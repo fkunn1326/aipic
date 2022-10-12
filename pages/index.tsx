@@ -1,0 +1,93 @@
+import Image from 'next/image'
+import { useState } from 'react'
+import { supabase } from '../utils/supabaseClient'
+import React from 'react'
+import Modal from '../components/modal'
+import Header from '../components/header/header'
+
+export async function getStaticProps() {
+  const { data } = await supabase.from('images').select('*').order('id')
+  return {
+    props: {
+      images: data,
+    },
+  }
+}
+
+function cn(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
+
+type Image = {
+  id: number
+  userName: string
+  prompt: string
+  href: string
+  name: string
+}
+
+export default function App({ images }: { images: Image[] }) {
+  return (
+    <div>
+      <Header></Header>
+      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+          {images.map((image) => (
+            <BlurImage key={image.id} image={image}/>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BlurImage({ image }: { image: Image }) {
+  const [isLoading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  return (
+    <div className="group" onClick={() => setIsOpen(true)}>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <div className="flex w-full h-full self-stretch flex-col md:flex-row pb-16 md:pb-0  md:pt-0 flex-1">
+            <div className="w-full flex-shrink-0 overflow-hidden text-base px-5 flex flex-col h-auto" style={{ height: 'fit-content', width: '400px' }}>
+              <div className="mt-6 px-5 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl shadow bg-opacity-50 flex flex-col space-y-5" style={{ order: 0 }}>
+                <p>{image.prompt}</p>
+                <div className="flex space-x-2 text-xs">
+                  <div className="flex flex-col">
+                    <div className="text-bold rounded-md sm:text-xs active:scale-95 transition-all transform-gpu whitespace-nowrap flex-1 flex select-none cursor-pointer bg-sky-500 items-center justify-center shadow px-2.5 py-2 w-fit-content text-white" onClick={() => navigator.clipboard.writeText(image.prompt)}>
+                      プロンプトをコピー
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="w-full md:h-full flex flex-col relative">
+              <Image
+                alt={image.name}
+                src={image.href}
+                layout="fill"
+                objectFit="scale-down"
+              />
+            </div>
+        </div>
+      </Modal>
+      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
+        <Image
+          alt={image.name}
+          src={image.href}
+          layout="fill"
+          objectFit="cover"
+          className={cn(
+            'duration-700 ease-in-out group-hover:opacity-75',
+            isLoading
+              ? 'scale-110 blur-2xl grayscale'
+              : 'scale-100 blur-0 grayscale-0'
+          )}
+          onLoadingComplete={() => setLoading(false)}
+        />
+      </div>
+      <h3 className="mt-4 text-sm text-gray-700">{image.name}</h3>
+      <p className="mt-1 text-lg font-medium text-gray-900">{image.userName}</p>
+    </div>
+  )
+}
