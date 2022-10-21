@@ -3,11 +3,16 @@ import type { AppProps } from 'next/app'
 import { UserProvider } from '@supabase/auth-helpers-react';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import React from 'react'
+import UserInfoProvider from '../components/auth/userInfoProvider'
+import useTransition from "../components/hooks/useTransition";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useTransition();
   return (
     <UserProvider supabaseClient={supabaseClient}>
-      <Component {...pageProps} />
+      <UserInfoProvider>
+        <Component {...pageProps} />
+      </UserInfoProvider>
     </UserProvider>
   )
 }

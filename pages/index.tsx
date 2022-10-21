@@ -1,12 +1,12 @@
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect, useContext  } from 'react'
 import { supabase } from '../utils/supabaseClient'
 import React from 'react'
 import Modal from '../components/modal'
 import Header from '../components/header/header'
 
 export async function getStaticProps() {
-  const { data } = await supabase.from('images').select('*').order('id')
+  const { data } = await supabase.from('images').select('*').order('created_at')
   return {
     props: {
       images: data,
@@ -20,19 +20,21 @@ function cn(...classes: string[]) {
 
 type Image = {
   id: number
-  userName: string
+  created_at: string
+  user_id: string
   prompt: string
   href: string
-  name: string
+  title: string
 }
+
 
 export default function App({ images }: { images: Image[] }) {
   return (
     <div>
       <Header></Header>
       <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {images.map((image) => (
+        <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
+          {images.reverse().map((image) => (
             <BlurImage key={image.id} image={image}/>
           ))}
         </div>
@@ -41,9 +43,27 @@ export default function App({ images }: { images: Image[] }) {
   )
 }
 
+const getUserData = async (userid) => {
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq('id', userid)
+    .single()
+  console.log(data)
+  return data["name"]
+}
+
 function BlurImage({ image }: { image: Image }) {
   const [isLoading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [userData, SetuserData] = useState<any>([{}]);
+
+  useEffect(() => {
+    (async() => {
+      const { data } = await supabase.from('profiles').select('*').eq('id', image.user_id)
+      SetuserData(data);
+    })();
+  }, []);
 
   return (
     <div className="group" onClick={() => setIsOpen(true)}>
@@ -63,7 +83,7 @@ function BlurImage({ image }: { image: Image }) {
             </div>
             <div className="w-full md:h-full flex flex-col relative">
               <Image
-                alt={image.name}
+                alt={image.title}
                 src={image.href}
                 layout="fill"
                 objectFit="scale-down"
@@ -73,7 +93,7 @@ function BlurImage({ image }: { image: Image }) {
       </Modal>
       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
         <Image
-          alt={image.name}
+          alt={image.title}
           src={image.href}
           layout="fill"
           objectFit="cover"
@@ -86,8 +106,11 @@ function BlurImage({ image }: { image: Image }) {
           onLoadingComplete={() => setLoading(false)}
         />
       </div>
-      <h3 className="mt-4 text-sm text-gray-700">{image.name}</h3>
-      <p className="mt-1 text-lg font-medium text-gray-900">{image.userName}</p>
+      <p className="mt-2 text-base font-semibold text-gray-900">{image.title}</p>
+      <div className="mt-1 w-full flex items-center">
+        <img src={userData[0]["avatar_url"]} className="h-5 w-5 rounded-full"></img>
+        <h3 className="ml-2 text-base text-gray-700">{userData[0]["name"]}</h3>
+      </div>
     </div>
   )
 }

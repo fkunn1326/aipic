@@ -3,7 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['media.discordapp.net'],
+    domains: [
+      'xefsjwahbvrgjqysodbm.supabase.co'
+    ],
   },
 }
 
