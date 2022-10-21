@@ -42,7 +42,7 @@ const Settings = () => {
                         </div>
                         <p
                             className="text-gray-900 sm:text-sm rounded-lg font-semibold block w-full"
-                        >{`********@${user["email"].split("@")[1]}`}</p>
+                        >{`********@{user["email"].split("@")[1]}`}</p>
                         {/* <input
                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5"
                             required
