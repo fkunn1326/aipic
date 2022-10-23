@@ -25,7 +25,6 @@ const Signin = () => {
     const { user, error } = await supabaseClient.auth.signIn({
       provider: 'google',
     })
-    console.log(user)
   };
 
 return (
