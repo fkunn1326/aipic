@@ -13,6 +13,11 @@ const Signup = () => {
   const [forms, setForms] = useState({email: '', password: ''});
   const [ismailsent, setisMailsent] = useState(false);
 
+  const origin =
+  typeof window !== 'undefined' && window.location.origin
+      ? window.location.origin
+      : '';
+
   const handleEmailChange = e => setForms({...forms, email: e.target.value});
   const handlePasswordChange = e => setForms({...forms, password: e.target.value});
   const clickForms = e => {
@@ -26,11 +31,12 @@ const Signup = () => {
     })
     e.preventDefault();
   };
+  
   const clickGoogle = async e => {
     const { user, error } = await supabaseClient.auth.signIn({
       provider: 'google',
     },{
-      redirectTo: 'http://127.0.0.1:3000/auth'
+      redirectTo: `${origin}/auth`
     })
   };
 
