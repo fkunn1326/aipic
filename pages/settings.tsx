@@ -104,7 +104,6 @@ const Settings = () => {
           });
           isdataloaded.current = true;
       }
-      console.log(states)
     }
   }, [user, ctx]);
 
