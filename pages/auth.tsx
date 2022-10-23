@@ -2,13 +2,11 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useHash } from '../utils/useHash'
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const AuthPage = () => {
     const [hash, setHash] = useHash()
     const [isok, setisok] = useState(false)
     const router = useRouter()
-    const query = router.query;
 
     useEffect(() => {
         if(router.isReady) {

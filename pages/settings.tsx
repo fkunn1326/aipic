@@ -9,6 +9,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+export const getServerSideProps = withPageAuth({ redirectTo: "/" });
+
 const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g
 
 const Settings = () => {
@@ -289,3 +291,7 @@ const Settings = () => {
 };
 
 export default Settings;
+function withPageAuth(arg0: { redirectTo: string; }) {
+  throw new Error("Function not implemented.");
+}
+
