@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import { useState, useEffect, useContext  } from 'react'
-import { supabase } from '../utils/supabaseClient'
 import React from 'react'
 import Modal from '../components/modal'
 import Header from '../components/header/header'
+import { supabaseClient } from '@supabase/auth-helpers-nextjs'
 
 export async function getStaticProps() {
-  const { data } = await supabase.from('images').select('*').order('created_at')
+  const { data } = await supabaseClient.from('images').select('*').order('created_at')
   return {
     props: {
       images: data,
@@ -43,16 +43,6 @@ export default function App({ images }: { images: Image[] }) {
   )
 }
 
-const getUserData = async (userid) => {
-  const { data } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq('id', userid)
-    .single()
-  console.log(data)
-  return data["name"]
-}
-
 function BlurImage({ image }: { image: Image }) {
   const [isLoading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -60,7 +50,7 @@ function BlurImage({ image }: { image: Image }) {
 
   useEffect(() => {
     (async() => {
-      const { data } = await supabase.from('profiles').select('*').eq('id', image.user_id)
+      const { data } = await supabaseClient.from('profiles').select('*').eq('id', image.user_id)
       SetuserData(data);
     })();
   }, []);
@@ -68,9 +58,9 @@ function BlurImage({ image }: { image: Image }) {
   return (
     <div className="group" onClick={() => setIsOpen(true)}>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="flex w-full h-full self-stretch flex-col md:flex-row pb-16 md:pb-0  md:pt-0 flex-1">
+        <div className="overscroll-contain flex w-full h-full self-stretch flex-col md:flex-row pb-16 md:pb-0  md:pt-0 flex-1">
             <div className="w-full flex-shrink-0 overflow-hidden text-base px-5 flex flex-col h-auto" style={{ height: 'fit-content', width: '400px' }}>
-              <div className="mt-6 px-5 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl shadow bg-opacity-50 flex flex-col space-y-5" style={{ order: 0 }}>
+              <div className="my-6 px-5 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl shadow bg-opacity-50 flex flex-col space-y-5" style={{ order: 0 }}>
                 <p>{image.prompt}</p>
                 <div className="flex space-x-2 text-xs">
                   <div className="flex flex-col">

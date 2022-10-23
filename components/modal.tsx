@@ -13,7 +13,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-10 overflow-y-auto"
+        className="fixed inset-0 z-10 overscroll-contain"
         onClose={onClose}
       >
         <div className="h-screen px-4 text-center">
@@ -44,7 +44,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-4/6 h-5/6 p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
+            <div className="inline-block w-4/6 h-5/6 p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
               {children}
             </div>
           </Transition.Child>
