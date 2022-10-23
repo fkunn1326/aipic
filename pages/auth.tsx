@@ -14,7 +14,6 @@ const AuthPage = () => {
     useEffect(() => {
         if(router.isReady) {
             hash.startsWith('access_token=') ? setisok(true) : setisok(false);
-            console.log(hash.split("&")[3].split("=")[1])
             if (isok){
                 var sb_access_token = hash.split("&")[0].split("=")[1]
                 var sb_provider_token = hash.split("&")[2].split("=")[1]
