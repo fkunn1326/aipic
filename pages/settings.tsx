@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import Header from "../components/header/header";
 import { userInfoContext } from "../context/userInfoContext";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -291,7 +291,3 @@ const Settings = () => {
 };
 
 export default Settings;
-function withPageAuth(arg0: { redirectTo: string; }) {
-  throw new Error("Function not implemented.");
-}
-
