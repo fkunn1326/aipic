@@ -24,6 +24,8 @@ const Signin = () => {
   const clickGoogle = async e => {
     const { user, error } = await supabaseClient.auth.signIn({
       provider: 'google',
+    },{
+      redirectTo: 'http://127.0.0.1:3000/auth'
     })
   };
 
