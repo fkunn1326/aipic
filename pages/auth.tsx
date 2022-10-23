@@ -1,7 +1,10 @@
+import { supabaseClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useHash } from '../utils/useHash'
+import { setCookie } from 'nookies'
+
 
 const AuthPage = () => {
     const [hash, setHash] = useHash()
@@ -11,6 +14,27 @@ const AuthPage = () => {
     useEffect(() => {
         if(router.isReady) {
             hash.startsWith('access_token=') ? setisok(true) : setisok(false);
+            console.log(hash.split("&")[3].split("=")[1])
+            if (isok){
+                var sb_access_token = hash.split("&")[0].split("=")[1]
+                var sb_provider_token = hash.split("&")[2].split("=")[1]
+                var sb_refresh_token = hash.split("&")[3].split("=")[1]
+                setCookie(null, 'sb-access-token', sb_access_token, {
+                    maxAge: 30 * 24 * 60 * 60,
+                    path: '/',
+                    SameSite: "Lax",
+                })
+                setCookie(null, 'sb-provider-token', sb_provider_token, {
+                    maxAge: 30 * 24 * 60 * 60,
+                    path: '/',
+                    SameSite: "Lax",
+                })
+                setCookie(null, 'sb-refresh-token', sb_refresh_token, {
+                    maxAge: 30 * 24 * 60 * 60,
+                    path: '/',
+                    SameSite: "Lax",
+                })
+            }
             setTimeout(() => {
                 router.push('/')
             }, 3000);
