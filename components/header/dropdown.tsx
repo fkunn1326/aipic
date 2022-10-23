@@ -84,8 +84,8 @@ export default function Dropdawn(props) {
                       'block w-full px-4 py-2 text-left text-sm'
                     )}
                     onClick={()=> {
-                      router.reload()
                       supabaseClient.auth.signOut();
+                      router.reload()
                     }}
                   >
                     サインアウト

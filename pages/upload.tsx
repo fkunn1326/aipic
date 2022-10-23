@@ -5,11 +5,10 @@ import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { getChunks } from 'png-chunks';
 import Image from 'next/image'
-import { supabase } from "../utils/supabaseClient"
 import { v4 as uuidv4 } from "uuid";
 import { userInfoContext } from '../context/userInfoContext'
 import { useRouter } from 'next/router'
-import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
@@ -152,13 +151,13 @@ const Upload = (props) => {
         setisSending(true);
         var file = imagedata as any;
         var uuid = uuidv4()
-        await supabase
+        await supabaseClient
             .storage
             .from("images")
             .upload(`${uuid}.png`, file, {
                 contentType: 'image/png'
         })
-        await supabase
+        await supabaseClient
             .from("images")
             .insert({
                 id: uuid,

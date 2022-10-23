@@ -24,9 +24,8 @@ const Signin = () => {
   const clickGoogle = async e => {
     const { user, error } = await supabaseClient.auth.signIn({
       provider: 'google',
-    },{
-      redirectTo: 'https://fkunn1326-ai-arts-jwwxw57g66j3p96g-3000.preview.app.github.dev/auth'
     })
+    console.log(user)
   };
 
 return (
