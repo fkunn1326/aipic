@@ -5,12 +5,16 @@ import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import React from 'react'
 import UserInfoProvider from '../components/auth/userInfoProvider'
 import useTransition from "../components/hooks/useTransition";
+import Head from '../components/head'
 
 function MyApp({ Component, pageProps }: AppProps) {
   useTransition();
   return (
     <UserProvider supabaseClient={supabaseClient}>
       <UserInfoProvider>
+        <Head 
+            title={'AI Arts'}
+        />
         <Component {...pageProps} />
       </UserInfoProvider>
     </UserProvider>
