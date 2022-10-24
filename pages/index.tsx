@@ -4,7 +4,7 @@ import React from 'react'
 import Modal from '../components/modal'
 import Header from '../components/header/header'
 import { supabaseClient } from '@supabase/auth-helpers-nextjs'
-import useSWR from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 
 export async function getStaticProps() {
   const { data } = await supabaseClient.from('images').select('*').order('created_at')
@@ -32,15 +32,14 @@ const fetcher = url => fetch(url).then(r => r.json())
 
 export default function App() {
   const { data, error } = useSWR('../api/images/list', fetcher);
-  var skeltonimages = Array.from({ length: 10 }, () => 0)
   if (!data) return (
     <div>
       <Header></Header>
       <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {skeltonimages.map(() => (
-            <SkeletonImage/>
-          ))}
+          {Array.apply(0, Array(10)).map(function (x, i) {
+            return <SkeletonImage key={i} />;
+          })}
         </div>
       </div>
     </div>
