@@ -1,0 +1,12 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+
+const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
+
+  const { data, error } = await supabaseClient.from('images').select('*').order('created_at');
+
+  if (error) return res.status(401).json({ error: error.message });
+  return res.status(200).json(data);
+};
+
+export default getImageList;

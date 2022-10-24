@@ -4,6 +4,7 @@ import React from 'react'
 import Modal from '../components/modal'
 import Header from '../components/header/header'
 import { supabaseClient } from '@supabase/auth-helpers-nextjs'
+import useSWR from 'swr';
 
 export async function getStaticProps() {
   const { data } = await supabaseClient.from('images').select('*').order('created_at')
@@ -27,8 +28,24 @@ type Image = {
   title: string
 }
 
+const fetcher = url => fetch(url).then(r => r.json())
 
-export default function App({ images }: { images: Image[] }) {
+export default function App() {
+  const { data, error } = useSWR('../api/images/list', fetcher);
+  var skeltonimages = Array.from({ length: 10 }, () => 0)
+  if (!data) return (
+    <div>
+      <Header></Header>
+      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
+          {skeltonimages.map(() => (
+            <SkeletonImage/>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+  var images = data.slice(0, data.length);
   return (
     <div>
       <Header></Header>
@@ -81,7 +98,7 @@ function BlurImage({ image }: { image: Image }) {
             </div>
         </div>
       </Modal>
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
+      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
         <Image
           alt={image.title}
           src={image.href}
@@ -100,6 +117,20 @@ function BlurImage({ image }: { image: Image }) {
       <div className="mt-1 w-full flex items-center">
         <img src={userData[0]["avatar_url"]} className="h-5 w-5 rounded-full"></img>
         <h3 className="ml-2 text-base text-gray-700">{userData[0]["name"]}</h3>
+      </div>
+    </div>
+  )
+}
+
+function SkeletonImage() {
+  return (
+    <div className="group">
+      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 animate-pulse">
+      </div>
+      <div className="mt-2 rounded-full bg-gray-200 h-3 w-32"></div>
+      <div className="mt-1 w-full flex items-center">
+        <div className="h-5 w-5 rounded-full bg-gray-200"></div>
+        <div className="ml-2 rounded-full bg-gray-200 h-3 w-16"></div>
       </div>
     </div>
   )

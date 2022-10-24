@@ -85,6 +85,7 @@ export default function Dropdawn(props) {
                     )}
                     onClick={()=> {
                       supabaseClient.auth.signOut();
+                      router.push("/")
                     }}
                   >
                     サインアウト

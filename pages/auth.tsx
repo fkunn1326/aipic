@@ -2,7 +2,7 @@ import { supabaseClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { useHash } from '../utils/useHash'
+import { useHash } from '../components/hooks/useHash'
 import { setCookie } from 'nookies'
 
 

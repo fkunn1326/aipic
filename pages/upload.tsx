@@ -59,70 +59,72 @@ const Upload = (props) => {
         var fileReader = new FileReader();
         fileReader.onload = function webViewerChangeFileReaderOnload(evt) {
             var buffer = evt!.target!.result as ArrayBuffer;
-            var chunks = getChunks(new Uint8Array(buffer));
             var prompt = ""
             var negativeprompt = ""
             var metadata = {}
-            for (var i = 0; i < chunks.length; i++) {
-                if (chunks[i]["chunkType"] == "tEXt") {
-                    var chunk = new TextDecoder().decode(chunks[i]["data"])
-                    if (chunk.startsWith("parameters")) {
-                        //Stable Diffusion Web UIのメタデータのみ
-                        prompt = chunk.substring(11)
-                    }else if(chunk.startsWith("Description")){
-                        //Novel AIのメタデータ（positive）
-                        prompt = chunk.substring(12)
-                    }else if(chunk.startsWith("Comment")){
-                        //Novel AIのメタデータ（いろいろ）
-                        var obj = JSON.parse(chunk.substring(8))
-                        negativeprompt = obj["uc"]
-                        metadata = {
-                            "Steps": obj["steps"],
-                            "Sampler": obj["sampler"],
-                            "Strength": obj["strength"],
-                            "Noise": obj["noise"],
-                            "Scale": obj["scale"],
-                            "Seed": obj["seed"]
-                        }
-                    }else if(chunk.startsWith("Software")){
-                        if (chunk.substring(9) === "NovelAI"){
-                            setSelectedModel(models[2])
+            try {
+                var chunks = getChunks(new Uint8Array(buffer));
+                for (var i = 0; i < chunks.length; i++) {
+                    if (chunks[i]["chunkType"] == "tEXt") {
+                        var chunk = new TextDecoder().decode(chunks[i]["data"])
+                        if (chunk.startsWith("parameters")) {
+                            //Stable Diffusion Web UIのメタデータのみ
+                            prompt = chunk.substring(11)
+                        }else if(chunk.startsWith("Description")){
+                            //Novel AIのメタデータ（positive）
+                            prompt = chunk.substring(12)
+                        }else if(chunk.startsWith("Comment")){
+                            //Novel AIのメタデータ（いろいろ）
+                            var obj = JSON.parse(chunk.substring(8))
+                            negativeprompt = obj["uc"]
+                            metadata = {
+                                "Steps": obj["steps"],
+                                "Sampler": obj["sampler"],
+                                "Strength": obj["strength"],
+                                "Noise": obj["noise"],
+                                "Scale": obj["scale"],
+                                "Seed": obj["seed"]
+                            }
+                        }else if(chunk.startsWith("Software")){
+                            if (chunk.substring(9) === "NovelAI"){
+                                setSelectedModel(models[2])
+                            }
                         }
                     }
                 }
-            }
-            var input_prompt = document.getElementById("prompt") as HTMLInputElement;
-            if (prompt === "" && negativeprompt === ""){
-                setfullprompt(prompt);
-                input_prompt.value = prompt;
-                let event = new Event('change', {bubbles:true})
-                input_prompt.dispatchEvent(event)  
-                handlePromptChange(event); 
-            }else{
-                if (negativeprompt === ""){
-                    //sd
+                var input_prompt = document.getElementById("prompt") as HTMLInputElement;
+                if (prompt === "" && negativeprompt === ""){
                     setfullprompt(prompt);
                     input_prompt.value = prompt;
                     let event = new Event('change', {bubbles:true})
                     input_prompt.dispatchEvent(event)  
                     handlePromptChange(event); 
                 }else{
-                    //NAI
-                    prompt = prompt + 
-                    "\nNegative prompt: " + negativeprompt + 
-                    "\nSteps: " + metadata["Steps"] + 
-                    ", Sampler: " + metadata["Sampler"] +
-                    ", Seed: " + metadata["Seed"] +
-                    ", Strength: " + metadata["Strength"] +
-                    ", Noise: " + metadata["Noise"] +
-                    ", Scale: " + metadata["Scale"]
-                    setfullprompt(prompt);
-                    input_prompt.value = prompt
-                    let event = new Event('change', {bubbles:true})
-                    input_prompt.dispatchEvent(event)
-                    handlePromptChange(event); 
+                    if (negativeprompt === ""){
+                        //sd
+                        setfullprompt(prompt);
+                        input_prompt.value = prompt;
+                        let event = new Event('change', {bubbles:true})
+                        input_prompt.dispatchEvent(event)  
+                        handlePromptChange(event); 
+                    }else{
+                        //NAI
+                        prompt = prompt + 
+                        "\nNegative prompt: " + negativeprompt + 
+                        "\nSteps: " + metadata["Steps"] + 
+                        ", Sampler: " + metadata["Sampler"] +
+                        ", Seed: " + metadata["Seed"] +
+                        ", Strength: " + metadata["Strength"] +
+                        ", Noise: " + metadata["Noise"] +
+                        ", Scale: " + metadata["Scale"]
+                        setfullprompt(prompt);
+                        input_prompt.value = prompt
+                        let event = new Event('change', {bubbles:true})
+                        input_prompt.dispatchEvent(event)
+                        handlePromptChange(event); 
+                    }
                 }
-            }
+            } catch(e) {};
             setisSelected(true)
             setimageurl(URL.createObjectURL(new Blob([buffer], {type:"image/png"})))
         };
@@ -192,9 +194,9 @@ const Upload = (props) => {
                                     <div className="flex flex-col justify-center items-center pt-5 pb-6">
                                         <svg aria-hidden="true" className="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                                         <p className="mb-2 text-sm text-gray-500">ファイルを選択</p>
-                                        <p className="text-xs text-gray-500 text-center">PNGのみ<br/>1枚50MB以内<br/>アップロードできます。</p>
+                                        <p className="text-xs text-gray-500 text-center">PNG,JPG<br/>1枚50MB以内<br/>アップロードできます。</p>
                                     </div>
-                                    <input id="uploadaria" type="file" className="hidden" accept="image/png" onChange={e => handleupload(e)} required/>
+                                    <input id="uploadaria" type="file" className="hidden" accept="image/png, image/jpg" onChange={e => handleupload(e)} required/>
                                 </label>
                                 :
                                 <div className="flex flex-col justify-center items-center w-full h-96 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer relative">
