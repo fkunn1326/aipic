@@ -5,13 +5,15 @@ interface Props {
   title: string;
 }
 
-export default ({ title }: Props): JSX.Element => {
+const CummonHead = (props) => {
   return (
     <Head>
-      <title>{title}</title>
-      <meta property="og:title" content={title} />
-      <meta property="og:site_name" content={title} />
-      <meta name="twitter:title" content={title} />
+      <title>{props.title}</title>
+      <meta property="og:title" content={props.title} />
+      <meta property="og:site_name" content={props.title} />
+      <meta name="twitter:title" content={props.title} />
     </Head>
   );
 };
+
+export default CummonHead;
