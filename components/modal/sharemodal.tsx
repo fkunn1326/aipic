@@ -8,7 +8,7 @@ type Props = {
   onClose: VoidFunction;
 };
 
-const Modal = ({ isOpen, children, onClose }: Props) => {
+const ShareModal = ({ isOpen, children, onClose }: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -26,7 +26,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm" />
+            <Dialog.Overlay className="fixed inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm"/>
           </Transition.Child>
 
           <span
@@ -44,7 +44,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-4/6 h-5/6 p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
+            <div className="inline-block w-[480px] h-[350px] p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
               {children}
             </div>
           </Transition.Child>
@@ -54,4 +54,4 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
   );
 };
 
-export default Modal;
+export default ShareModal;
