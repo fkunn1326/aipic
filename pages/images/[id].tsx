@@ -157,6 +157,7 @@ const Images = () => {
                               className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                               href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${location.href}`}
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               <FontAwesomeIcon icon={faTwitter} className="w-7 h-7 group-hover:text-sky-500"/>
                             </a>
@@ -167,6 +168,7 @@ const Images = () => {
                               className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                               href={`http://www.facebook.com/share.php?u=${location.href}`}
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               <FontAwesomeIcon icon={faFacebook} className="w-7 h-7 group-hover:text-blue-600"/>
                             </a>
@@ -177,6 +179,7 @@ const Images = () => {
                               className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                               href={`https://social-plugins.line.me/lineit/share?url=${location.href}`}
                               target="_blank"
+                              rel="noopener noreferrer"
                             > 
                               <FontAwesomeIcon icon={faLine} className="w-7 h-7 group-hover:text-green-500"/>
                             </a>
