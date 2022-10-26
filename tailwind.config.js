@@ -6,6 +6,11 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    theme: {
+      screens: {
+        'desktop': '769px',
+      }
+    }
   },
   plugins: [require('@tailwindcss/aspect-ratio')],
 }

@@ -57,7 +57,7 @@ const Upload = (props) => {
         setimagedata(file);
         if (file !== undefined) {
         var fileReader = new FileReader();
-        fileReader.onload = function webViewerChangeFileReaderOnload(evt) {
+        fileReader.onload = async function webViewerChangeFileReaderOnload(evt) {
             var buffer = evt!.target!.result as ArrayBuffer;
             var prompt = ""
             var negativeprompt = ""
@@ -124,7 +124,17 @@ const Upload = (props) => {
                         handlePromptChange(event); 
                     }
                 }
-            } catch(e) {};
+            } catch(e) {
+                var blob = new Blob([file], { type: file.type })
+                var bitmap = await createImageBitmap(blob)
+                var canvas = document.createElement("canvas");
+                canvas.width = bitmap.width;
+                canvas.height = bitmap.height;
+                canvas.getContext('2d')?.drawImage(bitmap, 0, 0);
+                canvas.toBlob((blob) => {
+                    setimageurl(URL.createObjectURL(blob as Blob))
+                });
+            };
             setisSelected(true)
             setimageurl(URL.createObjectURL(new Blob([buffer], {type:"image/png"})))
         };
@@ -196,7 +206,7 @@ const Upload = (props) => {
                                         <p className="mb-2 text-sm text-gray-500">ファイルを選択</p>
                                         <p className="text-xs text-gray-500 text-center">PNG,JPG<br/>1枚50MB以内<br/>アップロードできます。</p>
                                     </div>
-                                    <input id="uploadaria" type="file" className="hidden" accept="image/png, image/jpg" onChange={e => handleupload(e)} required/>
+                                    <input id="uploadaria" type="file" className="hidden" accept="image/png, image/jpeg, image/webp" onChange={e => handleupload(e)} required/>
                                 </label>
                                 :
                                 <div className="flex flex-col justify-center items-center w-full h-96 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer relative">
@@ -226,7 +236,7 @@ const Upload = (props) => {
                                     プロンプト
                                 </div>
                                 <textarea 
-                                    className="block bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
                                     id="prompt"
                                     onChange={(e)=>{
                                         handlePromptChange(e);

@@ -9,9 +9,9 @@ const Header = () => {
     const [update,setUpdata]=useState<boolean>(false)
 
     return(
-        <div className="relative bg-white" onLoad={() => setUpdata(update?false:true)}>
-            <div className="mx-auto max-w-7xl px-1 sm:px-6">
-                <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10">
+        <div className="relative bg-white border" onLoad={() => setUpdata(update?false:true)}>
+            <div className="mx-auto max-w-7xl">
+                <div className="flex items-center justify-between py-3 md:justify-start md:space-x-10">
                     <div className="flex justify-start lg:w-0 lg:flex-1">
                         <Link href="/">
                             <p className="cursor-pointer text-2xl">AI Arts</p>
