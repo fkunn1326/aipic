@@ -4,7 +4,7 @@ import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
   const query: any = req.query
   const r18 = query.r18 === undefined ? false : JSON.parse(query.r18.toLowerCase())
-  const r18g = query.r18g === undefined ? JSON.parse(query.r18g.toLowerCase()) : false
+  const r18g = query.r18g === undefined ? false : JSON.parse(query.r18g.toLowerCase())
   const filter = `("all","${r18 && "r18"}","${r18g && "r18g"}")`
   const { data, error } = await supabaseClient
     .from('images')
