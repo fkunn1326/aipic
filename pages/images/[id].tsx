@@ -12,6 +12,7 @@ import ShareModal from '../../components/modal/sharemodal'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter, faFacebook, faLine } from "@fortawesome/free-brands-svg-icons";
 import { userInfoContext } from '../../context/userInfoContext';
+import Link from 'next/link';
 
 const fetcher = url => fetch(url).then(r => r.json())
 
@@ -35,6 +36,7 @@ const Images = () => {
   const [isShareOpen, setisShareOpen] = useState(false)
 
   const [isliked, setisliked] = useState(false)
+  const [limittype, setlimittype] = useState("")
 
   const router = useRouter();
   const pid = router.query.id;
@@ -47,7 +49,7 @@ const Images = () => {
           .from('likes')
           .delete()
           .match({
-            id: image.id,
+            image_id: image.id,
             user_id: ctx.UserInfo.id 
           })
         setisliked(false)
@@ -55,13 +57,12 @@ const Images = () => {
         await supabaseClient
           .from('likes')
           .insert({
-            id: image.id,
+            image_id: image.id,
             user_id: ctx.UserInfo.id 
           })
         setisliked(true)
       }
     }
-
   }
 
 
@@ -70,6 +71,17 @@ const Images = () => {
       image.likes.map((like) => {
         if (like.user_id === ctx.UserInfo.id) setisliked(true)
       })
+      console.log(ctx.UserInfo.id)
+      if (ctx.UserInfo.id === undefined){
+        setlimittype("unauth")
+      }else{
+        if (!ctx.UserInfo.access_limit[image.age_limit]){
+          setlimittype("unsafe")
+        }else{
+          setlimittype("ok")
+        }
+      }
+      if (image.age_limit === "all") setlimittype("ok")
     }
   },[data]);
 
@@ -91,15 +103,19 @@ const Images = () => {
                   <div className="flex mb-8 relative h-[70vh] items-center w-full">
                     <div className="flex flex-col absolute inset-0 items-center justify-center">
                       <div className="flex relative flex-col-reverse z-auto h-full w-full">
-                        <div className="relative h-full w-full box-content">
-                          <Image
-                            alt={image.title}
-                            src={image.href}
-                            layout="fill"
-                            objectFit="contain"
-                            className="rounded-lg w-full h-full min-h-[70vh] cursor-zoom-in"
-                            onClick={() => setisImageOpen(true)}
-                          />
+                        <div className={`relative h-full w-full box-content rounded-t-3xl ${limittype !== "ok" && "bg-neutral-400"}`}>
+                          {limittype !== "unauth" &&
+                            <Image
+                              alt={image.title}
+                              src={image.href}
+                              layout="fill"
+                              objectFit="contain"
+                              className={`rounded-lg w-full h-full min-h-[70vh] z-10 ${limittype === "ok" && "cursor-zoom-in"} ${limittype === "unsafe" && "blur-xl opacity-60 pointer-events-none"}`}
+                              onClick={() => {
+                                if (limittype === "ok") setisImageOpen(true)
+                              }}
+                            />
+                          }
                           <ImageModal isOpen={isImageOpen} onClose={() => setisImageOpen(false)}>
                             <div className="relative w-full h-full">
                               <Image
@@ -113,6 +129,26 @@ const Images = () => {
                               />
                             </div>
                           </ImageModal>
+                          {limittype === "unsafe" &&
+                            <div className="flex flex-col gap-8 justify-center items-center absolute inset-0 m-auto z-50 pointer-events-auto">
+                              <p className="text-xl text-white font-semibold">{image.age_limit.toUpperCase()}作品は、非表示に設定されています。</p>
+                              <Link href="/settings">
+                                <a className="text-base text-white font-semibold py-4 px-12 border rounded-3xl cursor-pointer">
+                                    設定を変更する
+                                </a>
+                              </Link>
+                            </div>
+                          }
+                          {limittype === "unauth" &&
+                            <div className="flex flex-col gap-8 justify-center items-center absolute inset-0 m-auto z-50 pointer-events-auto">
+                              <p className="text-xl text-white font-semibold">{image.age_limit.toUpperCase()}作品を表示するには、ログインする必要があります。</p>
+                              <Link href="/signin">
+                                <a className="text-base text-white font-semibold py-4 px-12 border rounded-3xl cursor-pointer">
+                                    サインイン
+                                </a>
+                              </Link>
+                            </div>
+                          }
                         </div>
                       </div>
                     </div>
@@ -137,7 +173,7 @@ const Images = () => {
                           <p className="font-semibold">{image.prompt}</p>
                         </div>
                       </Modal>
-                      <button className="w-8 h-8 active:text-pink-500" onClick={(e) => handlelike(e)}>
+                      <button className="w-8 h-8" onClick={(e) => handlelike(e)}>
                         {isliked ?
                           <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>       
                         :

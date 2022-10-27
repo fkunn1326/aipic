@@ -111,7 +111,7 @@ const Settings = () => {
     <div>
       <Header></Header>
       <div className="mx-auto px-3 sm:px-6 lg:max-w-7xl lg:px-7 w-full h-full">
-        <div className="p-4 w-full bg-gray-50 bg-white rounded-lg border border-gray-300 sm:p-8 my-8">
+        <div className="p-4 w-full bg-gray-50 rounded-lg border border-gray-300 sm:p-8 my-8">
           <h5 className="mb-2 text-xl font-bold text-gray-900">アカウント</h5>
           <p className="mb-5 text-gray-500 sm:text-base">
             アカウントについての情報を確認したり、変更したりします。
@@ -254,7 +254,7 @@ const Settings = () => {
               type="button"
               disabled={!ischanged}
               onClick={(e) => {handleconfirm(e)}}
-              className="font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center text-white bg-sky-500 disabled:bg-sky-300"
+              className="font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center text-white bg-sky-500 disabled:bg-sky-300 disabled:cursor-no-drop"
             >
               変更を保存する
             </button>
@@ -262,7 +262,7 @@ const Settings = () => {
               type="button"
               disabled={!ischanged}
               onClick={(e) => handlecancel(e)}
-              className="ml-2 font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center border border-sky-500 text-sky-500 hover:text-white hover:bg-sky-500 disabled:text-sky-300 disabled:bg-white"
+              className="ml-2 font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center border border-sky-500 text-sky-500 hover:text-white hover:bg-sky-500 disabled:text-sky-300 disabled:bg-white disabled:cursor-no-drop"
             >
               キャンセル
             </button>
@@ -277,7 +277,7 @@ const Settings = () => {
               </p>
               <button
                 type="button"
-                className="text-white font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center text-red-600 border border-red-600 hover:text-white hover:bg-red-500"
+                className="text-red-600 font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center border border-red-600 hover:text-white hover:bg-red-500"
               >
                 アカウントを削除する
               </button>

@@ -4,7 +4,8 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: [
-      'xefsjwahbvrgjqysodbm.supabase.co'
+      'xefsjwahbvrgjqysodbm.supabase.co',
+      'lh3.googleusercontent.com'
     ],
   },
 }
