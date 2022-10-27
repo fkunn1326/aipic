@@ -35,6 +35,7 @@ const Upload = (props) => {
     const [fullprompt, setfullprompt] = useState("")
     const [href, sethref] = useState("")
     const [title, settitle] = useState("")
+    const [caption, setcaption] = useState("")
     const [agelimit, setagelimit] = useState("")
     const [imagedata, setimagedata] = useState(null)
 
@@ -174,6 +175,8 @@ const Upload = (props) => {
             .insert({
                 id: uuid,
                 prompt: fullprompt,
+                caption: caption,
+                model: selectedModel,
                 href: `***REMOVED***/storage/v1/object/public/images/${uuid}.png`,
                 age_limit: agelimit,
                 title: title,
@@ -186,6 +189,12 @@ const Upload = (props) => {
         e.target.style.height = "auto";
         e.target.style.height = `${e.target.scrollHeight}px`;
         setfullprompt(e.target.value);
+    }
+
+    const handleCaptionChange = e => {
+        e.target.style.height = "auto";
+        e.target.style.height = `${e.target.scrollHeight}px`;
+        setcaption(e.target.value);
     }
 
     return(
@@ -243,6 +252,19 @@ const Upload = (props) => {
                                     }}
                                     required
                                     value={fullprompt}
+                                    spellCheck="false"
+                                ></textarea>
+                            </div>
+                            <div>
+                                <div className="block mb-2 text-sm font-medium text-gray-900">
+                                    説明
+                                </div>
+                                <textarea 
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
+                                    onChange={(e)=>{
+                                        handleCaptionChange(e)
+                                    }}
+                                    value={caption}
                                     spellCheck="false"
                                 ></textarea>
                             </div>

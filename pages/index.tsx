@@ -1,8 +1,8 @@
 import Image from 'next/image'
-import { useState, useEffect, useContext  } from 'react'
-import React from 'react'
+import React, { useState, useEffect, useContext  } from 'react'
 import Header from '../components/header/header'
 import { supabaseClient } from '@supabase/auth-helpers-nextjs'
+import { userInfoContext } from '../context/userInfoContext'
 import useSWR from 'swr';
 import Link from 'next/link'
 
@@ -19,19 +19,11 @@ function cn(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-type Image = {
-  id: number
-  created_at: string
-  user_id: string
-  prompt: string
-  href: string
-  title: string
-}
-
 const fetcher = url => fetch(url).then(r => r.json())
 
 export default function App() {
-  const { data, error } = useSWR('../api/images/list', fetcher);
+  const ctx = useContext(userInfoContext);
+  const { data, error } = useSWR('../api/images/list?' + new URLSearchParams(ctx.UserInfo.access_limit).toString() , fetcher);
   if (!data) return (
     <div>
       <Header></Header>
@@ -59,41 +51,48 @@ export default function App() {
   )
 }
 
-function BlurImage({ image }: { image: Image }) {
+function BlurImage({ image }) {
   const [isLoading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [userData, SetuserData] = useState<any>([{}]);
-
-  useEffect(() => {
-    (async() => {
-      const { data } = await supabaseClient.from('profiles').select('*').eq('id', image.user_id)
-      SetuserData(data);
-    })();
-  }, []);
 
   return (
     <div className="group" onClick={() => setIsOpen(true)}>
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
-        <Link href={`/images/${image.id}`}>
-          <Image
-            alt={image.title}
-            src={image.href}
-            layout="fill"
-            objectFit="cover"
-            className={cn(
-              'duration-700 ease-in-out group-hover:opacity-75',
-              isLoading
-                ? 'scale-110 blur-2xl grayscale'
-                : 'scale-100 blur-0 grayscale-0'
-            )}
-            onLoadingComplete={() => setLoading(false)}
-          />
-        </Link>
+      <div className="relative">
+        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+          <Link href={`/images/${image.id}`}>
+            <Image
+              alt={image.title}
+              src={image.href}
+              layout="fill"
+              objectFit="cover"
+              className={cn(
+                'duration-700 ease-in-out group-hover:opacity-75',
+                isLoading
+                  ? 'scale-110 blur-2xl grayscale'
+                  : 'scale-100 blur-0 grayscale-0',
+                // image.age_limit !== 'all' 
+                //   ? 'blur-md'
+                //   : ''
+              )}
+              onLoadingComplete={() => {
+                setLoading(false)
+              }}
+            />
+          </Link>
+        </div>
+        {image.age_limit === "nsfw" && <p className="absolute bottom-2 right-4 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">NSFW</p>}
+        {image.age_limit === "r18" && <p className="absolute bottom-2 right-4 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">R-18</p>}
+        {image.age_limit === "r18g" && <p className="absolute bottom-2 right-4 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">R-18G</p>}
       </div>
       <p className="mt-2 text-base font-semibold text-gray-900">{image.title}</p>
       <div className="mt-1 w-full flex items-center">
-        <img src={userData[0]["avatar_url"]} className="h-5 w-5 rounded-full"></img>
-        <h3 className="ml-2 text-base text-gray-700">{userData[0]["name"]}</h3>
+        <Image 
+          src={image.author.avatar_url}
+          width={20}
+          height={20}
+          className="rounded-full"
+        ></Image>
+        <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
       </div>
     </div>
   )
