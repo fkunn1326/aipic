@@ -1,6 +1,6 @@
-import { Dialog, Transition } from '@headlessui/react';
-import React from 'react';
-import { Fragment, ReactNode } from 'react';
+import { Dialog, Transition } from "@headlessui/react";
+import React from "react";
+import { Fragment, ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
@@ -26,7 +26,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm"/>
+            <Dialog.Overlay className="fixed inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm" />
           </Transition.Child>
 
           <span

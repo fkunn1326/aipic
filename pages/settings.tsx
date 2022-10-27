@@ -11,7 +11,7 @@ function classNames(...classes) {
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
-const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g
+const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g;
 
 const Settings = () => {
   const ctx = useContext(userInfoContext);
@@ -21,50 +21,52 @@ const Settings = () => {
     email: "",
     password: "********",
     access_limit: {
-      "r18": false,
-      "r18g": false
+      r18: false,
+      r18g: false,
     },
   });
-  const [ischanged, setischanged] = useState(false)
-  const [idstate, setidstate] = useState(0)
+  const [ischanged, setischanged] = useState(false);
+  const [idstate, setidstate] = useState(0);
 
   const handleedit = (key, value) => {
     setstates({ ...states, [key]: states[value] });
   };
 
   const handleidchange = (e) => {
-    var peer1 = document.getElementById("id_peer1") as HTMLElement
-    var peer2 = document.getElementById("id_peer2") as HTMLElement
-    var peer3 = document.getElementById("id_peer3") as HTMLElement
+    var peer1 = document.getElementById("id_peer1") as HTMLElement;
+    var peer2 = document.getElementById("id_peer2") as HTMLElement;
+    var peer3 = document.getElementById("id_peer3") as HTMLElement;
     setstates({ ...states, userid: e.target.value });
     setischanged(true);
-    (async() => {
-      var { data } = await supabaseClient.from('profiles').select('id, uid') as any
-      data = data.find(profile => profile.uid === e.target.value)
-      peer1.classList.add("hidden")
-      peer2.classList.add("hidden")
-      peer3.classList.add("hidden")
-      if (e.target.value !== ""){
+    (async () => {
+      var { data } = (await supabaseClient
+        .from("profiles")
+        .select("id, uid")) as any;
+      data = data.find((profile) => profile.uid === e.target.value);
+      peer1.classList.add("hidden");
+      peer2.classList.add("hidden");
+      peer3.classList.add("hidden");
+      if (e.target.value !== "") {
         if (data === undefined) {
-          if (idregex.test(e.target.value)){
-            peer3.classList.remove("hidden")
+          if (idregex.test(e.target.value)) {
+            peer3.classList.remove("hidden");
           }
-        }else{
-          if (data["id"] === user!["id"]){
-          }else{
-            peer1.classList.remove("hidden")
+        } else {
+          if (data["id"] === user!["id"]) {
+          } else {
+            peer1.classList.remove("hidden");
           }
         }
-      }else{
-        peer2.classList.remove("hidden")
+      } else {
+        peer2.classList.remove("hidden");
       }
     })();
-  }
+  };
 
   const handleaccesschange = (obj) => {
     setischanged(true);
-    setstates({...states, "access_limit": obj });
-  }
+    setstates({ ...states, access_limit: obj });
+  };
 
   const handlecancel = (e) => {
     setstates({
@@ -74,35 +76,37 @@ const Settings = () => {
       access_limit: ctx["UserInfo"]["access_limit"],
     });
     setischanged(false);
-  }
+  };
 
   const handleconfirm = async (e) => {
-    if (states["userid"] !== undefined){
-      if (!idregex.test(states["userid"])){
-        var new_obj = Object.assign(ctx["UserInfo"])
-        new_obj["uid"] = states["userid"]
-        new_obj["access_limit"] = states["access_limit"]
-        await supabaseClient
-          .from("profiles")
-          .upsert(new_obj)
-          .select()
+    if (states["userid"] !== undefined) {
+      if (!idregex.test(states["userid"])) {
+        var new_obj = Object.assign(ctx["UserInfo"]);
+        new_obj["uid"] = states["userid"];
+        new_obj["access_limit"] = states["access_limit"];
+        await supabaseClient.from("profiles").upsert(new_obj).select();
         setischanged(false);
       }
     }
-  }
+  };
 
-  const isdataloaded = useRef(false)
+  const isdataloaded = useRef(false);
 
   useEffect(() => {
-    if (!isdataloaded.current){
-      if (user !== null && ctx !== false && ctx["UserInfo"]["access_limit"] !== undefined && ctx["UserInfo"]["uid"] !== undefined) {
-          setstates({
-            ...states,
-            userid: ctx["UserInfo"]["uid"],
-            email: user!["email"]!,
-            access_limit: ctx["UserInfo"]["access_limit"],
-          });
-          isdataloaded.current = true;
+    if (!isdataloaded.current) {
+      if (
+        user !== null &&
+        ctx !== false &&
+        ctx["UserInfo"]["access_limit"] !== undefined &&
+        ctx["UserInfo"]["uid"] !== undefined
+      ) {
+        setstates({
+          ...states,
+          userid: ctx["UserInfo"]["uid"],
+          email: user!["email"]!,
+          access_limit: ctx["UserInfo"]["access_limit"],
+        });
+        isdataloaded.current = true;
       }
     }
   }, [user, ctx]);
@@ -130,19 +134,19 @@ const Settings = () => {
                   required
                   value={states["userid"]}
                   onChange={(e) => {
-                    handleidchange(e)
+                    handleidchange(e);
                   }}
                   spellCheck="false"
                 ></input>
               </div>
               <p id="id_peer1" className="mt-2 hidden text-red-500 text-sm">
-                    このIDは既に使用されています。
+                このIDは既に使用されています。
               </p>
               <p id="id_peer2" className="mt-2 hidden text-red-500 text-sm">
-                    空欄にすることはできません。
+                空欄にすることはできません。
               </p>
               <p id="id_peer3" className="mt-2 hidden text-red-500 text-sm">
-                    IDに空白や記号を含めることはできません。
+                IDに空白や記号を含めることはできません。
               </p>
             </div>
           </div>
@@ -177,18 +181,18 @@ const Settings = () => {
                 閲覧制限作品(R-18)
               </p>
               <div className="ml-4 flex items-center">
-                  <label className="ml-2 text-sm font-medium text-gray-900">
-                    <input
+                <label className="ml-2 text-sm font-medium text-gray-900">
+                  <input
                     checked={states["access_limit"]["r18"]}
                     type="radio"
                     name="r18-radio"
                     onChange={(e) => {
-                          var new_obj = Object.assign({},states["access_limit"]);
-                          new_obj["r18"] = !new_obj["r18"]
-                          handleaccesschange(new_obj)
+                      var new_obj = Object.assign({}, states["access_limit"]);
+                      new_obj["r18"] = !new_obj["r18"];
+                      handleaccesschange(new_obj);
                     }}
-                    className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2" 
-                    ></input>
+                    className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                  ></input>
                   表示する
                 </label>
               </div>
@@ -200,9 +204,9 @@ const Settings = () => {
                     value=""
                     name="r18-radio"
                     onChange={(e) => {
-                      var new_obj = Object.assign({},states["access_limit"]);
-                      new_obj["r18"] = !new_obj["r18"]
-                      handleaccesschange(new_obj)
+                      var new_obj = Object.assign({}, states["access_limit"]);
+                      new_obj["r18"] = !new_obj["r18"];
+                      handleaccesschange(new_obj);
                     }}
                     className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
                   ></input>
@@ -220,9 +224,9 @@ const Settings = () => {
                     checked={states["access_limit"]["r18g"]}
                     type="radio"
                     onChange={(e) => {
-                      var new_obj = Object.assign({},states["access_limit"]);
-                      new_obj["r18g"] = !new_obj["r18g"]
-                      handleaccesschange(new_obj)
+                      var new_obj = Object.assign({}, states["access_limit"]);
+                      new_obj["r18g"] = !new_obj["r18g"];
+                      handleaccesschange(new_obj);
                     }}
                     name="r18g-radio"
                     className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
@@ -236,9 +240,9 @@ const Settings = () => {
                     checked={!states["access_limit"]["r18g"]}
                     type="radio"
                     onChange={(e) => {
-                      var new_obj = Object.assign({},states["access_limit"]);
-                      new_obj["r18g"] = !new_obj["r18g"]
-                      handleaccesschange(new_obj)
+                      var new_obj = Object.assign({}, states["access_limit"]);
+                      new_obj["r18g"] = !new_obj["r18g"];
+                      handleaccesschange(new_obj);
                     }}
                     name="r18g-radio"
                     id="r18g-ratio-d"
@@ -253,7 +257,9 @@ const Settings = () => {
             <button
               type="button"
               disabled={!ischanged}
-              onClick={(e) => {handleconfirm(e)}}
+              onClick={(e) => {
+                handleconfirm(e);
+              }}
               className="font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center text-white bg-sky-500 disabled:bg-sky-300 disabled:cursor-no-drop"
             >
               変更を保存する

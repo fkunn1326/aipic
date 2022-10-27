@@ -3,39 +3,45 @@ import React, { useState } from "react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const Signin = () => {
-  const pswdregex = /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
-  const emailregex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-  const [forms, setForms] = useState({email: '', password: ''});
+  const pswdregex =
+    /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
+  const emailregex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+  const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
 
   const origin =
-  typeof window !== 'undefined' && window.location.origin
+    typeof window !== "undefined" && window.location.origin
       ? window.location.origin
-      : '';
+      : "";
 
-  const handleEmailChange = e => setForms({...forms, email: e.target.value});
-  const handlePasswordChange = e => setForms({...forms, password: e.target.value});
-  const clickForms = e => {
+  const handleEmailChange = (e) =>
+    setForms({ ...forms, email: e.target.value });
+  const handlePasswordChange = (e) =>
+    setForms({ ...forms, password: e.target.value });
+  const clickForms = (e) => {
     supabaseClient.auth.signIn(forms).then((result) => {
-      if (result!.user!.identities!.length === 0){
-        var el = document.getElementById("email_peer2") as HTMLElement
-        el.classList.remove("hidden")
-      }else{
+      if (result!.user!.identities!.length === 0) {
+        var el = document.getElementById("email_peer2") as HTMLElement;
+        el.classList.remove("hidden");
+      } else {
         setisMailsent(true);
       }
-    })
+    });
     e.preventDefault();
   };
 
-  const clickGoogle = async e => {
-    const { user, error } = await supabaseClient.auth.signIn({
-      provider: 'google',
-    },{
-      redirectTo: `${origin}/auth`
-    })
+  const clickGoogle = async (e) => {
+    const { user, error } = await supabaseClient.auth.signIn(
+      {
+        provider: "google",
+      },
+      {
+        redirectTo: `${origin}/auth`,
+      }
+    );
   };
 
-return (
+  return (
     <div className="bg-gray-50 pt-10">
       <div className="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
@@ -60,23 +66,33 @@ return (
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                     autoComplete="username"
                     placeholder="name@example.com"
-                    onChange={(e)=>{
-                      var textel = document.getElementById("email_peer") as HTMLElement
-                      var textel2 = document.getElementById("email_peer2") as HTMLElement
-                      textel2.classList.add("hidden")
-                      if (!emailregex.test(e.target.value)){
-                        textel.classList.remove("hidden")
-                      }else{
-                        textel.classList.add("hidden")
+                    onChange={(e) => {
+                      var textel = document.getElementById(
+                        "email_peer"
+                      ) as HTMLElement;
+                      var textel2 = document.getElementById(
+                        "email_peer2"
+                      ) as HTMLElement;
+                      textel2.classList.add("hidden");
+                      if (!emailregex.test(e.target.value)) {
+                        textel.classList.remove("hidden");
+                      } else {
+                        textel.classList.add("hidden");
                       }
                       handleEmailChange(e);
                     }}
                     required
                   ></input>
-                  <p id="email_peer" className="mt-2 hidden text-pink-600 text-sm">
+                  <p
+                    id="email_peer"
+                    className="mt-2 hidden text-pink-600 text-sm"
+                  >
                     有効なメールアドレスを入力してください。
                   </p>
-                  <p id="email_peer2" className="mt-2 hidden text-pink-600 text-sm">
+                  <p
+                    id="email_peer2"
+                    className="mt-2 hidden text-pink-600 text-sm"
+                  >
                     アカウントが存在しないか、パスワードが間違っています。
                   </p>
                 </label>
@@ -91,7 +107,7 @@ return (
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                     autoComplete="new-password"
-                    onChange={(e)=>{
+                    onChange={(e) => {
                       handlePasswordChange(e);
                     }}
                     required
@@ -104,9 +120,7 @@ return (
               >
                 サインイン
               </button>
-              <p className="text-sm text-gray-500 text-center">
-                または
-              </p>
+              <p className="text-sm text-gray-500 text-center">または</p>
               <button
                 type="button"
                 className="w-full text-black bg-slate-100 hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium text-gray-900 rounded-lg text-sm px-5 py-2.5 text-center flex justify-center"
@@ -158,7 +172,7 @@ return (
                 </Link>
               </p>
             </form>
-          </div> 
+          </div>
         </div>
       </div>
     </div>
