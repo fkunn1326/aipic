@@ -8,9 +8,9 @@ module.exports = {
     extend: {},
     theme: {
       screens: {
-        'desktop': '769px',
-      }
-    }
+        desktop: "769px",
+      },
+    },
   },
-  plugins: [require('@tailwindcss/aspect-ratio')],
-}
+  plugins: [require("@tailwindcss/aspect-ratio")],
+};

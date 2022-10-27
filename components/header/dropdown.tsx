@@ -1,18 +1,18 @@
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import Router, { useRouter } from 'next/router'
-import React from 'react'
-import Link from 'next/link';
+import Router, { useRouter } from "next/router";
+import React from "react";
+import Link from "next/link";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Dropdawn(props) {
-  const router = useRouter()
-  var avatar = props.avatar
+  const router = useRouter();
+  var avatar = props.avatar;
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -37,11 +37,11 @@ export default function Dropdawn(props) {
               {({ active }) => (
                 <a
                   className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm cursor-pointer'
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
-                    router.push("/settings")
+                    router.push("/settings");
                   }}
                 >
                   アカウントの設定
@@ -53,8 +53,8 @@ export default function Dropdawn(props) {
                 <a
                   href="#"
                   className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm"
                   )}
                 >
                   サポート？？
@@ -66,8 +66,8 @@ export default function Dropdawn(props) {
                 <a
                   href="#"
                   className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm"
                   )}
                 >
                   利用規約
@@ -80,12 +80,12 @@ export default function Dropdawn(props) {
                   <button
                     type="button"
                     className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block w-full px-4 py-2 text-left text-sm'
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "block w-full px-4 py-2 text-left text-sm"
                     )}
-                    onClick={()=> {
+                    onClick={() => {
                       supabaseClient.auth.signOut();
-                      router.push("/")
+                      router.push("/");
                     }}
                   >
                     サインアウト
@@ -97,5 +97,5 @@ export default function Dropdawn(props) {
         </Menu.Items>
       </Transition>
     </Menu>
-  )
+  );
 }
