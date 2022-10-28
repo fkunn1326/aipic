@@ -18,10 +18,16 @@ import "@pathofdev/react-tag-input/build/index.css";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
+type tags = {
+  name: string,
+  id: string,
+  count: number
+};
+
 const models = [
   { id: 1, name: "Stable Diffusion", unavailable: false },
   { id: 2, name: "Waifu Diffusion", unavailable: false },
-  { id: 3, name: "Novel AI", unavailable: false },
+  { id: 3, name: "NovelAI", unavailable: false },
   { id: 4, name: "TrinArt", unavailable: false },
   { id: 5, name: "Midjourney", unavailable: false },
   { id: 6, name: "Dalle-2", unavailable: false },
@@ -46,6 +52,7 @@ const Upload = (props) => {
   const [agelimit, setagelimit] = useState("");
   const [imagedata, setimagedata] = useState(null);
   const [tags, setTags] = useState<object[]>([]);
+  const [suggestions, setSuggestions] = useState<tags[]>([]);
 
   const router = useRouter();
 
@@ -181,6 +188,10 @@ const Upload = (props) => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
+    var tagsarr: string[] = []
+    tags.map(tag=>{
+      tagsarr.push(tag["text"].slice(1))
+    })
     setisSending(true);
     var file = imagedata as any;
     var uuid = uuidv4();
@@ -195,6 +206,7 @@ const Upload = (props) => {
       href: `https://xefsjwahbvrgjqysodbm.supabase.co/storage/v1/object/public/images/${uuid}.png`,
       age_limit: agelimit,
       title: title,
+      tags: tagsarr,
       user_id: ctx.UserInfo["id"],
     });
     router.push("/");
@@ -217,6 +229,8 @@ const Upload = (props) => {
   };
 
   const handleAddition = tag => {
+    console.log(tag)
+    if (tag["name"]!==undefined) if (!tag["name"].startsWith("#")) tag["name"] = "#" + tag["name"]
     setTags([...tags, tag]);
   };
 
@@ -230,7 +244,14 @@ const Upload = (props) => {
   };
 
   const handleTagClick = index => {
-    console.log('The tag at index ' + index + ' was clicked');
+    handleDelete(index)
+  };
+
+  const handleInputChange = async tag => {
+    if (tag !== ""){
+      const result = await fetch(`/api/tags/suggest/?word=${tag}`)
+      setSuggestions(await result.json())
+    }
   };
   
   return (
@@ -345,9 +366,27 @@ const Upload = (props) => {
                     handleAddition={handleAddition}
                     handleDrag={handleDrag}
                     handleTagClick={handleTagClick}
+                    handleInputChange={handleInputChange}
                     inputFieldPosition="bottom"
-                    maxLength="10"
+                    allowDragDrop={false}
                     placeholder=""
+                    autofocus={false}
+                    allowAdditionFromPaste={false}
+                    renderSuggestion = {({ name }) => 
+                    <div className="flex justify-between w-64 text-sm px-4">
+                      <div className="text-gray-700 flex items-center">{name}</div>
+                      <div className="text-gray-600 my-2">{(suggestions.find(tag => tag.name === name))?.count}件</div>
+                    </div>}
+                    minQueryLength="1"
+                    classNames = {{
+                        tag: "text-base text-sky-600 mr-2 !cursor-pointer hover:line-through",
+                        tagInputField: "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 mt-2",
+                        suggestions: "absolute border py-2 rounded-lg bg-white cursor-pointer",
+                        activeSuggestion: "bg-sky-100",
+                        remove: "hidden"
+                    }}
+                    suggestions={suggestions}
+                    labelField={'name'}
                     autocomplete
                 />               
               </div>
