@@ -71,20 +71,22 @@ const Images = () => {
 
   useEffect(() => {
     if (data !== undefined) {
-      image.likes.map((like) => {
-        if (like.user_id === ctx.UserInfo.id) setisliked(true);
-      });
-      console.log(ctx.UserInfo.id);
-      if (ctx.UserInfo.id === undefined) {
-        setlimittype("unauth");
-      } else {
-        if (!ctx.UserInfo.access_limit[image.age_limit]) {
-          setlimittype("unsafe");
+      if (image !== undefined) {
+        image.likes.map((like) => {
+          if (like.user_id === ctx.UserInfo.id) setisliked(true);
+        });
+        console.log(ctx.UserInfo.id);
+        if (ctx.UserInfo.id === undefined) {
+          setlimittype("unauth");
         } else {
-          setlimittype("ok");
+          if (!ctx.UserInfo.access_limit[image.age_limit]) {
+            setlimittype("unsafe");
+          } else {
+            setlimittype("ok");
+          }
         }
+        if (image.age_limit === "all") setlimittype("ok");
       }
-      if (image.age_limit === "all") setlimittype("ok");
     }
   }, [data]);
 
@@ -305,6 +307,13 @@ const Images = () => {
                     <div className="flex flex-col w-[40vw]">
                       <h1 className="text-2xl font-bold mt-3">{image.title}</h1>
                       <p className="mt-2 break-all">{image.caption}</p>
+                      <div className="flex flex-row mt-2 text-sky-600 font-semibold">
+                        {image.tags !== null && image.tags.map((tag, idx) => (
+                          <Link href={`/tags/${tag}`} key={idx} className="mr-2">
+                            <a>#{tag}</a>
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

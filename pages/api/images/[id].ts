@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
-const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
+const getImage = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
   const { data, error } = await supabaseClient
     .from("images")
@@ -11,4 +11,4 @@ const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json(data);
 };
 
-export default getImageList;
+export default getImage;

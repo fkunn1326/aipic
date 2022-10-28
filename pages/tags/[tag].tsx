@@ -1,10 +1,11 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
-import Header from "../components/header/header";
+import Header from "../../components/header/header";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { userInfoContext } from "../context/userInfoContext";
+import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -12,11 +13,14 @@ function cn(...classes: string[]) {
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function App() {
+export default function Tag() {
+  const router = useRouter()
   const ctx = useContext(userInfoContext);
+  const { tag }: any = router.query;
+
   const { data, error } = useSWR(
-    "../api/images/list?" +
-      new URLSearchParams(ctx.UserInfo.access_limit).toString(),
+    "../api/tags/" +
+    decodeURIComponent(tag),
     fetcher
   );
   if (!data)
@@ -36,7 +40,16 @@ export default function App() {
   return (
     <div>
       <Header></Header>
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-7xl px-12">
+        <div className="pt-6 text-2xl font-semibold">
+          #{tag}
+        </div>
+        <div className="flex flex-row gap-x-1 pt-6 items-center font-semibold">
+          <p className="text-base">{images.length}</p>
+          <p className="text-sm text-gray-600">作品</p>
+        </div>
+      </div>
+      <div className="mx-auto max-w-2xl px-4 sm:py-12 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
           {images.reverse().map((image) => (
             <BlurImage key={image.id} image={image} />
