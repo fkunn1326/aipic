@@ -92,7 +92,7 @@ function BlurImage({ image }) {
           </p>
         )}
       </div>
-      <p className="mt-2 text-base font-semibold text-gray-900">
+      <p className="mt-2 text-base font-semibold text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">
         {image.title}
       </p>
       <div className="mt-1 w-full flex items-center">

@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { WithContext as ReactTags } from 'react-tag-input';
 import "@pathofdev/react-tag-input/build/index.css";
+import axios from "axios";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
@@ -53,6 +54,7 @@ const Upload = (props) => {
   const [imagedata, setimagedata] = useState(null);
   const [tags, setTags] = useState<object[]>([]);
   const [suggestions, setSuggestions] = useState<tags[]>([]);
+  const [file, setfile] = useState<any>()
 
   const router = useRouter();
 
@@ -75,6 +77,7 @@ const Upload = (props) => {
       var fileReader = new FileReader();
       fileReader.onload = async function webViewerChangeFileReaderOnload(evt) {
         var buffer = evt!.target!.result as ArrayBuffer;
+        setfile(new Blob([buffer], {type: file.type}))
         var prompt = "";
         var negativeprompt = "";
         var metadata = {};
@@ -152,6 +155,7 @@ const Upload = (props) => {
           }
         } catch (e) {
           var blob = new Blob([file], { type: file.type });
+          setfile(blob)
           var bitmap = await createImageBitmap(blob);
           var canvas = document.createElement("canvas");
           canvas.width = bitmap.width;
@@ -190,20 +194,30 @@ const Upload = (props) => {
     e.preventDefault();
     var tagsarr: string[] = []
     tags.map(tag=>{
-      tagsarr.push(tag["text"].slice(1))
+      tagsarr.push(tag["name"].slice(1))
     })
     setisSending(true);
-    var file = imagedata as any;
     var uuid = uuidv4();
-    await supabaseClient.storage.from("images").upload(`${uuid}.png`, file, {
-      contentType: "image/png",
-    });
+    var formdata = new FormData()
+    formdata.append("name", uuid)
+    formdata.append("type", file.type)
+    formdata.append("file", file)
+    let { data } = await axios.post(
+      "/api/r2/upload",
+      formdata, 
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+
     await supabaseClient.from("images").insert({
       id: uuid,
       prompt: fullprompt,
       caption: caption,
       model: selectedModel.name,
-      href: `https://xefsjwahbvrgjqysodbm.supabase.co/storage/v1/object/public/images/${uuid}.png`,
+      href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/${uuid}.png`,
       age_limit: agelimit,
       title: title,
       tags: tagsarr,
@@ -229,7 +243,6 @@ const Upload = (props) => {
   };
 
   const handleAddition = tag => {
-    console.log(tag)
     if (tag["name"]!==undefined) if (!tag["name"].startsWith("#")) tag["name"] = "#" + tag["name"]
     setTags([...tags, tag]);
   };
@@ -377,7 +390,7 @@ const Upload = (props) => {
                       <div className="text-gray-700 flex items-center">{name}</div>
                       <div className="text-gray-600 my-2">{(suggestions.find(tag => tag.name === name))?.count}件</div>
                     </div>}
-                    minQueryLength="1"
+                    minQueryLength={1}
                     classNames = {{
                         tag: "text-base text-sky-600 mr-2 !cursor-pointer hover:line-through",
                         tagInputField: "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 mt-2",
