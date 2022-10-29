@@ -123,7 +123,7 @@ const Signin = () => {
               <p className="text-sm text-gray-500 text-center">または</p>
               <button
                 type="button"
-                className="w-full text-black bg-slate-100 hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium text-gray-900 rounded-lg text-sm px-5 py-2.5 text-center flex justify-center"
+                className="w-full bg-slate-100 hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium text-gray-900 rounded-lg text-sm px-5 py-2.5 text-center flex justify-center"
                 onClick={(e) => clickGoogle(e)}
               >
                 <svg
