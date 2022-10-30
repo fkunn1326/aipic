@@ -22,6 +22,41 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { userInfoContext } from "../../context/userInfoContext";
 import Link from "next/link";
+import Head from 'next/head'
+
+export const getServerSideProps = async (context) => {
+  const { id } = context.query
+  const res = await fetch(`https://aipic.vercel.app/api/images/${id}`)
+  const session = await res.json()
+
+  return { props: {
+    session: session
+  }}
+}
+
+const Meta = ({session}) => {
+  return (
+    <Head>
+      <meta charSet="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+      <title>{session[0].title}</title>
+      <meta name="description" content={session[0].caption} />
+      <meta property="og:url" content={`https://aipic.vercel.app/images/${session[0].id}`}/>
+      <meta property="og:title" content={session[0].title}/>
+      <meta property="og:type" content="website" />
+      <meta property="og:description" content={session[0].caption} />
+      <meta property="og:image" content={session[0].href} />
+      <meta property="og:site_name" content="AiPiC" />
+      <meta property="og:locale" content="ja_JP" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@fkunn1326" />
+      <meta name="twitter:description" content={session[0].caption}/>
+      <meta name="twitter:image:src" content={session[0].href} />
+      <meta name="robots" content="index,follow" />
+    </Head>
+  )
+}
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -37,7 +72,7 @@ const copyToClipboard = (text) => {
   return result;
 };
 
-const Images = () => {
+const Images = ({session}) => {
   const ctx = useContext(userInfoContext);
 
   const [isImageOpen, setisImageOpen] = useState(false);
@@ -96,6 +131,7 @@ const Images = () => {
 
   return (
     <div>
+      <Meta session={session} />
       <Header />
       <div className="px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
         <div className="glow mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 md:mx-6 mb:my-auto mb:py-7 sm:py-6">
@@ -204,7 +240,29 @@ const Images = () => {
                               />
                             </button>
                           </div>
-                          <p className="font-semibold">{image.prompt}</p>
+                          <p className="font-semibold">{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
+                            <Link href={`/tags/${str}`} key={idx} className="mr-2">
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-200 rounded-sm">{str} </a>
+                            </Link>
+                        ))}</p>
+                        </div>
+                        <div className="bg-slate-50 p-8 rounded-3xl mt-4">
+                          <div className="flex justify-between">
+                            <p className="text-gray-600 text-sm">ネガティブプロンプト</p>
+                            <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
+                              <ClipboardDocumentIcon
+                                className="w-5 h-5 text-gray-600 m-2"
+                                onClick={() => {
+                                  copyToClipboard(image.nprompt.split(",").map(i => i.trim()));
+                                }}
+                              />
+                            </button>
+                          </div>
+                          <p className="font-semibold">{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
+                            <Link href={`/tags/${str}`} key={idx} className="mr-2">
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-200 rounded-sm">{str}</a>
+                            </Link>
+                        ))}</p>
                         </div>
                       </Modal>
                       <button

@@ -45,7 +45,8 @@ const Upload = (props) => {
   const [isSelected, setisSelected] = useState(false);
   const [isSending, setisSending] = useState(false);
   const [imageurl, setimageurl] = useState("");
-  const [fullprompt, setfullprompt] = useState("");
+  const [prompt, setprompt] = useState("");
+  const [nprompt, setnprompt] = useState("");
   const [href, sethref] = useState("");
   const [title, settitle] = useState("");
   const [caption, setcaption] = useState("");
@@ -57,18 +58,6 @@ const Upload = (props) => {
   const [file, setfile] = useState<any>()
 
   const router = useRouter();
-
-  const [Prompt, setprompt] = useState({
-    Prompt: null,
-    NegativePrompt: null,
-    Steps: null,
-    Sampler: null,
-    Scale: null,
-    Seed: null,
-    Size: null,
-    Strength: null,
-    Noise: null,
-  });
 
   const handleupload = (e) => {
     var file = e.target.files[0];
@@ -88,7 +77,7 @@ const Upload = (props) => {
               var chunk = new TextDecoder().decode(chunks[i]["data"]);
               if (chunk.startsWith("parameters")) {
                 //Stable Diffusion Web UIのメタデータのみ
-                prompt = chunk.substring(11);
+                prompt = chunk;
               } else if (chunk.startsWith("Description")) {
                 //Novel AIのメタデータ（positive）
                 prompt = chunk.substring(12);
@@ -114,8 +103,11 @@ const Upload = (props) => {
           var input_prompt = document.getElementById(
             "prompt"
           ) as HTMLInputElement;
+          var input_nprompt = document.getElementById(
+            "nprompt"
+          ) as HTMLInputElement;
           if (prompt === "" && negativeprompt === "") {
-            setfullprompt(prompt);
+            setprompt(prompt);
             input_prompt.value = prompt;
             let event = new Event("change", { bubbles: true });
             input_prompt.dispatchEvent(event);
@@ -123,34 +115,41 @@ const Upload = (props) => {
           } else {
             if (negativeprompt === "") {
               //sd
-              setfullprompt(prompt);
+              setprompt(prompt);
+              const index_of_negative = prompt.indexOf("Negative prompt:");
+              const index_of_steps = prompt.indexOf("Steps:");
+
+              negativeprompt = prompt.substring(index_of_negative + "Negative prompt ".length, index_of_steps - 1);
+              prompt = prompt.substring("parameters ".length, index_of_negative - 1);
+
               input_prompt.value = prompt;
+              input_nprompt.value = negativeprompt;
+
               let event = new Event("change", { bubbles: true });
+              let eventn = new Event("change", { bubbles: true });
+              
               input_prompt.dispatchEvent(event);
+              input_nprompt.dispatchEvent(eventn);
+
               handlePromptChange(event);
+              handlenPromptChange(eventn);
             } else {
               //NAI
-              prompt =
-                prompt +
-                "\nNegative prompt: " +
-                negativeprompt +
-                "\nSteps: " +
-                metadata["Steps"] +
-                ", Sampler: " +
-                metadata["Sampler"] +
-                ", Seed: " +
-                metadata["Seed"] +
-                ", Strength: " +
-                metadata["Strength"] +
-                ", Noise: " +
-                metadata["Noise"] +
-                ", Scale: " +
-                metadata["Scale"];
-              setfullprompt(prompt);
+              setprompt(prompt);
+              setnprompt(negativeprompt)
               input_prompt.value = prompt;
+              input_nprompt.value = negativeprompt;
+
               let event = new Event("change", { bubbles: true });
+              let eventn = new Event("change", { bubbles: true });
+
               input_prompt.dispatchEvent(event);
+              input_nprompt.dispatchEvent(eventn);
+
               handlePromptChange(event);
+              handlenPromptChange(eventn);
+              console.log(prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}));
+              console.log(negativeprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}));
             }
           }
         } catch (e) {
@@ -202,7 +201,7 @@ const Upload = (props) => {
     formdata.append("name", uuid)
     formdata.append("type", file.type)
     formdata.append("file", file)
-    let { data } = await axios.post(
+    await axios.post(
       "/api/r2/upload",
       formdata, 
       {
@@ -212,9 +211,12 @@ const Upload = (props) => {
       }
     );
 
-    await supabaseClient.from("images").insert({
+    const { data, error } = await supabaseClient.from("images").insert({
       id: uuid,
-      prompt: fullprompt,
+      prompt: prompt,
+      nprompt: nprompt,
+      promptarr: prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
+      npromptarr: nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       caption: caption,
       model: selectedModel.name,
       href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/${uuid}.png`,
@@ -223,13 +225,20 @@ const Upload = (props) => {
       tags: tagsarr,
       user_id: ctx.UserInfo["id"],
     });
+    console.log(data, error)
     router.push("/");
   };
 
   const handlePromptChange = (e) => {
     e.target.style.height = "auto";
     e.target.style.height = `${e.target.scrollHeight}px`;
-    setfullprompt(e.target.value);
+    setprompt(e.target.value);
+  };
+
+  const handlenPromptChange = (e) => {
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+    setnprompt(e.target.value);
   };
 
   const handleCaptionChange = (e) => {
@@ -405,7 +414,7 @@ const Upload = (props) => {
               </div>
               <div>
                 <div className="block mb-2 text-sm font-medium text-gray-900">
-                  プロンプト
+                  プロンプト（単語ごとにコンマで区切るようにしてください）
                 </div>
                 <textarea
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
@@ -414,7 +423,21 @@ const Upload = (props) => {
                     handlePromptChange(e);
                   }}
                   required
-                  value={fullprompt}
+                  value={prompt}
+                  spellCheck="false"
+                ></textarea>
+              </div>
+              <div>
+                <div className="block mb-2 text-sm font-medium text-gray-900">
+                  ネガティブプロンプト（単語ごとにコンマで区切るようにしてください）
+                </div>
+                <textarea
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
+                  id="nprompt"
+                  onChange={(e) => {
+                    handlenPromptChange(e);
+                  }}
+                  value={nprompt}
                   spellCheck="false"
                 ></textarea>
               </div>
