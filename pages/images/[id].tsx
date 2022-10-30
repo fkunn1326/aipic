@@ -27,38 +27,36 @@ import Head from 'next/head'
 export const getServerSideProps = async (context) => {
   const { id } = context.query
   const res = await fetch(`https://aipic.vercel.app/api/images/${id}`)
-  const session = await res.json()
+  const data = await res.json()
 
   return { props: {
-    session: session,
+    data: data,
     host: context.req.headers.host || null
   }}
 }
 
-const Meta = ({session}) => {
+const Meta = ({data}) => {
   return (
     <Head>
       <meta charSet="utf-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-      <title>{session[0].title}</title>
-      <meta name="description" content={session[0].caption} />
+      <title>{data[0].title}</title>
+      <meta name="description" content={data[0].caption} />
       <meta property="og:type" content="website" />
-      <meta property="og:title" content={session[0].title} />
-      <meta property="og:description" content={session[0].caption} />
-      <meta property="og:url" content={`https://aipic.vercel.app/images/${session[0].id}`}/>
+      <meta property="og:title" content={data[0].title} />
+      <meta property="og:description" content={data[0].caption} />
+      <meta property="og:url" content={`https://aipic.vercel.app/images/${data[0].id}`}/>
       <meta property="og:site_name" content="Aipic" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@fkunn1326" />
-      <meta name="twitter:title" content={session[0].title} />
-      <meta name="twitter:description" content={session[0].caption} />
-      <meta name="twitter:image" content={session[0].href} />
+      <meta name="twitter:title" content={data[0].title} />
+      <meta name="twitter:description" content={data[0].caption} />
+      <meta name="twitter:image" content={data[0].href} />
       <meta name="robots" content="index,follow" />
     </Head>
   )
 }
-
-const fetcher = (url) => fetch(url).then((r) => r.json());
 
 const copyToClipboard = (text) => {
   const pre = document.createElement("pre");
@@ -72,7 +70,7 @@ const copyToClipboard = (text) => {
   return result;
 };
 
-const Images = ({session, host}) => {
+const Images = ({data, host}) => {
   const ctx = useContext(userInfoContext);
 
   const [isImageOpen, setisImageOpen] = useState(false);
@@ -84,6 +82,8 @@ const Images = ({session, host}) => {
 
   const router = useRouter();
   const pid = router.query.id;
+
+  const uri = `https://${host}/images/${pid}`
 
   const handlelike = async (e) => {
     if (ctx.UserInfo.id !== undefined) {
@@ -104,7 +104,7 @@ const Images = ({session, host}) => {
   };
 
   useEffect(() => {
-    if (session !== undefined) {
+    if (data !== undefined) {
       if (image !== undefined) {
         image.likes.map((like) => {
           if (like.user_id === ctx.UserInfo.id) setisliked(true);
@@ -122,15 +122,15 @@ const Images = ({session, host}) => {
         if (image.age_limit === "all") setlimittype("ok");
       }
     }
-  }, [session]);
+  }, [data]);
 
-  if (!session) return <div>Loading...</div>;
-  var image = session[0];
+  if (!data) return <div>Loading...</div>;
+  var image = data[0];
   if (!image) return <div>Loading...</div>;
 
   return (
     <div>
-      <Meta session={session} />
+      <Meta data={data} />
       <Header />
       <div className="px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
         <div className="glow mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 md:mx-6 mb:my-auto mb:py-7 sm:py-6">
@@ -293,7 +293,7 @@ const Images = ({session, host}) => {
                           <div className="flex flex-col items-center text-sm text-gray-700">
                             <a
                               className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
-                              href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${host}`}
+                              href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${uri}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -307,7 +307,7 @@ const Images = ({session, host}) => {
                           <div className="flex flex-col items-center text-sm text-gray-700">
                             <a
                               className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
-                              href={`http://www.facebook.com/share.php?u=${host}`}
+                              href={`http://www.facebook.com/share.php?u=${uri}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -321,7 +321,7 @@ const Images = ({session, host}) => {
                           <div className="flex flex-col items-center text-sm text-gray-700">
                             <a
                               className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
-                              href={`https://social-plugins.line.me/lineit/share?url=${host}`}
+                              href={`https://social-plugins.line.me/lineit/share?url=${uri}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -339,7 +339,7 @@ const Images = ({session, host}) => {
                                 try {
                                   await navigator.share({
                                     title: image.title,
-                                    url: host,
+                                    url: uri,
                                   });
                                 } catch (e) {
                                   console.error(e);
@@ -352,7 +352,7 @@ const Images = ({session, host}) => {
                           </div>
                         </div>
                         <div className="m-6 h-14 rounded-2xl bg-slate-50 flex items-center whitespace-nowrap overflow-x-scroll">
-                          <p className="mx-4">{host}</p>
+                          <p className="mx-4">{uri}</p>
                         </div>
                       </ShareModal>
                       <button className="w-8 h-8">
