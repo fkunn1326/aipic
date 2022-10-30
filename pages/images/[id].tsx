@@ -42,17 +42,16 @@ const Meta = ({session}) => {
       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       <title>{session[0].title}</title>
       <meta name="description" content={session[0].caption} />
-      <meta property="og:url" content={`https://aipic.vercel.app/images/${session[0].id}`}/>
-      <meta property="og:title" content={session[0].title}/>
       <meta property="og:type" content="website" />
+      <meta property="og:title" content={session[0].title} />
       <meta property="og:description" content={session[0].caption} />
-      <meta property="og:image" content={session[0].href} />
+      <meta property="og:url" content={`https://aipic.vercel.app/images/${session[0].id}`}/>
       <meta property="og:site_name" content="AiPiC" />
-      <meta property="og:locale" content="ja_JP" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@fkunn1326" />
-      <meta name="twitter:description" content={session[0].caption}/>
-      <meta name="twitter:image:src" content={session[0].href} />
+      <meta name="twitter:title" content={session[0].title} />
+      <meta name="twitter:description" content={session[0].caption} />
+      <meta name="twitter:image" content={session[0].href} />
       <meta name="robots" content="index,follow" />
     </Head>
   )
