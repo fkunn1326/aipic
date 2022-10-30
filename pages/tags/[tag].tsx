@@ -7,22 +7,26 @@ import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+export const getServerSideProps = async (context) => {
+  const { tag } = context.query
+  const res = await fetch(`https://aipic.vercel.app/api/tags/${decodeURIComponent(tag)}`)
+  const data = await res.json()
+
+  return { props: {
+    data: data,
+  }}
+}
+
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function Tag() {
+export default function Tag({data}) {
   const router = useRouter()
-  const ctx = useContext(userInfoContext);
   const { tag }: any = router.query;
 
-  const { data, error } = useSWR(
-    "../api/tags/" +
-    decodeURIComponent(tag),
-    fetcher
-  );
   if (!data)
     return (
       <div>
