@@ -240,8 +240,8 @@ const Images = ({data, host}) => {
                             </button>
                           </div>
                           <p className="font-semibold">{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <Link href={`/tags/${str}`} key={idx} className="mr-2">
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-200 rounded-sm">{str} </a>
+                            <Link href={`/prompts/${str}`} key={idx} className="mr-2">
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str} </a>
                             </Link>
                         ))}</p>
                         </div>
@@ -258,8 +258,8 @@ const Images = ({data, host}) => {
                             </button>
                           </div>
                           <p className="font-semibold">{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <Link href={`/tags/${str}`} key={idx} className="mr-2">
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-200 rounded-sm">{str}</a>
+                            <Link href={`/negative/${str}`} key={idx} className="mr-2">
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str}</a>
                             </Link>
                         ))}</p>
                         </div>
