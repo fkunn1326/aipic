@@ -6,7 +6,6 @@ import {
 } from '@aws-sdk/client-s3'
 import type { Readable } from 'node:stream';
 import md5 from 'md5'
-import getRawBody from "raw-body"
 import multer from "multer";
 
 const r2 = new S3Client({
