@@ -377,7 +377,7 @@ const Images = ({data, host}) => {
               </div>
               <div className="t-[96px] w-full basis-1/4">
                 <div className="flex shrink basis-full sticky min-w-[370px] max-h-[450px]">
-                  <div className="flex flex-col flex-nowrap">
+                  <div className="flex flex-col flex-nowrap w-full">
                     <div className="mb-8 px-0 py-7">
                       <div className="mb-4 flex-col flex-nowrap">
                         <div className="flex mb-8 flex-col flex-nowrap">
@@ -392,6 +392,16 @@ const Images = ({data, host}) => {
                               </p>
                             </div>
                           </span>
+                          {image.user_id === ctx.UserInfo.id &&
+                          <Link href={`/edit/${image.id}`}>
+                            <a
+                              type="submit"
+                              className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-1.5 text-center`}
+                            >
+                              編集する
+                            </a>
+                          </Link>
+                          }
                         </div>
                       </div>
                     </div>

@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useContext } from "react";
-import Header from "../components/header/header";
+import Header from "../../components/header/header";
 import { Listbox, Transition } from "@headlessui/react";
 import {
   CheckIcon,
@@ -10,12 +10,15 @@ import {
 import { getChunks } from "png-chunks";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
-import { userInfoContext } from "../context/userInfoContext";
+import { userInfoContext } from "../../context/userInfoContext";
 import { useRouter } from "next/router";
 import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { WithContext as ReactTags } from 'react-tag-input';
 import "@pathofdev/react-tag-input/build/index.css";
 import axios from "axios";
+import useSWR from "swr";
+import { parseCookies } from "nookies"
+import { NextPageContext } from "next";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
@@ -24,6 +27,8 @@ type tags = {
   id: string,
   count: number
 };
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
 const models = [
   { id: 1, name: "Stable Diffusion", unavailable: false },
@@ -42,7 +47,7 @@ const Upload = (props) => {
   const ctx = useContext(userInfoContext);
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [isdropping, setisdropping] = useState(false);
-  const [isSelected, setisSelected] = useState(false);
+  const [isSelected, setisSelected] = useState(true);
   const [isSending, setisSending] = useState(false);
   const [imageurl, setimageurl] = useState("");
   const [prompt, setprompt] = useState("");
@@ -58,6 +63,38 @@ const Upload = (props) => {
   const [file, setfile] = useState<any>()
 
   const router = useRouter();
+  const { id } = router.query;
+
+  const { data, error } = useSWR(`../../api/images/${id}`, fetcher);
+
+  useEffect(() => {
+    if(data){
+      try{
+        if(ctx.UserInfo.id !== data[0].user_id){
+          router.push("/")
+        }
+        setimageurl(data[0].href)
+        settitle(data[0].title)
+        setcaption(data[0].caption)
+        var localtag: tags[] = []
+        data[0].tags.map(i => {
+          localtag.push({
+            "id": `#${i}`,
+            "name": `#${i}`,
+            "count": 0
+          })
+        })
+        setTags(localtag)
+        setprompt(data[0].prompt)
+        setnprompt(data[0].nprompt)
+        setagelimit(data[0].age_limit)
+        var modelidx = models.findIndex(model => { return model["name"] === data[0].model })
+        setSelectedModel(models[modelidx])
+      }catch(e){
+        router.push("/")
+      }
+    }
+  }, [data, ctx])
 
   const handleupload = (e) => {
     var file = e.target.files[0];
@@ -196,38 +233,61 @@ const Upload = (props) => {
       tagsarr.push(tag["name"].slice(1))
     })
     setisSending(true);
-    var uuid = uuidv4();
-    var formdata = new FormData()
-    formdata.append("name", uuid)
-    formdata.append("type", file.type)
-    formdata.append("file", file)
-    await axios.post(
-      "/api/r2/upload",
-      formdata, 
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+    if (file !== undefined){
+      var formdata = new FormData()
+      formdata.append("name", data[0].id)
+      formdata.append("type", file.type)
+      formdata.append("file", file)
+      await axios.post(
+        "/api/r2/upload",
+        formdata, 
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      }
-    );
+      );
+    }
 
-    const { data, error } = await supabaseClient.from("images").insert({
-      id: uuid,
+    await supabaseClient.from("images").update({
       prompt: prompt,
       nprompt: nprompt,
       promptarr: prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       npromptarr: nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       caption: caption,
       model: selectedModel.name,
-      href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/${uuid}.png`,
       age_limit: agelimit,
       title: title,
       tags: tagsarr,
-      user_id: ctx.UserInfo["id"],
-    });
-    console.log(data, error)
+    }).match({
+      id: data[0].id,
+      href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/${data[0].id}.png`,
+      user_id: ctx.UserInfo.id
+    })
+
     router.push("/");
   };
+
+  const handledelete = async (e) => {
+    const check = confirm(`一度消した画像は復元することはできません。\n本当に削除しますか？`)
+    if (check) {
+      setisSending(true)
+      await axios.post(
+        "/api/r2/delete",
+        JSON.stringify({ 
+          "filename": `${data[0].id}.png`,
+          "token": `${supabaseClient?.auth?.session()?.access_token}`,
+          "image_id": `${data[0].id}`
+        }), 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+      router.push("/")
+    }
+  }
 
   const handlePromptChange = (e) => {
     e.target.style.height = "auto";
@@ -325,6 +385,9 @@ const Upload = (props) => {
                         1枚50MB以内
                         <br />
                         アップロードできます。
+                        <br />
+                        <br />
+                        画像を更新した場合は、反映まで少し時間がかかることがあります。
                       </p>
                     </div>
                     <input
@@ -457,6 +520,8 @@ const Upload = (props) => {
                           onClick={() => {
                             setagelimit("all");
                           }}
+                          onChange={() => {;}}
+                          checked={agelimit === "all"}
                           required
                         ></input>
                         全年齢
@@ -474,6 +539,8 @@ const Upload = (props) => {
                           onClick={() => {
                             setagelimit("r18");
                           }}
+                          onChange={() => {;}}
+                          checked={agelimit === "r18"}
                           required
                         ></input>
                         R18
@@ -491,6 +558,8 @@ const Upload = (props) => {
                           onClick={() => {
                             setagelimit("r18g");
                           }}
+                          onChange={() => {;}}
+                          checked={agelimit === "r18g"}
                           required
                         ></input>
                         R18-G
@@ -561,20 +630,26 @@ const Upload = (props) => {
               </div>
               <button
                 type="submit"
-                className={`flex flex-row justify-center w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
+                className={`w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
                   !isSending
                     ? "bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300"
                     : "bg-sky-300"
                 }`}
                 disabled={isSending}
               >
-                {isSending &&
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                }
-                投稿する
+                保存する
+              </button>
+              <button
+                type="button"
+                className={`flex flex-row justify-center w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
+                  !isSending
+                    ? "bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300"
+                    : "bg-red-300"
+                }`}
+                onClick={(e) => {handledelete(e)}}
+                disabled={isSending}
+              >
+                削除する
               </button>
             </form>
           </div>
