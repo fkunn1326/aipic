@@ -152,7 +152,7 @@ const Images = ({data, host}) => {
                               src={image.href}
                               layout="fill"
                               objectFit="contain"
-                              className={`rounded-lg w-full h-full min-h-[70vh] z-10 ${
+                              className={`rounded-t-3xl w-full h-full min-h-[70vh] z-10 ${
                                 limittype === "ok" && "cursor-zoom-in"
                               } ${
                                 limittype === "unsafe" &&
@@ -382,15 +382,17 @@ const Images = ({data, host}) => {
                       <div className="mb-4 flex-col flex-nowrap">
                         <div className="flex mb-8 flex-col flex-nowrap">
                           <span className="mb-2">
-                            <div className="flex flex-row flex-nowrap items-center">
-                              <img
-                                src={image.author.avatar_url}
-                                className="h-9 w-9 rounded-full"
-                              ></img>
-                              <p className="ml-2 font-semibold">
-                                {image.author.name}
-                              </p>
-                            </div>
+                            <Link href={`/users/${image.author.uid}`}>
+                              <a className="flex flex-row flex-nowrap items-center">
+                                <img
+                                  src={image.author.avatar_url}
+                                  className="h-9 w-9 rounded-full"
+                                ></img>
+                                <p className="ml-2 font-semibold">
+                                  {image.author.name}
+                                </p>
+                              </a>
+                            </Link>
                           </span>
                           {image.user_id === ctx.UserInfo.id &&
                           <Link href={`/edit/${image.id}`}>

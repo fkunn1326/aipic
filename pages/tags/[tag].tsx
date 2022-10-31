@@ -7,25 +7,21 @@ import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export const getServerSideProps = async (context) => {
-  const { tag } = context.query
-  const res = await fetch(`https://aipic.vercel.app/api/tags/${decodeURIComponent(tag)}`)
-  const data = await res.json()
-
-  return { props: {
-    data: data,
-  }}
-}
-
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function Tag({data}) {
+export default function Tag() {
+  const ctx = useContext(userInfoContext);
   const router = useRouter()
   const { tag }: any = router.query;
+  const { data, error } = useSWR(
+    `../api/tags/${tag}?` +
+      new URLSearchParams(ctx.UserInfo.access_limit).toString(),
+    fetcher
+  );
 
   if (!data)
     return (
@@ -112,15 +108,17 @@ function BlurImage({ image }) {
       <p className="mt-2 text-base font-semibold text-gray-900">
         {image.title}
       </p>
-      <div className="mt-1 w-full flex items-center">
-        <Image
-          src={image.author.avatar_url}
-          width={20}
-          height={20}
-          className="rounded-full"
-        ></Image>
-        <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
-      </div>
+      <Link href={`/users/${image.author.uid}`}>
+        <a className="mt-1 w-full flex items-center">
+          <Image
+            src={image.author.avatar_url}
+            width={20}
+            height={20}
+            className="rounded-full"
+          ></Image>
+          <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
+        </a>
+      </Link>
     </div>
   );
 }
