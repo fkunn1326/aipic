@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
 import Link from "next/link";
@@ -95,15 +94,17 @@ function BlurImage({ image }) {
       <p className="mt-2 text-base font-semibold text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">
         {image.title}
       </p>
-      <div className="mt-1 w-full flex items-center">
-        <Image
-          src={image.author.avatar_url}
-          width={20}
-          height={20}
-          className="rounded-full"
-        ></Image>
-        <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
-      </div>
+      <Link href={`/users/${image.author.uid}`}>
+        <a className="mt-1 w-full flex items-center">
+          <Image
+            src={image.author.avatar_url}
+            width={20}
+            height={20}
+            className="rounded-full"
+          ></Image>
+          <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
+        </a>
+      </Link>
     </div>
   );
 }

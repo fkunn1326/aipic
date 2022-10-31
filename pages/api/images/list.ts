@@ -10,7 +10,7 @@ const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
   const filter = `("all","${r18 && "r18"}","${r18g && "r18g"}")`;
   const { data, error } = await supabaseClient
     .from("images")
-    .select(`*, author: user_id(name, avatar_url), likes: likes(id, user_id)`)
+    .select(`*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`)
     .order("created_at")
     .filter("age_limit", "in", filter);
 
