@@ -156,12 +156,23 @@ const Settings = () => {
                 <div className="block text-base font-medium text-gray-900">
                   現在のメールアドレス
                 </div>
-                <button className="ml-2 block text-sm font-medium text-sky-600">
-                  変更する
-                </button>
-                <button className="ml-2 block text-sm font-medium text-sky-600">
-                  パスワードを変更する
-                </button>
+                {user?.app_metadata.provider !== "google" ?
+                <div>
+                  <button className="ml-2 block text-sm font-medium text-sky-600">
+                    変更する
+                  </button>
+                  <button className="ml-2 block text-sm font-medium text-sky-600">
+                    パスワードを変更する
+                  </button>
+                </div>
+                :
+                <div>
+                  <p className="ml-2 block text-sm font-medium text-slate-500">
+                    ※このアカウントはGoogleアカウントに連携されているので、メールアドレスは変更できません。
+                  </p>
+                </div>
+                }
+
               </div>
               <input
                 className="outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-1/2 p-2.5"
@@ -170,6 +181,17 @@ const Settings = () => {
                 readOnly
                 spellCheck="false"
               ></input>
+            </div>
+          </div>
+          <div>
+            <div className="mt-6">
+              <div className="block text-sm font-medium text-gray-900 mb-2">
+                ニックネームやアバターは、、
+                <Link href={`/users/${ctx.UserInfo.uid}`}>
+                  <a className="text-sky-600">プロフィールページ</a>
+                </Link>
+                で編集してください。
+              </div>
             </div>
           </div>
           <div className="mt-6">

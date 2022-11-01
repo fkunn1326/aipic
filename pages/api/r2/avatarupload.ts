@@ -35,7 +35,7 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks);
 }
 
-const Upload = async (req: any, res: NextApiResponse) => {
+const AvatarUpload = async (req: any, res: NextApiResponse) => {
     if (req.method !== "POST") {
         return res.status(405).json({ message: "Method not allowed" });
     }
@@ -52,12 +52,12 @@ const Upload = async (req: any, res: NextApiResponse) => {
 
       const data = await r2.send(new PutObjectCommand({
         Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME as string,
-        Key: `images/${name}.png`,
+        Key: `avatars/${name}.png`,
         Body: file.buffer,
         ContentType: type
       }));
 
-      return res.status(201).json({url: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/images/${name}.png` });
+      return res.status(201).json({url: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/avatars/${name}.png` });
 
     } catch (err) {
       if (err.hasOwnProperty('$metadata')) {
@@ -68,4 +68,4 @@ const Upload = async (req: any, res: NextApiResponse) => {
     }
 };
 
-export default Upload;
+export default AvatarUpload;
