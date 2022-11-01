@@ -12,11 +12,15 @@ function cn(...classes: string[]) {
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
-  const ctx = useContext(userInfoContext);
+  var ctx = useContext(userInfoContext);
+  var access_limit = ""
+  if (ctx.UserInfo !== null) {
+    access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
+  }
+
   const { data, error } = useSWR(
-    "../api/images/list?" +
-      new URLSearchParams(ctx.UserInfo.access_limit).toString(),
-    fetcher
+    "../api/images/list" + access_limit,
+     fetcher
   );
   if (!data)
     return (

@@ -4,6 +4,8 @@ import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import Header from "../components/header/header";
 import { userInfoContext } from "../context/userInfoContext";
 import { useUser } from "@supabase/auth-helpers-react";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -27,6 +29,8 @@ const Settings = () => {
   });
   const [ischanged, setischanged] = useState(false);
   const [idstate, setidstate] = useState(0);
+
+  const router = useRouter();
 
   const handleedit = (key, value) => {
     setstates({ ...states, [key]: states[value] });
@@ -89,6 +93,25 @@ const Settings = () => {
       }
     }
   };
+
+  const handledelete = async (e) => {
+    const check = confirm(`本当にアカウントを削除しますか？\nアカウントを削除すると関連付けられているデータがすべて削除されます。`)
+    if (check){
+      supabaseClient.auth.signOut()
+      await axios.post(
+        "/api/account/delete",
+        JSON.stringify({ 
+          "token": `${supabaseClient?.auth?.session()?.access_token}`,
+        }), 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+    }
+    router.push("/")
+  }
 
   const isdataloaded = useRef(false);
 
@@ -305,6 +328,7 @@ const Settings = () => {
               </p>
               <button
                 type="button"
+                onClick={(e)=> {handledelete(e)}}
                 className="text-red-600 font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center border border-red-600 hover:text-white hover:bg-red-500"
               >
                 アカウントを削除する

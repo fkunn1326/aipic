@@ -148,8 +148,6 @@ const Upload = (props) => {
 
               handlePromptChange(event);
               handlenPromptChange(eventn);
-              console.log(prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}));
-              console.log(negativeprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}));
             }
           }
         } catch (e) {
@@ -225,7 +223,6 @@ const Upload = (props) => {
       tags: tagsarr,
       user_id: ctx.UserInfo["id"],
     });
-    console.log(data, error)
     router.push("/");
   };
 

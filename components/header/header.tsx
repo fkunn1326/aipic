@@ -20,7 +20,7 @@ const Header = () => {
               <p className="cursor-pointer text-2xl">AI Arts</p>
             </Link>
           </div>
-          {ctx.UserInfo === false ? (
+          {ctx.UserInfo === false || ctx.UserInfo === null ? (
             <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
               <Link href="/signin">
                 <a className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
