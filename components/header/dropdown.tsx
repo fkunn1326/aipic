@@ -63,15 +63,23 @@ export default function Dropdawn(props) {
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <a href=""
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
                   )}
                 >
-                  利用規約
-                </a>
+                <Link href="/kiyaku">
+                  <a
+                    href=""
+                    className={classNames(
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "block px-4 py-2 text-sm"
+                    )}
+                  >
+                    利用規約
+                  </a>
+                </Link>
+              </a>
               )}
             </Menu.Item>
             <form method="" action="">

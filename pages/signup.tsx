@@ -177,12 +177,14 @@ const Signup = () => {
                           required
                         ></input>
                         <div className="ml-3 text-sm cursor-pointer">
-                          <a
-                            href="#"
-                            className="text-sm font-medium text-sky-600 hover:underline"
-                          >
-                            利用規約
-                          </a>
+                          <Link href="/kiyaku">
+                            <a
+                              href=""
+                              className="text-sm font-medium text-sky-600 hover:underline"
+                            >
+                              利用規約
+                            </a>
+                          </Link>
                           に同意します。
                         </div>
                       </label>

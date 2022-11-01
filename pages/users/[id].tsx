@@ -167,7 +167,7 @@ export default function App() {
         </div>
       </div>
     );
-
+    
   var images = data[0].images.slice(0, data[0].images.length);
   return (
     <div>
