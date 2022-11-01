@@ -219,7 +219,7 @@ const Upload = (props) => {
       npromptarr: nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       caption: caption,
       model: selectedModel.name,
-      href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/${uuid}.png`,
+      href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/images/${uuid}.png`,
       age_limit: agelimit,
       title: title,
       tags: tagsarr,

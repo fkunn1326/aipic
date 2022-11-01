@@ -9,12 +9,15 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const r18g =
     query.r18g === undefined ? false : JSON.parse(query.r18g.toLowerCase());
   const filter = `("all","${r18 && "r18"}","${r18g && "r18g"}")`;
-  
-  var { data, error }: any = await supabaseClient
-    .from("profiles")
-    .select(`id`)
-    .eq("uid", id);
-  var id = data[0].id
+
+  try{ 
+    var { data, error }: any = await supabaseClient
+      .from("profiles")
+      .select(`id`)
+      .eq("uid", id);
+    var id = data[0].id    
+  }catch(err){;}
+
 
   var { data, error }: any = await supabaseClient
     .from("profiles")
@@ -22,6 +25,7 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
     .filter("images.age_limit", "in", filter)
     .eq("id", id)
     .eq("images.user_id", id)
+    .order('created_at', { foreignTable: 'images'});
 
   if (error) return res.status(401).json({ error: error.message });
   return res.status(200).json(data);

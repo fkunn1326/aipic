@@ -49,7 +49,7 @@ const Delete = async (req: NextApiRequest, res: NextApiResponse) => {
             await r2.send(
                 new DeleteObjectCommand({
                     Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME as string,
-                    Key: filename
+                    Key: `images/${filename}`
                 })
             );
             return res.status(200);
