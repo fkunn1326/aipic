@@ -10,7 +10,7 @@ import {
   EllipsisHorizontalIcon,
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
+import { HeartIcon as HeartSolidIcon, EyeIcon, ClipboardIcon } from "@heroicons/react/24/solid";
 import ImageModal from "../../components/modal/imagemodel";
 import Modal from "../../components/modal/modal";
 import ShareModal from "../../components/modal/sharemodal";
@@ -109,7 +109,6 @@ const Images = ({data, host}) => {
         image.likes.map((like) => {
           if (like.user_id === ctx.UserInfo.id) setisliked(true);
         });
-        console.log(ctx.UserInfo.id);
         if (ctx.UserInfo.id === undefined) {
           setlimittype("unauth");
         } else {
@@ -370,6 +369,20 @@ const Images = ({data, host}) => {
                             <a>#{tag}</a>
                           </Link>
                         ))}
+                      </div>
+                      <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500">
+                        <div className="flex flex-row items-center ">
+                          <HeartSolidIcon className="w-4 h-4 mr-1"/>
+                          1
+                        </div>
+                        <div className="flex flex-row items-center ">
+                          <EyeIcon className="w-4 h-4 mr-1"/>
+                          12
+                        </div>
+                        <div className="flex flex-row items-center ">
+                          <ClipboardIcon className="w-4 h-4 mr-1"/>
+                          3
+                        </div>
                       </div>
                     </div>
                   </div>
