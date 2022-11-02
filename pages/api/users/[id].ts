@@ -21,7 +21,7 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
   var { data, error }: any = await supabaseClient
     .from("profiles")
-    .select(`*, images:images(*)`)
+    .select(`*, images:images(*, likes:likes(*))`)
     .filter("images.age_limit", "in", filter)
     .eq("id", id)
     .eq("images.user_id", id)
