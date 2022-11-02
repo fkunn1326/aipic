@@ -39,7 +39,12 @@ export default function App() {
   return (
     <div>
       <Header></Header>
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-7xl p-6 sm:px-12">
+        <div className="mt-6 text-2xl font-semibold">
+          新着
+        </div>
+      </div>
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
           {images.reverse().map((image) => (
             <BlurImage key={image.id} image={image} />

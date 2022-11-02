@@ -47,6 +47,11 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
                 作品の投稿
               </a>
             </Link>
+            <Link href="/dashboard">
+              <a className="text-gray-600 font-semibold p-2">
+                ダッシュボード
+              </a>
+            </Link>
             <Link href="/settings">
               <a className="text-gray-600 font-semibold p-2">
                 アカウントの設定

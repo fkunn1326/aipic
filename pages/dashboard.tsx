@@ -1,41 +1,38 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
+import { userInfoContext } from "../context/userInfoContext";
+import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { HeartIcon as HeartSolidIcon, EyeIcon, ClipboardIcon } from "@heroicons/react/24/solid";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import axios from "axios";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const getServerSideProps = withPageAuth({ redirectTo: "/" });
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
-  const [data, setdata] = useState<any[]>([])
+  const [name, setname] = useState<string>("")
+  const [intro, setintro] = useState<string>("")
+  const [header, setheader] = useState<Blob>();
+  const [avatar, setavatar] = useState<Blob>();
 
-  useEffect(() => {
-    if(localStorage.getItem("history") !== null){
-        setdata(JSON.parse(localStorage.getItem("history") as string))
-    }
-  }, [])
-
-  const router = useRouter()
-
-  const handleclear  = (e) => {
-    localStorage.setItem("history", JSON.stringify([]))
-    router.push("/")
-  }
+  const router = useRouter();
+  const ctx = useContext(userInfoContext);
   
-  if (!data)
+  const { data, error } = useSWR(
+    `../api/users/${ctx.UserInfo.uid}?${new URLSearchParams({"r18":"true","r18g":"true"}).toString()}`,
+    fetcher
+  );
+
+  if (!data || data[0] === undefined)
     return (
       <div>
         <Header></Header>
-        <div className="mx-auto max-w-7xl flex px-6 sm:px-12">
-            <div className="pt-6 text-2xl font-semibold">
-                履歴を削除
-            </div>
-        </div>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
             {Array.apply(0, Array(10)).map(function (x, i) {
@@ -45,25 +42,21 @@ export default function App() {
         </div>
       </div>
     );
-  var images = data.slice(0, data.length);
+    
+  var images = data[0].images.slice(0, data[0].images.length);
+
   return (
     <div>
       <Header></Header>
-      <div className="pt-6 flex flex-row items-center mx-auto max-w-7xl px-6 sm:px-12">
-        <div className="text-2xl font-semibold">
-            閲覧履歴
+      <div className="mx-auto max-w-7xl p-6 sm:px-12">
+        <div className="mt-6 text-2xl font-semibold">
+          投稿した作品
         </div>
-        <button 
-            className="ml-4 text-sm border transition-colors ease-in-out duration-300 text-sky-500 border-sky-500 hover:bg-sky-500 hover:text-white rounded-xl px-2 py-1"
-            onClick={(e) => {handleclear(e)}}
-        >
-            履歴を削除
-        </button>
       </div>
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
           {images.reverse().map((image) => (
-            <BlurImage key={image.id} image={image} />
+            <BlurImage key={image.id} image={image} data={data[0]}/>
           ))}
         </div>
       </div>
@@ -71,12 +64,11 @@ export default function App() {
   );
 }
 
-function BlurImage({ image }) {
+function BlurImage({ image, data }) {
   const [isLoading, setLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="group" onClick={() => setIsOpen(true)}>
+    <div className="group">
       <div className="relative">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
           <Link href={`/images/${image.id}`}>
@@ -119,17 +111,20 @@ function BlurImage({ image }) {
       <p className="mt-2 text-base font-semibold text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">
         {image.title}
       </p>
-      <Link href={`/users/${image.author.uid}`}>
-        <a className="mt-1 w-full flex items-center">
-          <Image
-            src={image.author.avatar_url}
-            width={20}
-            height={20}
-            className="rounded-full"
-          ></Image>
-          <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
-        </a>
-      </Link>
+      <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
+            <div className="flex flex-row items-center ">
+                <HeartSolidIcon className="w-4 h-4 mr-1"/>
+                {image.likes.length}
+            </div>
+            <div className="flex flex-row items-center ">
+                <EyeIcon className="w-4 h-4 mr-1"/>
+                {image.views}
+            </div>
+            <div className="flex flex-row items-center ">
+                <ClipboardIcon className="w-4 h-4 mr-1"/>
+                {image.copies}
+            </div>
+        </div>
     </div>
   );
 }
