@@ -47,7 +47,9 @@ const Header = () => {
                 <button onClick={() => {setShowSidebar(!showSidebar)}}>
                   <Bars3Icon className="w-8 h-8 "/>
                 </button>
-                <Sidebar isOpen={showSidebar} avatar={null} name={null} id={null} />
+                <div onClick={() => {setShowSidebar(false)}}>
+                  <Sidebar isOpen={showSidebar} avatar={null} name={null} id={null} />
+                </div>
               </div>
             </div>
           ) : (
@@ -56,7 +58,9 @@ const Header = () => {
                 <button onClick={() => {setShowSidebar(!showSidebar)}}>
                   <Bars3Icon className="w-8 h-8 "/>
                 </button>
-                <Sidebar isOpen={showSidebar} avatar={ctx.UserInfo["avatar_url"]} name={ctx.UserInfo.name} id={ctx.UserInfo.uid} />
+                <div onClick={() => {setShowSidebar(false)}}>
+                  <Sidebar isOpen={showSidebar} avatar={ctx.UserInfo["avatar_url"]} name={ctx.UserInfo.name} id={ctx.UserInfo.uid} />
+                </div>
               </div>
               <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
                 <Link href="/upload">
