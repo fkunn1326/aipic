@@ -239,7 +239,7 @@ const Images = ({data, host}) => {
                             </button>
                           </div>
                           <p className="font-semibold">{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str} </a>
+                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str} </a>
                         ))}</p>
                         </div>
                         <div className="bg-slate-50 p-8 rounded-3xl mt-4">
@@ -255,7 +255,7 @@ const Images = ({data, host}) => {
                             </button>
                           </div>
                           <p className="font-semibold">{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str}</a>
+                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str}</a>
                         ))}</p>
                         </div>
                       </Modal>
