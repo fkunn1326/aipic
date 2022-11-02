@@ -52,12 +52,17 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
                 アカウントの設定
               </a>
             </Link>
+            <Link href="/history">
+              <a className="text-gray-600 font-semibold p-2">
+                閲覧履歴
+              </a>
+            </Link>
             <Link href="/kiyaku">
               <a className="text-gray-600 font-semibold p-2">
                 利用規約
               </a>
             </Link>
-            <Link href="/kiyaku">
+            <Link href="/">
               <a 
                 className="text-gray-600 font-semibold p-2"
                 onClick={() => {
