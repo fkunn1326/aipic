@@ -23,6 +23,7 @@ import {
 import { userInfoContext } from "../../context/userInfoContext";
 import Link from "next/link";
 import Head from 'next/head'
+import axios from "axios";
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
@@ -57,18 +58,6 @@ const Meta = ({data}) => {
     </Head>
   )
 }
-
-const copyToClipboard = (text) => {
-  const pre = document.createElement("pre");
-  pre.style.webkitUserSelect = "auto";
-  pre.style.userSelect = "auto";
-  pre.textContent = text;
-  document.body.appendChild(pre);
-  document.getSelection()!.selectAllChildren(pre);
-  const result = document.execCommand("copy");
-  document.body.removeChild(pre);
-  return result;
-};
 
 const Images = ({data, host}) => {
   const ctx = useContext(userInfoContext);
@@ -122,6 +111,52 @@ const Images = ({data, host}) => {
       }
     }
   }, [data]);
+
+  useEffect(() => {
+    (async() => {
+      try{
+        await axios.post(
+          "/api/views",
+          JSON.stringify({ 
+            "token": `${supabaseClient?.auth?.session()?.access_token}`,
+            "image_id": `${data[0].id}`
+          }), 
+          {
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }
+        );
+      }catch(e){;}
+    })()
+  }, []);
+
+  const handlecopy = (text, id) => {
+    const pre = document.createElement("pre");
+    pre.style.webkitUserSelect = "auto";
+    pre.style.userSelect = "auto";
+    pre.textContent = text;
+    document.body.appendChild(pre);
+    document.getSelection()!.selectAllChildren(pre);
+    const result = document.execCommand("copy");
+    document.body.removeChild(pre);
+    (async() => {
+      await axios.post(
+        "/api/copies",
+        JSON.stringify({ 
+          "token": `${supabaseClient?.auth?.session()?.access_token}`,
+          "image_id": `${id}`
+        }), 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+    })()
+    return result;
+  };
+
 
   if (!data) return <div>Loading...</div>;
   var image = data[0];
@@ -233,7 +268,7 @@ const Images = ({data, host}) => {
                               <ClipboardDocumentIcon
                                 className="w-5 h-5 text-gray-600 m-2"
                                 onClick={() => {
-                                  copyToClipboard(image.prompt);
+                                  handlecopy(image.prompt, image.id);
                                 }}
                               />
                             </button>
@@ -249,7 +284,7 @@ const Images = ({data, host}) => {
                               <ClipboardDocumentIcon
                                 className="w-5 h-5 text-gray-600 m-2"
                                 onClick={() => {
-                                  copyToClipboard(image.nprompt.split(",").map(i => i.trim()));
+                                  handlecopy(image.nprompt, image.id);
                                 }}
                               />
                             </button>
@@ -369,15 +404,15 @@ const Images = ({data, host}) => {
                       <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
                         <div className="flex flex-row items-center ">
                           <HeartSolidIcon className="w-4 h-4 mr-1"/>
-                          1
+                          {image.likes.length}
                         </div>
                         <div className="flex flex-row items-center ">
                           <EyeIcon className="w-4 h-4 mr-1"/>
-                          12
+                          {image.views}
                         </div>
                         <div className="flex flex-row items-center ">
                           <ClipboardIcon className="w-4 h-4 mr-1"/>
-                          3
+                          {image.copies}
                         </div>
                       </div>
                     </div>
