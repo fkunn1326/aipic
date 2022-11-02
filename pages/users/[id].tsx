@@ -300,7 +300,7 @@ function BlurImage({ image, data }) {
   return (
     <div className="group" onClick={() => setIsOpen(true)}>
       <div className="relative">
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+        <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
           <Link href={`/images/${image.id}`}>
             <Image
               alt={image.title}
