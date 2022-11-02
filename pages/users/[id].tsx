@@ -172,7 +172,7 @@ export default function App() {
   return (
     <div>
       <Header></Header>
-      <div className="relative w-screen h-96 p-8 pb-12">
+      <div className="relative w-screen h-64 sm:h-96 p-4 sm:p-8 pb-12">
         <div className="relative w-full h-full">
           <Image
               src={data[0].header_url}
@@ -181,8 +181,8 @@ export default function App() {
               className="w-full h-full mx-4 rounded-3xl"
           />
         </div>
-        <div className="flex flex-row items-end absolute bottom-[-15px] left-36">
-          <div className="relative w-24 h-24 border-[3.5px]  border-white rounded-full">
+        <div className="flex flex-row items-end absolute bottom-[-15px] left-8 sm:left-36">
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 border-[3.5px]  border-white rounded-full">
             <Image
                 src={data[0].avatar_url}
                 layout="fill"
@@ -194,15 +194,16 @@ export default function App() {
             <h1>{data[0].name}</h1>
           </div>
           {data[0].id === ctx.UserInfo.id ?
-            <div className="mb-1 ml-5 font-semibold text-base rounded-full border-2 border-slate-200 px-4 py-1.5 hover:bg-slate-100">
-              <button onClick={() => {setIsOpen(true)}}>プロフィールを編集</button>
+            <div className="mb-2 sm:mb-1 ml-5 font-semibold text-base rounded-full border-2 border-slate-200 px-4 py-1.5 hover:bg-slate-100">
+              <button onClick={() => {setIsOpen(true)}} className="hidden sm:flex">プロフィールを編集</button>
+              <PencilSquareIcon className="w-4 h-4 text-gray-400 sm:hidden" onClick={() => {setIsOpen(true)}}/>
               <SettingModal
                 isOpen={isOpen}
                 onClose={() => handlecancel()}
               >
                 <div className="flex flex-col justify-center gap-y-8">
                   <h1 className="ml-2 text-base font-semibold">プロフィールを編集</h1>
-                  <div className="relative w-full h-64">
+                  <div className="relative w-full h-36 sm:h-64">
                     <button className="group relative w-full h-full flex items-center text-center justify-center" onClick={(e) => {handleheaderclick(e)}}>
                       <Image
                           src={headerurl}
@@ -215,7 +216,7 @@ export default function App() {
                       <p className="transition-opacity ease-in duration-75 absolute z-20 text-sm text-white font-semibold opacity-0 group-hover:opacity-100">ヘッダーを変更</p>
                     </button>
                     <button className="group flex flex-row items-end absolute bottom-[-50px] left-8" onClick={(e) => {handleavatarclick(e)}}>
-                      <div className="relative w-24 h-24 border-[3.5px] border-white rounded-full flex items-center text-center justify-center">
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 border-[3.5px] border-white rounded-full flex items-center text-center justify-center">
                         <Image
                             src={avatarurl}
                             layout="fill"

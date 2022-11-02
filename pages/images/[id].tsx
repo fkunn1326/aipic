@@ -131,12 +131,12 @@ const Images = ({data, host}) => {
     <div>
       <Meta data={data} />
       <Header />
-      <div className="px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
+      <div className="overflow-x-hidden sm:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
         <div className="glow mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 md:mx-6 mb:my-auto mb:py-7 sm:py-6">
           <div className="flex-nowrap flex-col">
-            <main className="pt-16 mb-16 flex-row flex-nowrap items-start flex basis-auto">
-              <div className="mr-8 flex-col flex w-full basis-3/4 border rounded-3xl">
-                <div className="h-[120vh] w-full">
+            <main className="pt-4 sm:pt-16 mb-16 flex-col sm:flex-row flex-nowrap items-start flex basis-auto">
+              <div className="sm:mr-8 flex-col flex w-full basis-3/4 border rounded-3xl">
+                <div className="h-max w-full py-12">
                   <div className="flex mb-8 relative h-[70vh] items-center w-full">
                     <div className="flex flex-col absolute inset-0 items-center justify-center">
                       <div className="flex relative flex-col-reverse z-auto h-full w-full">
@@ -209,7 +209,7 @@ const Images = ({data, host}) => {
                     </div>
                   </div>
                   <div className="flex flex-row justify-end flex-nowrap mt-6 w-full">
-                    <div className="flex flex-end flex-row flex-nowrap p-6 gap-4">
+                    <div className="flex flex-end flex-row flex-nowrap px-6 sm:py-6 gap-4">
                       <button
                         className="h-8 mr-2"
                         onClick={() => setisPromptOpen(true)}
@@ -239,9 +239,7 @@ const Images = ({data, host}) => {
                             </button>
                           </div>
                           <p className="font-semibold">{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <Link href={`/prompts/${str}`} key={idx} className="mr-2">
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str} </a>
-                            </Link>
+                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str} </a>
                         ))}</p>
                         </div>
                         <div className="bg-slate-50 p-8 rounded-3xl mt-4">
@@ -257,9 +255,7 @@ const Images = ({data, host}) => {
                             </button>
                           </div>
                           <p className="font-semibold">{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <Link href={`/negative/${str}`} key={idx} className="mr-2">
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str}</a>
-                            </Link>
+                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1">{str}</a>
                         ))}</p>
                         </div>
                       </Modal>
@@ -291,7 +287,7 @@ const Images = ({data, host}) => {
                         <div className="grid grid-cols-4 gap-4 px-6">
                           <div className="flex flex-col items-center text-sm text-gray-700">
                             <a
-                              className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                               href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${uri}`}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -305,7 +301,7 @@ const Images = ({data, host}) => {
                           </div>
                           <div className="flex flex-col items-center text-sm text-gray-700">
                             <a
-                              className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                               href={`http://www.facebook.com/share.php?u=${uri}`}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -319,7 +315,7 @@ const Images = ({data, host}) => {
                           </div>
                           <div className="flex flex-col items-center text-sm text-gray-700">
                             <a
-                              className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                               href={`https://social-plugins.line.me/lineit/share?url=${uri}`}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -333,7 +329,7 @@ const Images = ({data, host}) => {
                           </div>
                           <div className="flex flex-col items-center text-sm text-gray-700">
                             <button
-                              className="group w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                               onClick={async () => {
                                 try {
                                   await navigator.share({
@@ -359,18 +355,18 @@ const Images = ({data, host}) => {
                       </button>
                     </div>
                   </div>
-                  <div className="flex justify-center">
+                  <div className="flex ml-10 sm:ml-12 sm:justify-center">
                     <div className="flex flex-col w-[40vw]">
-                      <h1 className="text-2xl font-bold mt-3">{image.title}</h1>
-                      <p className="mt-2 break-all">{image.caption}</p>
-                      <div className="flex flex-row mt-2 text-sky-600 font-semibold">
+                      <h1 className="text-xl sm:text-2xl font-bold mt-5 w-max">{image.title}</h1>
+                      <p className="mt-2 break-all text-sm sm:text-base">{image.caption}</p>
+                      <div className="flex flex-row mt-2 text-sky-600 font-semibold w-max text-sm sm:text-base">
                         {image.tags !== null && image.tags.map((tag, idx) => (
                           <Link href={`/tags/${tag}`} key={idx} className="mr-2">
                             <a>#{tag}</a>
                           </Link>
                         ))}
                       </div>
-                      <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500">
+                      <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
                         <div className="flex flex-row items-center ">
                           <HeartSolidIcon className="w-4 h-4 mr-1"/>
                           1
@@ -390,8 +386,8 @@ const Images = ({data, host}) => {
               </div>
               <div className="t-[96px] w-full basis-1/4">
                 <div className="flex shrink basis-full sticky min-w-[370px] max-h-[450px]">
-                  <div className="flex flex-col flex-nowrap w-full">
-                    <div className="mb-8 px-0 py-7">
+                  <div className="flex flex-col flex-nowrap w-full ml-5 sm:ml-0">
+                    <div className="mb-8 px-0 py-6">
                       <div className="mb-4 flex-col flex-nowrap">
                         <div className="flex mb-8 flex-col flex-nowrap">
                           <span className="mb-2">

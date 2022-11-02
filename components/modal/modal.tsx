@@ -44,7 +44,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-4/6 h-5/6 p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
+            <div className="inline-block sm:w-4/6 h-5/6 p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
               {children}
             </div>
           </Transition.Child>

@@ -40,7 +40,7 @@ const AuthPage = () => {
   }, []);
 
   return (
-    <div className="bg-gray-50 pt-10 mb-10">
+    <div className="bg-gray-50 pt-10 h-screen">
       <div className="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"

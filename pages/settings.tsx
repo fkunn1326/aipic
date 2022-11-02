@@ -137,7 +137,7 @@ const Settings = () => {
   return (
     <div>
       <Header></Header>
-      <div className="mx-auto px-3 sm:px-6 lg:max-w-7xl lg:px-7 w-full h-full">
+      <div className="mx-auto px-6 sm:max-w-full sm:px-6 lg:max-w-7xl lg:px-7 w-full h-full">
         <div className="p-4 w-full bg-gray-50 rounded-lg border border-gray-300 sm:p-8 my-8">
           <h5 className="mb-2 text-xl font-bold text-gray-900">アカウント</h5>
           <p className="mb-5 text-gray-500 sm:text-base">
@@ -153,7 +153,7 @@ const Settings = () => {
                   @
                 </span>
                 <input
-                  className="outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-r-lg focus:ring-sky-600 focus:border-sky-600 block w-1/2 p-2.5"
+                  className="outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-r-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
                   required
                   value={states["userid"]}
                   onChange={(e) => {
@@ -175,7 +175,7 @@ const Settings = () => {
           </div>
           <div className="mt-6">
             <div className="mt-6">
-              <div className="flex items-center mb-2">
+              <div className="grid items-center mb-2">
                 <div className="block text-base font-medium text-gray-900">
                   現在のメールアドレス
                 </div>
@@ -198,7 +198,7 @@ const Settings = () => {
 
               </div>
               <input
-                className="outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-1/2 p-2.5"
+                className="outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
                 required
                 value={states["email"]}
                 readOnly
@@ -221,12 +221,12 @@ const Settings = () => {
             <div className="block text-base font-medium text-gray-900 mb-3">
               閲覧制限
             </div>
-            <div className="flex items-center">
+            <div className="flex flex-col gap-y-1 sm:flex-row sm:items-center">
               <p className="font-semibold block text-sm text-gray-900">
                 閲覧制限作品(R-18)
               </p>
-              <div className="ml-4 flex items-center">
-                <label className="ml-2 text-sm font-medium text-gray-900">
+              <div className="sm:ml-4 flex items-center">
+                <label className="sm:ml-2 text-sm font-medium text-gray-900">
                   <input
                     checked={states["access_limit"]["r18"]}
                     type="radio"
@@ -241,8 +241,8 @@ const Settings = () => {
                   表示する
                 </label>
               </div>
-              <div className="ml-4 flex items-center">
-                <label className="ml-2 text-sm font-medium text-gray-900">
+              <div className="sm:ml-4 flex items-center">
+                <label className="sm:ml-2 text-sm font-medium text-gray-900">
                   <input
                     checked={!states["access_limit"]["r18"]}
                     type="radio"
@@ -259,12 +259,12 @@ const Settings = () => {
                 </label>
               </div>
             </div>
-            <div className="mt-2 flex items-center">
+            <div className="mt-2 flex flex-col gap-y-1 sm:flex-row sm:items-center">
               <p className="font-semibold block text-sm text-gray-900">
                 グロテスクな作品（R-18G）
               </p>
-              <div className="ml-4 flex items-center">
-                <label className="ml-2 text-sm font-medium text-gray-900">
+              <div className="sm:ml-4 flex items-center">
+                <label className="sm:ml-2 text-sm font-medium text-gray-900">
                   <input
                     checked={states["access_limit"]["r18g"]}
                     type="radio"
@@ -279,7 +279,7 @@ const Settings = () => {
                   表示する
                 </label>
               </div>
-              <div className="ml-4 flex items-center">
+              <div className="sm:ml-4 flex items-center">
                 <label className="text-sm font-medium text-gray-900">
                   <input
                     checked={!states["access_limit"]["r18g"]}

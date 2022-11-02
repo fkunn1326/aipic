@@ -40,7 +40,7 @@ export default function Tag() {
   return (
     <div>
       <Header></Header>
-      <div className="mx-auto max-w-7xl px-12">
+      <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="pt-6 text-2xl font-semibold">
           #{tag}
         </div>
