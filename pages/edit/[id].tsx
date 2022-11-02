@@ -262,8 +262,6 @@ const Upload = (props) => {
       tags: tagsarr,
     }).match({
       id: data[0].id,
-      href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/${data[0].id}.png`,
-      user_id: ctx.UserInfo.id
     })
 
     router.push("/");

@@ -41,6 +41,21 @@ export default function Dropdawn(props) {
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
+                    router.push(`/users/${props.id}`);
+                  }}
+                >
+                  マイページ
+                </a>
+              )}
+          </Menu.Item>
+          <Menu.Item>
+              {({ active }) => (
+                <a
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm cursor-pointer"
+                  )}
+                  onClick={() => {
                     router.push("/dashboard");
                   }}
                 >

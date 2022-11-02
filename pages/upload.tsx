@@ -386,7 +386,8 @@ const Upload = (props) => {
                     handleDrag={handleDrag}
                     handleTagClick={handleTagClick}
                     handleInputChange={handleInputChange}
-                    inputFieldPosition="bottom"
+                    inputFieldPosition="inline"
+                    inline={true}
                     allowDragDrop={false}
                     placeholder=""
                     autofocus={false}

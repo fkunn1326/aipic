@@ -4,10 +4,6 @@ import Header from "../components/header/header";
 import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { HeartIcon as HeartSolidIcon, EyeIcon, ClipboardIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import axios from "axios";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -16,20 +12,17 @@ function cn(...classes: string[]) {
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
-  const [name, setname] = useState<string>("")
-  const [intro, setintro] = useState<string>("")
-  const [header, setheader] = useState<Blob>();
-  const [avatar, setavatar] = useState<Blob>();
+  var ctx = useContext(userInfoContext);
+  var access_limit = ""
+  if (ctx.UserInfo !== null) {
+    access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
+  }
 
-  const router = useRouter();
-  const ctx = useContext(userInfoContext);
-  
   const { data, error } = useSWR(
-    `../api/users/${ctx.UserInfo.uid}?${new URLSearchParams({"r18":"true","r18g":"true"}).toString()}`,
-    fetcher
+    "../api/images/list" + access_limit,
+     fetcher
   );
-
-  if (!data || data[0] === undefined)
+  if (!data)
     return (
       <div>
         <Header></Header>
@@ -42,21 +35,24 @@ export default function App() {
         </div>
       </div>
     );
-    
-  var images = data[0].images.slice(0, data[0].images.length);
-
+  var images = data.slice(0, data.length);
   return (
     <div>
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="mt-6 text-2xl font-semibold">
-          投稿した作品
+          今日のチャレンジ
+        </div>
+        <div className="mt-6 border rounded-lg p-6 w-1/2">
+            cow print 牛柄<br/>
+            sweater セーター<br/>
+            thighhighs ニーソックス
         </div>
       </div>
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
           {images.reverse().map((image) => (
-            <BlurImage key={image.id} image={image} data={data[0]}/>
+            <BlurImage key={image.id} image={image} />
           ))}
         </div>
       </div>
@@ -64,11 +60,12 @@ export default function App() {
   );
 }
 
-function BlurImage({ image, data }) {
+function BlurImage({ image }) {
   const [isLoading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="group">
+    <div className="group" onClick={() => setIsOpen(true)}>
       <div className="relative">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
           <Link href={`/images/${image.id}`}>
@@ -111,20 +108,17 @@ function BlurImage({ image, data }) {
       <p className="mt-2 text-base font-semibold text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">
         {image.title}
       </p>
-      <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
-            <div className="flex flex-row items-center" title="いいね数">
-                <HeartSolidIcon className="w-4 h-4 mr-1" />
-                {image.likes.length}
-            </div>
-            <div className="flex flex-row items-center" title="閲覧数">
-                <EyeIcon className="w-4 h-4 mr-1"/>
-                {image.views}
-            </div>
-            <div className="flex flex-row items-center" title="コピー数">
-                <ClipboardIcon className="w-4 h-4 mr-1"/>
-                {image.copies}
-            </div>
-        </div>
+      <Link href={`/users/${image.author.uid}`}>
+        <a className="mt-1 w-full flex items-center">
+          <Image
+            src={image.author.avatar_url}
+            width={20}
+            height={20}
+            className="rounded-full"
+          ></Image>
+          <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
+        </a>
+      </Link>
     </div>
   );
 }

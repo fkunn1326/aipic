@@ -68,7 +68,7 @@ const Header = () => {
                     作品を投稿
                   </a>
                 </Link>
-                <Dropdown avatar={ctx.UserInfo["avatar_url"]}></Dropdown>
+                <Dropdown avatar={ctx.UserInfo["avatar_url"]} id={ctx.UserInfo.uid}></Dropdown>
               </div>
             </div>
           )}
