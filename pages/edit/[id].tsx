@@ -342,7 +342,7 @@ const Upload = (props) => {
     <div className="relative bg-white items-center">
       <Header></Header>
       <div className="mt-4 mb-60 flex flex-col items-center justify-center lg:py-0">
-        <div className="max-w-xs mt-4 bg-white md:mt-0 sm:max-w-2xl xl:p-0">
+        <div className="w-full bg-white md:mt-0 max-w-[22rem] sm:max-w-2xl xl:p-0">
           <div className="">
             <form
               className="space-y-4 md:space-y-6"

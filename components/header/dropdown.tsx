@@ -50,19 +50,6 @@ export default function Dropdawn(props) {
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
-                  )}
-                >
-                  サポート？？
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
                 <a href=""
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700"
@@ -77,6 +64,27 @@ export default function Dropdawn(props) {
                     )}
                   >
                     利用規約
+                  </a>
+                </Link>
+              </a>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <a href=""
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                  )}
+                >
+                <Link href="/history">
+                  <a
+                    href=""
+                    className={classNames(
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "block px-4 py-2 text-sm"
+                    )}
+                  >
+                    閲覧履歴
                   </a>
                 </Link>
               </a>

@@ -113,6 +113,16 @@ const Images = ({data, host}) => {
   }, [data]);
 
   useEffect(() => {
+    if (localStorage.getItem("history") === null){
+      localStorage.setItem("history", JSON.stringify([data[0]]))
+    }else{
+      var localhistory = JSON.parse(localStorage.getItem("history") as string)
+      var samehistory = localhistory.find(item => item.id === data[0].id)
+      if (samehistory === undefined){
+        localhistory.push(data[0])
+        localStorage.setItem("history", JSON.stringify(localhistory))
+      }
+    }
     (async() => {
       try{
         await axios.post(
