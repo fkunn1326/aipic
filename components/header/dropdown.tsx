@@ -16,7 +16,7 @@ export default function Dropdawn(props) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="outline-none items-center inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 ring-white">
+        <Menu.Button className="outline-none w-max items-center inline-flex justify-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 ring-white">
           <img src={avatar} className="h-12 w-12 rounded-full"></img>
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>

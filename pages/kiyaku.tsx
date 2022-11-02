@@ -5,7 +5,7 @@ const kiyaku = () => {
     return (
         <div>
             <Header />
-            <div className="py-12 px-32 m-auto xl:max-w-7xl">
+            <div className="py-12 px-10 sm:px-32 m-auto xl:max-w-7xl">
                 <div>
                     <h1 className="text-2xl font-bold">利用規約</h1>
                     <p className="pt-4">この利用規約（以下，「本規約」といいます。）は、当サイト上で提供するサービス（以下，「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下，「ユーザー」といいます。）には，本規約に従って，本サービスをご利用いただきます。</p>
@@ -149,7 +149,7 @@ const kiyaku = () => {
                     <h1 className="text-xl font-bold">第15条（準拠法・裁判管轄）</h1>
                     <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
                         <li>本規約の解釈にあたっては，日本法を準拠法とします。</li>
-                        <li>本サービスに関して紛争が生じた場合には，運営者の本店所在地を管轄する裁判所を専属的合意管轄とします。</li>
+                        <li>本サービスに関して紛争が生じた場合には，運営者の所在地を管轄する裁判所を専属的合意管轄とします。</li>
                     </ol>
                 </div>
             </div>
