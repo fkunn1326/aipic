@@ -112,15 +112,15 @@ function BlurImage({ image, data }) {
         {image.title}
       </p>
       <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
-            <div className="flex flex-row items-center" title="いいね数">
+            <div className="flex flex-row items-center">
                 <HeartSolidIcon className="w-4 h-4 mr-1" />
                 {image.likes.length}
             </div>
-            <div className="flex flex-row items-center" title="閲覧数">
+            <div className="flex flex-row items-center">
                 <EyeIcon className="w-4 h-4 mr-1"/>
                 {image.views}
             </div>
-            <div className="flex flex-row items-center" title="コピー数">
+            <div className="flex flex-row items-center">
                 <ClipboardIcon className="w-4 h-4 mr-1"/>
                 {image.copies}
             </div>

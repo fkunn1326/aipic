@@ -26,6 +26,7 @@ import Head from 'next/head'
 import axios from "axios";
 import PopOver from "../../components/popover"
 import { text2Link } from "../../components/common/text2link";
+import OtherImages from "../../components/common/images";
 
 
 export const getServerSideProps = async (context) => {
@@ -281,7 +282,7 @@ const Images = ({data, host}) => {
                               <p className="text-gray-600 text-sm">プロンプト</p>
                               <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                 <ClipboardDocumentIcon
-                                  className="w-5 h-5 text-gray-600 m-2"
+                                  className="w-5 h-5 text-gray-600 m-2 break-all"
                                   onClick={() => {
                                     handlecopy(image.prompt, image.id);
                                   }}
@@ -486,6 +487,7 @@ const Images = ({data, host}) => {
                 </div>
               </div>
             </main>
+            <OtherImages />
           </div>
         </div>
       </div>
