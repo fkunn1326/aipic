@@ -71,6 +71,21 @@ export default function Dropdawn(props) {
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
+                    router.push("/likes");
+                  }}
+                >
+                  自分がいいねをした作品
+                </a>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <a
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm cursor-pointer"
+                  )}
+                  onClick={() => {
                     router.push("/settings");
                   }}
                 >

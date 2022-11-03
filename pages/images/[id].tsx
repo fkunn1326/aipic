@@ -114,7 +114,7 @@ const Images = ({data, host}) => {
         if (image.age_limit === "all") setlimittype("ok");
       }
     }
-  }, [data]);
+  }, [data, image, ctx]);
 
   useEffect(() => {
     if (localStorage.getItem("history") === null){

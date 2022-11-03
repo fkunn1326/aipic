@@ -6,8 +6,6 @@ import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { HeartIcon as HeartSolidIcon, EyeIcon, ClipboardIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import axios from "axios";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
