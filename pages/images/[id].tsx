@@ -25,6 +25,7 @@ import Link from "next/link";
 import Head from 'next/head'
 import axios from "axios";
 import PopOver from "../../components/popover"
+import { text2Link } from "../../components/common/text2link";
 
 
 export const getServerSideProps = async (context) => {
@@ -408,7 +409,12 @@ const Images = ({data, host}) => {
                   <div className="flex ml-10 sm:ml-12 sm:justify-center">
                     <div className="flex flex-col w-[40vw]">
                       <h1 className="text-xl sm:text-2xl font-bold mt-5 w-max">{image.title}</h1>
-                      <p className="mt-2 break-all text-sm sm:text-base">{image.caption}</p>
+                      <div
+                        className="mt-2 break-all text-sm sm:text-base"
+                        dangerouslySetInnerHTML={{
+                          __html: text2Link(image.caption)
+                        }}
+                      />
                       <div className="flex flex-row mt-2 text-sky-600 font-semibold w-max text-sm sm:text-base">
                         {image.tags !== null && image.tags.map((tag, idx) => (
                           <Link href={`/tags/${tag}`} key={idx}>
