@@ -396,8 +396,18 @@ const Images = ({data, host}) => {
                               その他
                             </div>
                           </div>
-                          <div className="m-6 h-14 rounded-2xl bg-slate-50 flex items-center whitespace-nowrap overflow-x-scroll">
-                            <p className="mx-4">{uri}</p>
+                          <div className="relative">
+                            <div className="m-6 h-14 rounded-2xl bg-slate-50 flex items-center whitespace-nowrap overflow-x-scroll">
+                              <p className="mx-4">{uri}</p>
+                            </div>
+                            <button className="absolute right-8 top-2 border rounded-lg bg-slate-50 hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
+                                  <ClipboardDocumentIcon
+                                    className="w-5 h-5 text-gray-600 m-2"
+                                    onClick={() => {
+                                      handlecopy(uri, image.id);
+                                    }}
+                                  />
+                            </button>
                           </div>
                         </ShareModal>
                         {image.user_id === ctx.UserInfo.id &&
