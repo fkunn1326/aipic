@@ -86,7 +86,7 @@ export default function Dropdawn(props) {
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
-                    router.push("/kiyaku");
+                    router.push("/tos");
                   }}
                 >
                   利用規約
