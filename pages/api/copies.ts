@@ -26,11 +26,11 @@ const Copies = async (req: NextApiRequest, res: NextApiResponse) => {
             })
             .eq("id", image_id)
             
-            return res.status(200);        
+            return res.status(200).end();        
     }catch (err) {
         return res.status(403).json({"error": err});
     }
-    return res.status(200);
+    return res.status(200).end();
 };
 
 export default Copies;
