@@ -24,6 +24,8 @@ import { userInfoContext } from "../../context/userInfoContext";
 import Link from "next/link";
 import Head from 'next/head'
 import axios from "axios";
+import PopOver from "../../components/popover"
+
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
@@ -42,16 +44,16 @@ const Meta = ({data}) => {
       <meta charSet="utf-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-      <title>{data[0].title}</title>
+      <title>{data[0].title} - {data[0].author.name}の作品 - Aipic</title>
       <meta name="description" content={data[0].caption} />
       <meta property="og:type" content="website" />
-      <meta property="og:title" content={data[0].title} />
+      <meta property="og:title" content={`${data[0].title} - ${data[0].author.name}の作品 - Aipic`} />
       <meta property="og:description" content={data[0].caption} />
       <meta property="og:url" content={`https://aipic.vercel.app/images/${data[0].id}`}/>
       <meta property="og:site_name" content="Aipic" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@fkunn1326" />
-      <meta name="twitter:title" content={data[0].title} />
+      <meta name="twitter:title" content={`${data[0].title} - ${data[0].author.name}の作品 - Aipic`} />
       <meta name="twitter:description" content={data[0].caption} />
       <meta name="twitter:image" content={data[0].href} />
       <meta name="robots" content="index,follow" />
@@ -177,11 +179,11 @@ const Images = ({data, host}) => {
       <Meta data={data} />
       <Header />
       <div className="overflow-x-hidden sm:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
-        <div className="glow mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 md:mx-6 mb:my-auto mb:py-7 sm:py-6">
+        <div className="glow sm:mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 md:mx-6 mb:my-auto mb:py-7 sm:py-6">
           <div className="flex-nowrap flex-col">
-            <main className="pt-4 sm:pt-16 mb-16 flex-col sm:flex-row flex-nowrap items-start flex basis-auto">
-              <div className="sm:mr-8 flex-col flex w-full basis-3/4 border rounded-3xl">
-                <div className="h-max w-full py-12">
+            <main className="sm:pt-16 mb-16 flex-col sm:flex-row flex-nowrap items-start flex basis-auto">
+              <div className="sm:mr-8 flex-col flex w-full basis-3/4 sm:border rounded-3xl">
+                <div className="h-max w-full sm:py-12">
                   <div className="flex mb-8 relative h-[70vh] items-center w-full">
                     <div className="flex flex-col absolute inset-0 items-center justify-center">
                       <div className="flex relative flex-col-reverse z-auto h-full w-full">
@@ -189,6 +191,7 @@ const Images = ({data, host}) => {
                           className={`relative h-full w-full box-content rounded-t-3xl ${
                             limittype !== "ok" && "bg-neutral-400"
                           }`}
+                          style={{letterSpacing: 0, wordSpacing: 0, fontSize: 0}}
                         >
                           {limittype !== "unauth" && (
                             <Image
@@ -253,151 +256,153 @@ const Images = ({data, host}) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-row justify-end flex-nowrap mt-6 w-full">
-                    <div className="flex flex-end flex-row flex-nowrap px-6 sm:py-6 gap-4">
+                  <div className="flex flex-row sm:justify-end flex-nowrap mt-6 w-full">
+                    <div className="flex justify-between sm:justify-end w-full sm:flex-end flex-row flex-nowrap px-6 sm:py-6 gap-4">
                       <button
                         className="h-8 mr-2"
                         onClick={() => setisPromptOpen(true)}
                       >
                         プロンプトを表示する
                       </button>
-                      <Modal
-                        isOpen={isPromptOpen}
-                        onClose={() => setisPromptOpen(false)}
-                      >
-                        <div className="bg-slate-50 p-8 rounded-3xl">
-                          <p className="text-gray-600 text-sm">使用モデル</p>
-                          <p className="mt-2 font-semibold text-2xl">
-                            {image.model}
-                          </p>
-                        </div>
-                        <div className="bg-slate-50 p-8 rounded-3xl mt-4">
-                          <div className="flex justify-between">
-                            <p className="text-gray-600 text-sm">プロンプト</p>
-                            <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
-                              <ClipboardDocumentIcon
-                                className="w-5 h-5 text-gray-600 m-2"
-                                onClick={() => {
-                                  handlecopy(image.prompt, image.id);
+                      <div className="flex w-max flex-row gap-4">
+                        <Modal
+                          isOpen={isPromptOpen}
+                          onClose={() => setisPromptOpen(false)}
+                        >
+                          <div className="bg-slate-50 p-8 rounded-3xl">
+                            <p className="text-gray-600 text-sm">使用モデル</p>
+                            <p className="mt-2 font-semibold text-2xl">
+                              {image.model}
+                            </p>
+                          </div>
+                          <div className="bg-slate-50 p-8 rounded-3xl mt-4">
+                            <div className="flex justify-between">
+                              <p className="text-gray-600 text-sm">プロンプト</p>
+                              <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
+                                <ClipboardDocumentIcon
+                                  className="w-5 h-5 text-gray-600 m-2"
+                                  onClick={() => {
+                                    handlecopy(image.prompt, image.id);
+                                  }}
+                                />
+                              </button>
+                            </div>
+                            <p className="font-semibold">{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str} </a>
+                          ))}</p>
+                          </div>
+                          <div className="bg-slate-50 p-8 rounded-3xl mt-4">
+                            <div className="flex justify-between">
+                              <p className="text-gray-600 text-sm">ネガティブプロンプト</p>
+                              <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
+                                <ClipboardDocumentIcon
+                                  className="w-5 h-5 text-gray-600 m-2"
+                                  onClick={() => {
+                                    handlecopy(image.nprompt, image.id);
+                                  }}
+                                />
+                              </button>
+                            </div>
+                            <p className="font-semibold">{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str}</a>
+                          ))}</p>
+                          </div>
+                        </Modal>
+                        <button
+                          className="w-8 h-8"
+                          onClick={(e) => handlelike(e)}
+                        >
+                          {isliked ? (
+                            <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
+                          ) : (
+                            <HeartIcon className="w-8 h-8"></HeartIcon>
+                          )}
+                        </button>
+                        <button
+                          className="w-8 h-8"
+                          onClick={() => setisShareOpen(true)}
+                        >
+                          <ArrowUpOnSquareIcon className="w-8 h-8"></ArrowUpOnSquareIcon>
+                        </button>
+                        <ShareModal
+                          isOpen={isShareOpen}
+                          onClose={() => setisShareOpen(false)}
+                        >
+                          <div className="p-5 rounded-3xl">
+                            <p className="text-gray-600 text-sm">
+                              この作品を共有
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-4 gap-4 px-6">
+                            <div className="flex flex-col items-center text-sm text-gray-700">
+                              <a
+                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${uri}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FontAwesomeIcon
+                                  icon={faTwitter}
+                                  className="w-7 h-7 group-hover:text-sky-500"
+                                />
+                              </a>
+                              Twitter
+                            </div>
+                            <div className="flex flex-col items-center text-sm text-gray-700">
+                              <a
+                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                href={`http://www.facebook.com/share.php?u=${uri}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FontAwesomeIcon
+                                  icon={faFacebook}
+                                  className="w-7 h-7 group-hover:text-blue-600"
+                                />
+                              </a>
+                              Facebook
+                            </div>
+                            <div className="flex flex-col items-center text-sm text-gray-700">
+                              <a
+                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                href={`https://social-plugins.line.me/lineit/share?url=${uri}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FontAwesomeIcon
+                                  icon={faLine}
+                                  className="w-7 h-7 group-hover:text-green-500"
+                                />
+                              </a>
+                              LINE
+                            </div>
+                            <div className="flex flex-col items-center text-sm text-gray-700">
+                              <button
+                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                onClick={async () => {
+                                  try {
+                                    await navigator.share({
+                                      title: image.title,
+                                      url: uri,
+                                    });
+                                  } catch (e) {
+                                    console.error(e);
+                                  }
                                 }}
-                              />
-                            </button>
+                              >
+                                <EllipsisHorizontalIcon className="w-7 h-7" />
+                              </button>
+                              その他
+                            </div>
                           </div>
-                          <p className="font-semibold">{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str} </a>
-                        ))}</p>
-                        </div>
-                        <div className="bg-slate-50 p-8 rounded-3xl mt-4">
-                          <div className="flex justify-between">
-                            <p className="text-gray-600 text-sm">ネガティブプロンプト</p>
-                            <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
-                              <ClipboardDocumentIcon
-                                className="w-5 h-5 text-gray-600 m-2"
-                                onClick={() => {
-                                  handlecopy(image.nprompt, image.id);
-                                }}
-                              />
-                            </button>
+                          <div className="m-6 h-14 rounded-2xl bg-slate-50 flex items-center whitespace-nowrap overflow-x-scroll">
+                            <p className="mx-4">{uri}</p>
                           </div>
-                          <p className="font-semibold">{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
-                            <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str}</a>
-                        ))}</p>
-                        </div>
-                      </Modal>
-                      <button
-                        className="w-8 h-8"
-                        onClick={(e) => handlelike(e)}
-                      >
-                        {isliked ? (
-                          <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
-                        ) : (
-                          <HeartIcon className="w-8 h-8"></HeartIcon>
-                        )}
-                      </button>
-                      <button
-                        className="w-8 h-8"
-                        onClick={() => setisShareOpen(true)}
-                      >
-                        <ArrowUpOnSquareIcon className="w-8 h-8"></ArrowUpOnSquareIcon>
-                      </button>
-                      <ShareModal
-                        isOpen={isShareOpen}
-                        onClose={() => setisShareOpen(false)}
-                      >
-                        <div className="p-5 rounded-3xl">
-                          <p className="text-gray-600 text-sm">
-                            この作品を共有
-                          </p>
-                        </div>
-                        <div className="grid grid-cols-4 gap-4 px-6">
-                          <div className="flex flex-col items-center text-sm text-gray-700">
-                            <a
-                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
-                              href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${uri}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <FontAwesomeIcon
-                                icon={faTwitter}
-                                className="w-7 h-7 group-hover:text-sky-500"
-                              />
-                            </a>
-                            Twitter
-                          </div>
-                          <div className="flex flex-col items-center text-sm text-gray-700">
-                            <a
-                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
-                              href={`http://www.facebook.com/share.php?u=${uri}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <FontAwesomeIcon
-                                icon={faFacebook}
-                                className="w-7 h-7 group-hover:text-blue-600"
-                              />
-                            </a>
-                            Facebook
-                          </div>
-                          <div className="flex flex-col items-center text-sm text-gray-700">
-                            <a
-                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
-                              href={`https://social-plugins.line.me/lineit/share?url=${uri}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <FontAwesomeIcon
-                                icon={faLine}
-                                className="w-7 h-7 group-hover:text-green-500"
-                              />
-                            </a>
-                            LINE
-                          </div>
-                          <div className="flex flex-col items-center text-sm text-gray-700">
-                            <button
-                              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
-                              onClick={async () => {
-                                try {
-                                  await navigator.share({
-                                    title: image.title,
-                                    url: uri,
-                                  });
-                                } catch (e) {
-                                  console.error(e);
-                                }
-                              }}
-                            >
-                              <EllipsisHorizontalIcon className="w-7 h-7" />
-                            </button>
-                            その他
-                          </div>
-                        </div>
-                        <div className="m-6 h-14 rounded-2xl bg-slate-50 flex items-center whitespace-nowrap overflow-x-scroll">
-                          <p className="mx-4">{uri}</p>
-                        </div>
-                      </ShareModal>
-                      <button className="w-8 h-8">
-                        <EllipsisHorizontalIcon className="w-8 h-8"></EllipsisHorizontalIcon>
-                      </button>
+                        </ShareModal>
+                        {image.user_id === ctx.UserInfo.id &&
+                          <PopOver id={image.id}/>
+                        }
+                      </div>
                     </div>
                   </div>
                   <div className="flex ml-10 sm:ml-12 sm:justify-center">
@@ -406,8 +411,8 @@ const Images = ({data, host}) => {
                       <p className="mt-2 break-all text-sm sm:text-base">{image.caption}</p>
                       <div className="flex flex-row mt-2 text-sky-600 font-semibold w-max text-sm sm:text-base">
                         {image.tags !== null && image.tags.map((tag, idx) => (
-                          <Link href={`/tags/${tag}`} key={idx} className="mr-2">
-                            <a>#{tag}</a>
+                          <Link href={`/tags/${tag}`} key={idx}>
+                            <a className="mr-2">#{tag}</a>
                           </Link>
                         ))}
                       </div>
