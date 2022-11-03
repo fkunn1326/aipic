@@ -62,7 +62,7 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
                 閲覧履歴
               </a>
             </Link>
-            <Link href="/kiyaku">
+            <Link href="/tos">
               <a className="text-gray-600 font-semibold p-2">
                 利用規約
               </a>

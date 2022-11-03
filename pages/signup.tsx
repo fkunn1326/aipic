@@ -178,7 +178,7 @@ const Signup = () => {
                           required
                         ></input>
                         <div className="ml-3 text-sm cursor-pointer">
-                          <Link href="/kiyaku">
+                          <Link href="/tos">
                             <a
                               href=""
                               className="text-sm font-medium text-sky-600 hover:underline"

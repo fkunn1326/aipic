@@ -154,10 +154,23 @@ export default function App() {
     }, 1000)  
   }
 
-  if (!data)
+  if (!data){
     return (
       <div>
         <Header></Header>
+        <div className="relative w-screen h-64 sm:h-96 p-4 sm:p-8 pb-12">
+          <div className="w-full h-full">
+            <div className="w-full h-full mx-auto rounded-3xl animate-pulse bg-gray-200"></div>
+          </div>
+          <div className="flex flex-row items-end absolute bottom-[-15px] left-8 sm:left-36">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 border-[3.5px]  border-white bg-gray-200 rounded-full">
+              <div className="rounded-full animate-pulse"></div>
+            </div>
+            <div className="flex flex-col mb-3 ml-5 font-semibold text-lg">
+              <div className="ml-2 rounded-full bg-gray-200 h-5 w-32"></div>
+            </div>
+          </div>
+        </div>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
             {Array.apply(0, Array(10)).map(function (x, i) {
@@ -167,6 +180,7 @@ export default function App() {
         </div>
       </div>
     );
+  }
     
   var images = data[0].images.slice(0, data[0].images.length);
   return (

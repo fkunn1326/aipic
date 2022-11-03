@@ -1,7 +1,7 @@
 import React from "react"
 import Header from "../components/header/header"
 
-const kiyaku = () => {
+const tos = () => {
     return (
         <div>
             <Header />
@@ -157,4 +157,4 @@ const kiyaku = () => {
     )
 }
 
-export default kiyaku
+export default tos
