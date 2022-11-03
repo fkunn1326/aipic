@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 
+const withPlugins = require('next-compose-plugins');
+const withPWA = require('next-pwa')({
+  dest: 'public',    
+  register: true,
+  skipWaiting: true,
+})
 const withTM = require("next-transpile-modules")([
   "react-tag-input",
   "react-dnd",
@@ -10,7 +16,8 @@ const withTM = require("next-transpile-modules")([
 ])
 
 
-module.exports = withTM({
+module.exports = withPlugins([withTM, withPWA], {
+  reactStrinctMode: true,
   experimental: { esmExternals: "loose" },
   reactStrictMode: false,
   swcMinify: true,
