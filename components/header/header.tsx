@@ -7,6 +7,7 @@ import {
   Bars3Icon
 } from "@heroicons/react/24/solid";
 import Sideblur from "./sideblur"
+import { SiteName } from "../core/const"
 
 const Header = () => {
   const ctx = useContext(userInfoContext);
@@ -26,7 +27,7 @@ const Header = () => {
         <div className="flex items-center justify-between py-3 md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Link href="/">
-              <p className="cursor-pointer text-2xl">AI Arts</p>
+              <p className="cursor-pointer text-2xl">{SiteName}</p>
             </Link>
           </div>
           {ctx.UserInfo === false || ctx.UserInfo === null ? (

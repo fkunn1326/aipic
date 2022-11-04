@@ -74,7 +74,7 @@ export default function Dropdawn(props) {
                     router.push("/likes");
                   }}
                 >
-                  自分がいいねをした作品
+                  いいねをした作品
                 </a>
               )}
             </Menu.Item>

@@ -54,7 +54,7 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
             </Link>
             <Link href="/likes">
               <a className="text-gray-600 font-semibold p-2">
-                自分がいいねをした作品
+                いいねをした作品
               </a>
             </Link>
             <Link href="/settings">

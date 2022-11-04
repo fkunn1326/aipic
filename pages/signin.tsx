@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SiteName } from "../components/core/const"
 
 const Signin = () => {
   const pswdregex =
@@ -49,7 +50,7 @@ const Signin = () => {
             href="#"
             className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
           >
-            AI Arts
+            {SiteName}
           </a>
         </Link>
         <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
