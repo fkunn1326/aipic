@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import Header from "../../components/header/header";
 import { Listbox, Transition } from "@headlessui/react";
@@ -13,8 +13,8 @@ import { v4 as uuidv4 } from "uuid";
 import { userInfoContext } from "../../context/userInfoContext";
 import { useRouter } from "next/router";
 import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { WithContext as ReactTags } from 'react-tag-input';
-import "@pathofdev/react-tag-input/build/index.css";
+import ReactDOM from 'react-dom'
+import ReactTags from 'react-tag-autocomplete'
 import axios from "axios";
 import useSWR from "swr";
 import { parseCookies } from "nookies"
@@ -58,11 +58,38 @@ const Upload = (props) => {
   const [composing, setComposition] = useState(false);
   const [agelimit, setagelimit] = useState("");
   const [imagedata, setimagedata] = useState(null);
-  const [tags, setTags] = useState<object[]>([]);
+  const [tags, setTags] = useState<any[]>([]);
   const [suggestions, setSuggestions] = useState<tags[]>([]);
   const [file, setfile] = useState<any>()
   const [isdeleting, setisdeleting] = useState<boolean>(false)
   const [ischanging, setischanging] = useState<boolean>(false)
+
+  const reactTags = useRef()
+
+  const onDelete = useCallback((tagIndex) => {
+    setTags(tags.filter((tag, index) => index !== tagIndex));
+  }, [tags])
+
+  const onAddition = useCallback((newTag) => {
+    var name = newTag.name.startsWith("#") ? newTag.name : `#${newTag.name}`
+    var localNewTag = {
+      "id": newTag.id,
+      "name": name
+    }
+    setTags([...tags, localNewTag])
+  }, [tags])
+
+  const onValidate = useCallback((newTag) => {
+    var flag: boolean = tags.find(tag => {return tag.name.slice(1) === newTag.name}) === undefined
+    return flag
+  }, [])
+
+  const onInput = async query => {
+    if (query.length <= 2){
+      const result = await fetch(`/api/tags/suggest/?word=${query}`)
+      setSuggestions(await result.json())
+    }
+  };
 
   const router = useRouter();
   const { id } = router.query;
@@ -264,7 +291,7 @@ const Upload = (props) => {
       id: data[0].id,
     })
 
-    router.push("/");
+    router.push(`/images/${data[0].id}`);
   };
 
   const handledelete = async (e) => {
@@ -446,34 +473,30 @@ const Upload = (props) => {
                   タグ
                 </div>
                 <ReactTags
-                    tags={tags}
-                    handleDelete={handleDelete}
-                    handleAddition={handleAddition}
-                    handleDrag={handleDrag}
-                    handleTagClick={handleTagClick}
-                    handleInputChange={handleInputChange}
-                    inputFieldPosition="bottom"
-                    allowDragDrop={false}
-                    placeholder=""
-                    autofocus={false}
-                    allowAdditionFromPaste={false}
-                    renderSuggestion = {({ name }) => 
-                    <div className="flex justify-between w-64 text-sm px-4">
-                      <div className="text-gray-700 flex items-center">{name}</div>
-                      <div className="text-gray-600 my-2">{(suggestions.find(tag => tag.name === name))?.count}件</div>
-                    </div>}
-                    minQueryLength={1}
-                    classNames = {{
-                        tag: "text-base text-sky-600 mr-2 !cursor-pointer hover:line-through",
-                        tagInputField: "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5 mt-2",
-                        suggestions: "absolute border py-2 rounded-lg bg-white cursor-pointer",
-                        activeSuggestion: "bg-sky-100",
-                        remove: "hidden"
-                    }}
-                    suggestions={suggestions}
-                    labelField={'name'}
-                    autocomplete
-                />               
+                  allowNew
+                  ref={reactTags}
+                  tags={tags}
+                  suggestions={suggestions}
+                  onDelete={onDelete}
+                  onAddition={onAddition}
+                  onValidate={onValidate}
+                  onInput={onInput}
+                  minQueryLength={1}
+                  addOnBlur={true}
+                  placeholderText={"タグを追加"}
+                  classNames={{
+                    root: 'relative p-2.5 border border-gray-300 cursor-text bg-gray-50 border border-gray-300 rounded-lg',
+                    rootFocused: '',
+                    selected: 'inline',
+                    selectedTag: 'inline-block box-border text-base text-sky-600 mr-2 !cursor-pointer hover:line-through',
+                    search: 'inline-block',
+                    searchInput: 'max-w-full outline-none bg-gray-50',
+                    suggestions: 'react-tags__suggestions',
+                    suggestionActive: 'is-active',
+                    suggestionDisabled: 'is-disabled',
+                    suggestionPrefix: 'react-tags__suggestion-prefix'
+                  }} 
+                />            
               </div>
               <div>
                 <div className="block mb-2 text-sm font-medium text-gray-900">
