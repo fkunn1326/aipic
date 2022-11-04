@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import { userInfoContext } from "../../context/userInfoContext";
-import useSWR from "swr";
+import useSWRImmutable from 'swr/immutable'
 import BlurImage from "./BlurImage"
 import SkeletonImage from "./SkeltonImage"
 
@@ -10,6 +10,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 export default function OtherImages() {
   var ctx = useContext(userInfoContext);
   var access_limit = ""
+  
   if (ctx.UserInfo !== null) {
     access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
   }
@@ -22,9 +23,14 @@ export default function OtherImages() {
     return array;
   }
 
-  const { data, error } = useSWR(
+  const { data, error } = useSWRImmutable(
     "../api/images/list" + access_limit,
-     fetcher
+     fetcher,
+     {
+      dedupingInterval: 3600000,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
   if (!data)
     return (

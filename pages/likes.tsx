@@ -48,7 +48,7 @@ export default function App() {
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="mt-6 text-2xl font-semibold">
-          自分がいいねをした作品
+          いいねをした作品
         </div>
       </div>
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">

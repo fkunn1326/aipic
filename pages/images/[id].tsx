@@ -63,7 +63,7 @@ const Meta = ({data}) => {
   )
 }
 
-const Images = ({data, host}) => {
+const Images = ({data, host, children}) => {
   const ctx = useContext(userInfoContext);
 
   const [isImageOpen, setisImageOpen] = useState(false);
@@ -487,7 +487,7 @@ const Images = ({data, host}) => {
                 </div>
               </div>
             </main>
-            <OtherImages />
+            {children}
           </div>
         </div>
       </div>
@@ -495,4 +495,10 @@ const Images = ({data, host}) => {
   );
 };
 
-export default Images;
+export default function App({data, host, children}) {
+  return (
+    <Images data={data} host={host}>
+      <OtherImages />
+    </Images>
+  );
+}
