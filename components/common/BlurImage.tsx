@@ -16,24 +16,26 @@ export default function BlurImage({ image }) {
         <div className="relative">
           <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
             <Link href={`/images/${image.id}`}>
-              <Image
-                alt={image.title}
-                src={image.href}
-                layout="fill"
-                objectFit="cover"
-                className={cn(
-                  "duration-700 ease-in-out group-hover:opacity-75",
-                  isLoading
-                    ? "scale-110 blur-2xl grayscale"
-                    : "scale-100 blur-0 grayscale-0"
-                  // image.age_limit !== 'all'
-                  //   ? 'blur-md'
-                  //   : ''
-                )}
-                onLoadingComplete={() => {
-                  setLoading(false);
-                }}
-              />
+              <a>
+                <Image
+                  alt={image.title}
+                  src={image.href}
+                  layout="fill"
+                  objectFit="cover"
+                  className={cn(
+                    "duration-700 ease-in-out group-hover:opacity-75",
+                    isLoading
+                      ? "scale-110 blur-2xl grayscale"
+                      : "scale-100 blur-0 grayscale-0"
+                    // image.age_limit !== 'all'
+                    //   ? 'blur-md'
+                    //   : ''
+                  )}
+                  onLoadingComplete={() => {
+                    setLoading(false);
+                  }}
+                />
+              </a>
             </Link>
           </div>
           {image.age_limit === "nsfw" && (
