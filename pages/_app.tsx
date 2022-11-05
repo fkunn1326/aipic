@@ -5,7 +5,6 @@ import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import React from "react";
 import UserInfoProvider from "../components/auth/userInfoProvider";
 import useTransition from "../components/hooks/useTransition";
-import CummonHead from "../components/head";
 import { SiteName } from "../components/core/const"
 import "../styles/taginput.css"
 
@@ -14,7 +13,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserProvider supabaseClient={supabaseClient}>
       <UserInfoProvider>
-        <CummonHead title={SiteName} />
         <Component {...pageProps} />
       </UserInfoProvider>
     </UserProvider>

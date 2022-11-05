@@ -5,6 +5,7 @@ import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage"
 import SkeletonImage from "../components/common/SkeltonImage"
+import { ArrowUpIcon } from "@heroicons/react/24/solid";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -48,6 +49,9 @@ export default function App() {
           ))}
         </div>
       </div>
+      <button className="fixed right-0 bottom-0" onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>
+        <ArrowUpIcon className="w-12 h-12 bg-gray-400 text-white rounded-full p-3 m-12" />
+      </button>
     </div>
   );
 }
