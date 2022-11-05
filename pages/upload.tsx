@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useRef, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import Header from "../components/header/header";
 import { Listbox, Transition } from "@headlessui/react";
@@ -126,6 +126,8 @@ const Upload = (props) => {
                   setSelectedModel(models[2]);
                 }
               }
+            }else if (chunks[i]["chunkType"] == "iTXt"){
+              var chunk = new TextDecoder('utf-8').decode(chunks[i]["data"]);
             }
           }
           var input_prompt = document.getElementById(

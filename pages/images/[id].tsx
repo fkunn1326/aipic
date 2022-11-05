@@ -48,16 +48,18 @@ const Meta = ({data}) => {
       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       <title>{data[0].title} - {data[0].author.name}の作品 - Aipic</title>
       <meta name="description" content={data[0].caption} />
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content={`${data[0].title} - ${data[0].author.name}の作品 - Aipic`} />
-      <meta property="og:description" content={data[0].caption} />
-      <meta property="og:url" content={`https://aipic.vercel.app/images/${data[0].id}`}/>
-      <meta property="og:site_name" content="Aipic" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@fkunn1326" />
-      <meta name="twitter:title" content={`${data[0].title} - ${data[0].author.name}の作品 - Aipic`} />
-      <meta name="twitter:description" content={data[0].caption} />
+      <meta name="twitter:title" content={data[0].title} />
       <meta name="twitter:image" content={data[0].href} />
+      <meta name="twitter:description" content={data[0].caption} />
+      <meta property="og:site_name" content="AIPIC"  />
+      <meta property="og:image" content={data[0].href} />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content={`${data[0].author.name}`} />
+      <meta property="og:description" content={data[0].caption} />
+      <meta property="og:url" content={`https://aipic.vercel.app/images/${data[0].id}`}/>
+      <link rel="alternate" type="application/json+oembed" href={`https://www.aipic.app/api/oembed/${data[0].id}`} />
       <meta name="robots" content="index,follow" />
     </Head>
   )
@@ -180,12 +182,12 @@ const Images = ({data, host, children}) => {
     <div>
       <Meta data={data} />
       <Header />
-      <div className="overflow-x-hidden sm:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
-        <div className="glow sm:mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 md:mx-6 mb:my-auto mb:py-7 sm:py-6">
+      <div className="overflow-x-hidden lg:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
+        <div className="glow lg:mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 lg:mx-6 mb:my-auto mb:py-7 lg:py-6">
           <div className="flex-nowrap flex-col">
-            <main className="sm:pt-16 mb-16 flex-col sm:flex-row flex-nowrap items-start flex basis-auto">
-              <div className="sm:mr-8 flex-col flex w-full basis-3/4 sm:border rounded-3xl">
-                <div className="h-max w-full sm:py-12">
+            <main className="lg:pt-16 mb-16 flex-col lg:flex-row flex-nowrap items-start flex basis-auto">
+              <div className="lg:mr-8 flex-col flex w-full basis-3/4 lg:border rounded-3xl">
+                <div className="h-max w-full lg:py-12">
                   <div className="flex mb-8 relative h-[70vh] items-center w-full">
                     <div className="flex flex-col absolute inset-0 items-center justify-center">
                       <div className="flex relative flex-col-reverse z-auto h-full w-full">
@@ -258,10 +260,10 @@ const Images = ({data, host, children}) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-row sm:justify-end flex-nowrap mt-6 w-full">
-                    <div className="flex justify-between sm:justify-end w-full sm:flex-end flex-row flex-nowrap px-6 sm:py-6 gap-4">
+                  <div className="flex flex-row mx-auto lg:mx-24 lg:justify-end flex-nowrap mt-6 w-10/12">
+                    <div className="flex justify-between lg:justify-end w-full lg:flex-end flex-row flex-nowrap xl:px-6 lg:py-6 gap-4">
                       <button
-                        className="h-8 mr-2"
+                        className="h-8 xl:mr-2"
                         onClick={() => setisPromptOpen(true)}
                       >
                         プロンプトを表示する
@@ -338,7 +340,7 @@ const Images = ({data, host, children}) => {
                           <div className="grid grid-cols-4 gap-4 px-6">
                             <div className="flex flex-col items-center text-sm text-gray-700">
                               <a
-                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${uri}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -352,7 +354,7 @@ const Images = ({data, host, children}) => {
                             </div>
                             <div className="flex flex-col items-center text-sm text-gray-700">
                               <a
-                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 href={`http://www.facebook.com/share.php?u=${uri}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -366,7 +368,7 @@ const Images = ({data, host, children}) => {
                             </div>
                             <div className="flex flex-col items-center text-sm text-gray-700">
                               <a
-                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 href={`https://social-plugins.line.me/lineit/share?url=${uri}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -380,7 +382,7 @@ const Images = ({data, host, children}) => {
                             </div>
                             <div className="flex flex-col items-center text-sm text-gray-700">
                               <button
-                                className="group w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 onClick={async () => {
                                   try {
                                     await navigator.share({
@@ -417,16 +419,16 @@ const Images = ({data, host, children}) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex ml-10 sm:ml-12 sm:justify-center">
+                  <div className="flex mx-24 lg:ml-12 lg:justify-center">
                     <div className="flex flex-col w-[40vw]">
-                      <h1 className="text-xl sm:text-2xl font-bold mt-5 w-max">{image.title}</h1>
+                      <h1 className="text-xl lg:text-2xl font-bold mt-5 w-max">{image.title}</h1>
                       <div
-                        className="mt-2 break-all text-sm sm:text-base"
+                        className="mt-2 break-all text-sm lg:text-base"
                         dangerouslySetInnerHTML={{
                           __html: text2Link(image.caption)
                         }}
                       />
-                      <div className="flex flex-row mt-2 text-sky-600 font-semibold w-max text-sm sm:text-base">
+                      <div className="flex flex-row mt-2 text-sky-600 font-semibold w-max text-sm lg:text-base">
                         {image.tags !== null && image.tags.map((tag, idx) => (
                           <Link href={`/tags/${tag}`} key={idx}>
                             <a className="mr-2">#{tag}</a>
@@ -453,7 +455,7 @@ const Images = ({data, host, children}) => {
               </div>
               <div className="t-[96px] w-full basis-1/4">
                 <div className="flex shrink basis-full sticky min-w-[370px] max-h-[450px]">
-                  <div className="flex flex-col flex-nowrap w-full ml-5 sm:ml-0">
+                  <div className="flex flex-col flex-nowrap w-full ml-5 lg:ml-0">
                     <div className="mb-8 px-0 py-6">
                       <div className="mb-4 flex-col flex-nowrap">
                         <div className="flex mb-8 flex-col flex-nowrap">

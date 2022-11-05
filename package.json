@@ -35,6 +35,7 @@
     "nprogress": "^0.2.0",
     "png-chunks": "^1.0.0",
     "png-chunks-extract": "^1.0.0",
+    "prompt_loader": "ai-art-club/prompt_loader#latest",
     "react": "18.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
