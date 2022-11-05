@@ -192,7 +192,7 @@ const Images = ({data, host, children}) => {
                     <div className="flex flex-col absolute inset-0 items-center justify-center">
                       <div className="flex relative flex-col-reverse z-auto h-full w-full">
                         <div
-                          className={`relative h-full w-full box-content rounded-t-3xl ${
+                          className={`relative h-full w-full box-content ${
                             limittype !== "ok" && "bg-neutral-400"
                           }`}
                           style={{letterSpacing: 0, wordSpacing: 0, fontSize: 0}}
@@ -291,7 +291,7 @@ const Images = ({data, host, children}) => {
                                 />
                               </button>
                             </div>
-                            <p className="font-semibold">{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
+                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
                               <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str} </a>
                           ))}</p>
                           </div>
@@ -307,7 +307,7 @@ const Images = ({data, host, children}) => {
                                 />
                               </button>
                             </div>
-                            <p className="font-semibold">{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
+                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
                               <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str}</a>
                           ))}</p>
                           </div>
@@ -419,7 +419,7 @@ const Images = ({data, host, children}) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex mx-24 lg:ml-12 lg:justify-center">
+                  <div className="flex ml-8 lg:mx-24 lg:ml-12 lg:justify-center">
                     <div className="flex flex-col w-[40vw]">
                       <h1 className="text-xl lg:text-2xl font-bold mt-5 w-max">{image.title}</h1>
                       <div
