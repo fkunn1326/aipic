@@ -18,7 +18,10 @@ const withTM = require("next-transpile-modules")([
 
 module.exports = withPlugins([withTM, withPWA], {
   reactStrinctMode: true,
-  experimental: { esmExternals: "loose" },
+  experimental: { 
+    esmExternals: "loose",
+    scrollRestoration: true,
+  },
   reactStrictMode: false,
   swcMinify: true,
   images: {
