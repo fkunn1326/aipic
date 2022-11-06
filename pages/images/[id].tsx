@@ -27,6 +27,7 @@ import axios from "axios";
 import PopOver from "../../components/popover"
 import { text2Link } from "../../components/common/text2link";
 import OtherImages from "../../components/common/images";
+import FollowBtn from "../../components/common/follow";
 
 
 export const getServerSideProps = async (context) => {
@@ -421,16 +422,17 @@ const Images = ({data, host, children}) => {
                   </div>
                   <div className="flex ml-8 lg:mx-24 lg:ml-12 lg:justify-center">
                     <div className="flex flex-col w-[40vw]">
-                      <h1 className="text-xl lg:text-2xl font-bold mt-5 w-max">{image.title}</h1>
+                      <h1 className="text-xl lg:text-2xl font-bold mt-5 w-max" style={{"overflowWrap": "anywhere"}}>{image.title}</h1>
                       <div
-                        className="mt-2 break-all text-sm lg:text-base"
+                        className="mt-2 break-all w-[85vw] text-sm lg:text-base"
+                        style={{"overflowWrap": "anywhere"}}
                         dangerouslySetInnerHTML={{
                           __html: text2Link(image.caption)
                         }}
                       />
                       <div className="flex flex-row mt-2 text-sky-600 font-semibold w-max text-sm lg:text-base">
                         {image.tags !== null && image.tags.map((tag, idx) => (
-                          <Link href={`/tags/${tag}`} key={idx}>
+                          <Link href={`/tags/${tag}`} key={idx} style={{"overflowWrap": "anywhere"}}>
                             <a className="mr-2">#{tag}</a>
                           </Link>
                         ))}
@@ -472,15 +474,17 @@ const Images = ({data, host, children}) => {
                               </a>
                             </Link>
                           </span>
-                          {image.user_id === ctx.UserInfo.id &&
+                          {image.user_id === ctx.UserInfo.id ?
                           <Link href={`/edit/${image.id}`}>
                             <a
                               type="submit"
-                              className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-1.5 text-center`}
+                              className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-2 text-center`}
                             >
                               編集する
                             </a>
                           </Link>
+                          :
+                          <FollowBtn following_uid={ctx.UserInfo.id} followed_uid={image.user_id} />
                           }
                         </div>
                       </div>
