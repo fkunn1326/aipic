@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import axios from "axios";
+import FollowBtn from "../../components/common/follow"
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -204,7 +205,7 @@ export default function App() {
                 className="rounded-full"
             />
           </div>
-          <div className="flex flex-col mb-3 ml-5 font-semibold text-lg">
+          <div className="flex flex-col mb-1 ml-5 font-semibold text-lg">
             <h1>{data[0].name}</h1>
           </div>
           {data[0].id === ctx.UserInfo.id ?
@@ -290,10 +291,11 @@ export default function App() {
               </SettingModal>
             </div>
             :
-            <div className="flex flex-col mb-3 ml-5 text-sm text-gray-700">
-              <h1>{data[0].introduce}</h1>
+            <div className="grid sm:flex sm:flex-row mb-[-1.3rem] ml-5 text-sm text-gray-700">
+              <h1 className="opacity-0 sm:opacity-100 sm:block my-5 px-5 py-2">{data[0].introduce}</h1>
+              <FollowBtn following_uid={ctx.UserInfo.id} followed_uid={data[0].id}/>
             </div>
-          } 
+          }
         </div>
       </div>
       <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
