@@ -145,7 +145,7 @@ const Images = ({data, host, children}) => {
           }
         );
       }catch(e){;}
-    })()
+    })();
   }, []);
 
   const handlecopy = (text, id) => {

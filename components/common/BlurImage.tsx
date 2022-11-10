@@ -22,6 +22,10 @@ export default function BlurImage({ image }) {
                   src={image.href}
                   layout="fill"
                   objectFit="cover"
+                  priority={true}
+                  sizes="(max-width: 768px) 50vw,
+                  (max-width: 1200px) 30vw,
+                  20vw"
                   className={cn(
                     "duration-700 ease-in-out group-hover:opacity-75",
                     isLoading

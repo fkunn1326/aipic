@@ -292,7 +292,7 @@ export default function App() {
             </div>
             :
             <div className="grid sm:flex sm:flex-row mb-[-1.3rem] ml-5 text-sm text-gray-700">
-              <h1 className="opacity-0 sm:opacity-100 sm:block my-5 px-5 py-2">{data[0].introduce}</h1>
+              <h1 className="opacity-0 sm:opacity-100 sm:block my-5 px-5 py-2 max-w-xl">{data[0].introduce}</h1>
               <FollowBtn following_uid={ctx.UserInfo.id} followed_uid={data[0].id}/>
             </div>
           }

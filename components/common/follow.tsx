@@ -48,9 +48,9 @@ export default function FollowBtn({following_uid, followed_uid}) {
                 setisfollowed(true)
             }
         })()
+        router.events.on("routeChangeComplete", handleComplete);
     }, [ischanged])
 
-    router.events.on("routeChangeComplete", handleComplete);
 
     return (
       <div>
