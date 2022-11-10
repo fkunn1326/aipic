@@ -15,7 +15,7 @@ export default function App() {
   var ctx = useContext(userInfoContext);
   var access_limit = ""
   const router = useRouter();
-  const [follows, setfollows] = useState("")
+  const [follows, setfollows] = useState("()")
   const [isloading, setisloading] = useState(false);
 
   if (ctx.UserInfo !== null) {
@@ -49,7 +49,7 @@ export default function App() {
     fetcher
   )
 
-  if (!followdata)
+  if (!(data && followdata))
     return (
       <div>
         <Header></Header>
