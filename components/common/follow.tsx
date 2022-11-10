@@ -54,15 +54,17 @@ export default function FollowBtn({following_uid, followed_uid}) {
 
     return (
       <div>
-        <button
-            onClick={() => {handlefollow()}}
-            className={`
-                w-full rounded-full font-semibold text-sm my-5 px-5 py-2 text-center 
-                ${isfollowed ? "text-gray-800 bg-gray-200": "text-white bg-sky-500"}
-            `}
-        >
-            {isfollowed ? "フォロー解除する" : "フォローする"}
-        </button>
+        {following_uid !== undefined &&
+            <button
+                onClick={() => {handlefollow()}}
+                className={`
+                    w-full rounded-full font-semibold text-sm my-5 px-5 py-2 text-center 
+                    ${isfollowed ? "text-gray-800 bg-gray-200": "text-white bg-sky-500"}
+                `}
+            >
+                {isfollowed ? "フォロー解除する" : "フォローする"}
+            </button>
+        }
       </div>
     );
 }
