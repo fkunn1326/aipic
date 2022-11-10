@@ -6,21 +6,50 @@ import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage"
 import SkeletonImage from "../components/common/SkeltonImage"
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/router";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
   var ctx = useContext(userInfoContext);
   var access_limit = ""
+  const router = useRouter();
+  const [follows, setfollows] = useState("")
+  const [isloading, setisloading] = useState(false);
+
   if (ctx.UserInfo !== null) {
     access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
   }
 
+  useEffect(() => {
+    var followarr: any[] = [];
+    try{
+      (async() => {
+        const {data, error} = await supabaseClient.from("follows").select("*").eq("following_uid", ctx.UserInfo.id)
+        data?.map(id => {
+          followarr.push(id["followed_uid"])
+        })
+        setfollows(`(${followarr.join(",")})`)
+      })()
+    }catch(e){;}
+  },[ctx, isloading])
+
+
   const { data, error } = useSWR(
     "../api/images/list" + access_limit,
-     fetcher
+     fetcher,
+     {
+        fallbackData: []
+     }
   );
-  if (!data)
+
+  const { data: followdata, error:followerror } = useSWR(
+    follows !== undefined ? "../api/followimages/list" + access_limit + "&" + new URLSearchParams({"follows": follows}).toString() : null,
+    fetcher
+  )
+
+  if (!followdata)
     return (
       <div>
         <Header></Header>
@@ -32,11 +61,27 @@ export default function App() {
           </div>
         </div>
       </div>
-    );
-  var images = data.slice(0, data.length);
+  );
+
   return (
     <div>
       <Header></Header>
+      {follows !== "()" &&
+      <div>   
+        <div className="mx-auto max-w-7xl p-6 sm:px-12">
+          <div className="mt-6 text-2xl font-semibold">
+            フォローユーザーの作品
+          </div>
+        </div>
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
+            {followdata.map((image) => (
+              <BlurImage key={image.id} image={image} />
+            ))}
+          </div>
+        </div>
+      </div>
+      }
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="mt-6 text-2xl font-semibold">
           新着
@@ -44,7 +89,7 @@ export default function App() {
       </div>
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {images.reverse().map((image) => (
+          {data.map((image) => (
             <BlurImage key={image.id} image={image} />
           ))}
         </div>
