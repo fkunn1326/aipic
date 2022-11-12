@@ -320,7 +320,7 @@ const Images = ({data, host, children}) => {
                           {isliked ? (
                             <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
                           ) : (
-                            <HeartIcon className="w-8 h-8"></HeartIcon>
+                            top-2 left-4
                           )}
                         </button>
                         <button
