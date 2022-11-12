@@ -1,6 +1,6 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 export default function FollowBtn({following_uid, followed_uid}) {
     const router = useRouter();
@@ -35,7 +35,7 @@ export default function FollowBtn({following_uid, followed_uid}) {
         }
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async() => {
             const {data, error} = await supabaseClient
                 .from("follows")
@@ -44,9 +44,10 @@ export default function FollowBtn({following_uid, followed_uid}) {
                     "following_uid": following_uid,
                     "followed_uid": followed_uid
                 })
-            if (data?.length !== 0){
+            if (data !== null && data?.length !== 0){
                 setisfollowed(true)
             }
+            console.log(data)
         })()
         router.events.on("routeChangeComplete", handleComplete);
     }, [ischanged])

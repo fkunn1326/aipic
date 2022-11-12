@@ -8,49 +8,26 @@ import SkeletonImage from "../components/common/SkeltonImage"
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
   var ctx = useContext(userInfoContext);
   var access_limit = ""
-  const router = useRouter();
-  const [follows, setfollows] = useState("()")
-  const [isloading, setisloading] = useState(false);
 
   if (ctx.UserInfo !== null) {
     access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
   }
 
-  useEffect(() => {
-    var followarr: any[] = [];
-    try{
-      (async() => {
-        const {data, error} = await supabaseClient.from("follows").select("*").eq("following_uid", ctx.UserInfo.id)
-        data?.map(id => {
-          followarr.push(id["followed_uid"])
-        })
-        setfollows(`(${followarr.join(",")})`)
-      })()
-    }catch(e){;}
-  },[ctx, isloading])
-
-
   const { data, error } = useSWR(
-    "../api/images/list10" + access_limit,
+    "../api/images/list" + access_limit,
      fetcher,
      {
         fallbackData: []
      }
   );
 
-  const { data: followdata, error:followerror } = useSWR(
-    follows !== undefined ? "../api/followimages/list" + access_limit + "&" + new URLSearchParams({"follows": follows}).toString() : null,
-    fetcher
-  )
-
-  if (!(data && followdata))
+  if (!data)
     return (
       <div>
         <Header></Header>
@@ -67,32 +44,11 @@ export default function App() {
   return (
     <div>
       <Header></Header>
-      {follows !== "()" &&
-      <div>   
-        <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
-          <div className="mt-6 text-xl font-semibold">
-            フォローユーザーの作品
-          </div>
-        </div>
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-            {followdata.map((image) => (
-              <BlurImage key={image.id} image={image} />
-            ))}
-          </div>
-        </div>
-      </div>
-      }
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold">
             新着
           </div>
-          <a className="text-sky-600">
-            <Link href="/new">
-              すべて見る
-            </Link>
-          </a>
         </div>
       </div>
       <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
