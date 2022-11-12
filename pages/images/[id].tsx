@@ -318,9 +318,9 @@ const Images = ({data, host, children}) => {
                           onClick={(e) => handlelike(e)}
                         >
                           {isliked ? (
-                            <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
+                            <HeartSolidIcon className="w-8 h-8 text-pink-500"/>
                           ) : (
-                            top-2 left-4
+                            <HeartIcon className="w-8 h-8"/>
                           )}
                         </button>
                         <button
