@@ -11,9 +11,31 @@ import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import OtherImages from "../components/common/images";
+import Head from "next/head";
 
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
+
+const Meta = () => {
+  return (
+    <Head>
+      <title>AIPIC</title>
+      <meta name="description" content="AIPIC（あいぴく）は、🧙AIを利用して創られた🎨イラスト作品🖼の投稿サイトです!" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@fkunn1326" />
+      <meta name="twitter:title" content="AIPIC" />
+      <meta name="twitter:image" content="" />
+      <meta name="twitter:description" content="AIPIC（あいぴく）は、🧙AIを利用して創られた🎨イラスト作品🖼の投稿サイトです!" />
+      <meta property="og:site_name" content="AIPIC"  />
+      <meta property="og:image" content="" />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="AIPIC" />
+      <meta property="og:description" content="AIPIC（あいぴく）は、🧙AIを利用して創られた🎨イラスト作品🖼の投稿サイトです!" />
+      <meta property="og:url" content={`https://www.aipic.app`}/>
+      <meta name="robots" content="index,follow" />
+    </Head>
+  )
+}
 
 export default function App() {
   var ctx = useContext(userInfoContext);
@@ -56,6 +78,7 @@ export default function App() {
   if (!(data && followdata))
     return (
       <div>
+        <Meta/>
         <Header></Header>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
@@ -69,6 +92,7 @@ export default function App() {
 
   return (
     <div>
+      <Meta/>
       <Header></Header>
       {follows !== "()" ?
       <div>   

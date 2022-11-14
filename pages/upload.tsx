@@ -17,6 +17,7 @@ import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import ReactDOM from 'react-dom'
 import ReactTags from 'react-tag-autocomplete'
 import axios from "axios";
+import Link from "next/link";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
@@ -576,6 +577,16 @@ const Upload = (props) => {
                   </div>
                 </Listbox>
               </div>
+              <p className="my-4">
+                <Link href="/terms/tos">
+                  <a className="text-sky-600">利用規約</a>
+                </Link>
+                や
+                <Link href="/terms/guideline">
+                  <a className="text-sky-600">ガイドライン</a>
+                </Link>
+                に違反する作品は削除の対象となります。
+              </p>
               <button
                 type="submit"
                 className={`flex flex-row justify-center w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
