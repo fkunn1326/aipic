@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
+import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage"
@@ -31,6 +32,7 @@ export default function App() {
             })}
           </div>
         </div>
+        <Footer/>
       </div>
     );
 
@@ -58,6 +60,7 @@ export default function App() {
           ))}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

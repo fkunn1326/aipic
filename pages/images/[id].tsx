@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import Header from "../../components/header/header";
+import Footer from "../../components/footer";
 import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import Image from "next/image";
@@ -497,6 +498,7 @@ const Images = ({data, host, children}) => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
@@ -504,7 +506,12 @@ const Images = ({data, host, children}) => {
 export default function App({data, host, children}) {
   return (
     <Images data={data} host={host}>
-      <OtherImages />
+      <div className="mx-auto max-w-7xl p-6 sm:px-12">
+        <div className="text-xl font-semibold">
+          その他の作品
+        </div>
+      </div>
+      <OtherImages count={10} />
     </Images>
   );
 }

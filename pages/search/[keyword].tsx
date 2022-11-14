@@ -1,11 +1,11 @@
 import Image from "next/image";
-import React, { useState, useEffect, useContext } from "react";
-import Header from "../components/header/header";
-import Footer from "../components/footer";
-import { userInfoContext } from "../context/userInfoContext";
+import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
+import Header from "../../components/header/header";
+import Footer from "../../components/footer";
+import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
-import BlurImage from "../components/common/BlurImage"
-import SkeletonImage from "../components/common/SkeltonImage"
+import BlurImage from "../../components/common/BlurImage"
+import SkeletonImage from "../../components/common/SkeltonImage"
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
@@ -13,20 +13,29 @@ import { useRouter } from "next/router";
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
-  var ctx = useContext(userInfoContext);
+  const ctx = useContext(userInfoContext);
+  const router = useRouter()
+  const { keyword } = router.query
   var access_limit = ""
 
   if (ctx.UserInfo !== null) {
     access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
   }
 
+  useLayoutEffect(() => {
+    var el = document.getElementById("searchbox") as HTMLInputElement
+    el.value = keyword as string
+  },[router.isReady])
+
   const { data, error } = useSWR(
-    "../api/images/list" + access_limit,
+    "../api/search" + access_limit + "&keyword=" + keyword,
      fetcher,
      {
         fallbackData: []
      }
   );
+
+  const count = data?.length
 
   if (!data)
     return (
@@ -49,7 +58,7 @@ export default function App() {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold">
-            新着
+            {keyword} の検索結果: {count}件
           </div>
         </div>
       </div>

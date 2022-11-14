@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import Header from "../components/header/header";
+import Footer from "../components/footer";
 import { Listbox, Transition } from "@headlessui/react";
 import {
   CheckIcon,
@@ -300,7 +301,7 @@ const Upload = (props) => {
     <div className="relative bg-white items-center">
       <Header></Header>
       <div className="mt-4 mb-60 flex flex-col items-center justify-center lg:py-0">
-        <div className="w-full bg-white md:mt-0 max-w-[22rem] sm:max-w-2xl xl:p-0">
+        <div className="w-11/12 bg-white md:mt-0 max-w-[22rem] sm:max-w-2xl xl:p-0">
           <div className="">
             <form
               className="space-y-4 md:space-y-6"
@@ -596,6 +597,7 @@ const Upload = (props) => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

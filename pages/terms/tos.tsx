@@ -1,5 +1,6 @@
 import React from "react"
-import Header from "../components/header/header"
+import Header from "../../components/header/header"
+import Footer from "../../components/footer";
 
 const tos = () => {
     return (
@@ -153,6 +154,7 @@ const tos = () => {
                     </ol>
                 </div>
             </div>
+            <Footer/>
         </div>
     )
 }

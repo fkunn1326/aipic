@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import Header from "../../components/header/header";
+import Footer from "../../components/footer";
 import { Listbox, Transition } from "@headlessui/react";
 import {
   CheckIcon,
@@ -690,6 +691,7 @@ const Upload = (props) => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
