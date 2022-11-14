@@ -90,26 +90,38 @@ const Images = ({data, host, children}) => {
           user_id: ctx.UserInfo.id,
         });
         setisliked(false);
+        await axios.post(
+          "/api/likes",
+          JSON.stringify({ 
+            "token": `${supabaseClient?.auth?.session()?.access_token}`,
+            "image_id": `${image.id}`,
+            "type": "delete"
+          }), 
+          {
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }
+        );
       } else {
         await supabaseClient.from("likes").insert({
           image_id: image.id,
           user_id: ctx.UserInfo.id,
         });
-        (async() => {
-          await axios.post(
-            "/api/likes",
-            JSON.stringify({ 
-              "token": `${supabaseClient?.auth?.session()?.access_token}`,
-              "image_id": `${image.id}`
-            }), 
-            {
-              headers: {
-                "Content-Type": "application/json",
-              }
-            }
-          );
-        })()
         setisliked(true);
+        await axios.post(
+          "/api/likes",
+          JSON.stringify({ 
+            "token": `${supabaseClient?.auth?.session()?.access_token}`,
+            "image_id": `${image.id}`,
+            "type": "add"
+          }), 
+          {
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }
+        );
       }
     }
   };
