@@ -42,7 +42,7 @@ const Header = () => {
                 </button>
               </div>
               <Link href="/">
-                <p className="cursor-pointer text-2xl">{SiteName}</p>
+                <a className="cursor-pointer text-2xl">{SiteName}</a>
               </Link>
             </div>
             <div className="md:hidden mr-5 flex items-center">

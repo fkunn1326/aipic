@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import OtherImages from "../components/common/images";
 import DailyRanking from "../components/common/DailyRanking"
+import TagsList from "../components/common/tags"
 import Head from "next/head";
 
 
@@ -95,6 +96,7 @@ export default function App() {
     <div>
       <Meta/>
       <Header></Header>
+      <TagsList/>
       {follows !== "()" ?
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
