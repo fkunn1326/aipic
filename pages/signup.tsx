@@ -180,7 +180,7 @@ const Signup = () => {
                           required
                         ></input>
                         <div className="ml-3 text-sm cursor-pointer">
-                          <Link href="/tos">
+                          <Link href="/terms/tos">
                             <a
                               href=""
                               className="text-sm font-medium text-sky-600 hover:underline"

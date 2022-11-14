@@ -16,7 +16,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
         className="fixed inset-0 z-10 overscroll-contain"
         onClose={onClose}
       >
-        <div className="h-screen px-4 text-center">
+        <div className="h-screen sm:px-4 text-center">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -30,7 +30,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
           </Transition.Child>
 
           <span
-            className="inline-block h-screen align-middle"
+            className="inline-block h-screen align-bottom sm:align-middle"
             aria-hidden="true"
           >
             &#8203;
@@ -44,7 +44,7 @@ const Modal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full sm:w-4/6 h-5/6 p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
+            <div className="bottom-0 inline-block w-full sm:w-4/6 rounded-t-2xl sm:rounded-xl h-[87%] sm:h-5/6 p-6 sm:my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl">
               {children}
             </div>
           </Transition.Child>

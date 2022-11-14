@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
+import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage"
@@ -9,6 +10,8 @@ import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import OtherImages from "../components/common/images";
+
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -67,7 +70,7 @@ export default function App() {
   return (
     <div>
       <Header></Header>
-      {follows !== "()" &&
+      {follows !== "()" ?
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 text-xl font-semibold">
@@ -81,6 +84,15 @@ export default function App() {
             ))}
           </div>
         </div>
+      </div>
+      :
+      <div>   
+        <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
+          <div className="mt-6 text-xl font-semibold">
+            おすすめ
+          </div>
+        </div>
+        <OtherImages count={5} />
       </div>
       }
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
@@ -105,6 +117,7 @@ export default function App() {
       <button className="fixed right-0 bottom-0" onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>
         <ArrowUpIcon className="w-12 h-12 bg-gray-400 text-white rounded-full p-3 m-12" />
       </button>
+      <Footer/>
     </div>
   );
 }

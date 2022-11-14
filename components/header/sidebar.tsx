@@ -8,8 +8,8 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
     
     return (
       <div
-        className={`top-0 right-0 w-[76vw] bg-white rounded-r fixed h-full z-40 ease-in-out duration-[400ms] ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={`top-0 left-0 w-[76vw] bg-white rounded-r fixed h-full z-40 ease-in-out duration-[400ms] ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col gap-y-6 h-full p-10">
@@ -65,11 +65,6 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
             <Link href="/history">
               <a className="text-gray-600 font-semibold p-2">
                 閲覧履歴
-              </a>
-            </Link>
-            <Link href="/tos">
-              <a className="text-gray-600 font-semibold p-2">
-                利用規約
               </a>
             </Link>
             <Link href="/">

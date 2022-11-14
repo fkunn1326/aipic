@@ -2,6 +2,7 @@ import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import Header from "../components/header/header";
+import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
 import { useUser } from "@supabase/auth-helpers-react";
 import axios from "axios";
@@ -337,6 +338,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

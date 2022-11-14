@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
+import Footer from "../components/footer";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
@@ -41,6 +42,7 @@ export default function App() {
             })}
           </div>
         </div>
+        <Footer/>
       </div>
     );
   var images = data.slice(0, data.length);
@@ -65,6 +67,7 @@ export default function App() {
           ))}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
