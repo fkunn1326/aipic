@@ -451,8 +451,7 @@ const Images = ({data, host, children}) => {
                     <div className="flex flex-col w-[40vw]">
                       <h1 className="text-xl lg:text-2xl font-bold mt-5 w-max" style={{"overflowWrap": "anywhere"}}>{image.title}</h1>
                       <div
-                        className="mt-2 break-all w-[85vw] text-sm lg:text-base"
-                        style={{"overflowWrap": "anywhere"}}
+                        className="mt-2 text-sm lg:text-base"
                         dangerouslySetInnerHTML={{
                           __html: text2Link(image.caption)
                         }}
