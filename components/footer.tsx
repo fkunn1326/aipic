@@ -26,6 +26,11 @@ const Footer = () => {
                     </Link>
                 </p>
                 <p className="text-sm sm:ml-4">
+                    <Link href="/terms/guideline">
+                        <a className="text-sky-600 hover:underline">ガイドライン</a>
+                    </Link>
+                </p>
+                <p className="text-sm sm:ml-4">
                     <a href="https://forms.gle/gQWnPFDXqSmu8NqCA" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">お問い合わせフォーム</a>
                 </p>
             </div>

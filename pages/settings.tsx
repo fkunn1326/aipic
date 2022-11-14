@@ -30,6 +30,7 @@ const Settings = () => {
   });
   const [ischanged, setischanged] = useState(false);
   const [idstate, setidstate] = useState(0);
+  const [invalid, setinvalid] = useState(false)
 
   const router = useRouter();
 
@@ -51,19 +52,23 @@ const Settings = () => {
       peer1.classList.add("hidden");
       peer2.classList.add("hidden");
       peer3.classList.add("hidden");
+      setinvalid(false)
       if (e.target.value !== "") {
         if (data === undefined) {
           if (idregex.test(e.target.value)) {
             peer3.classList.remove("hidden");
+            setinvalid(true)
           }
         } else {
           if (data["id"] === user!["id"]) {
           } else {
             peer1.classList.remove("hidden");
+            setinvalid(true)
           }
         }
       } else {
         peer2.classList.remove("hidden");
+        setinvalid(true)
       }
     })();
   };
@@ -84,13 +89,16 @@ const Settings = () => {
   };
 
   const handleconfirm = async (e) => {
-    if (states["userid"] !== undefined) {
-      if (!idregex.test(states["userid"])) {
-        var new_obj = Object.assign(ctx["UserInfo"]);
-        new_obj["uid"] = states["userid"];
-        new_obj["access_limit"] = states["access_limit"];
-        await supabaseClient.from("profiles").upsert(new_obj).select();
-        setischanged(false);
+    console.log(invalid)
+    if(!invalid){
+      if (states["userid"] !== undefined) {
+        if (!idregex.test(states["userid"])) {
+          var new_obj = Object.assign(ctx["UserInfo"]);
+          new_obj["uid"] = states["userid"];
+          new_obj["access_limit"] = states["access_limit"];
+          await supabaseClient.from("profiles").upsert(new_obj).select();
+          setischanged(false);
+        }
       }
     }
   };
