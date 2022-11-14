@@ -18,12 +18,11 @@ const Views = async (req: NextApiRequest, res: NextApiResponse) => {
     const { token, image_id } = req.body;
     try {
         var decoded = jwt.decode(token)
-        var { data, error }: any = await supabaseAdmin.from("images").select("views,daily_point").eq("id", image_id)
+        var { data, error }: any = await supabaseAdmin.from("images").select("daily_point").eq("id", image_id)
         await supabaseAdmin
             .from('images')
             .update({
-                views: data[0].views + 1,
-                daily_point: data[0].daily_point + 1
+                daily_point: data[0].daily_point + 3
             })
             .eq("id", image_id)
             

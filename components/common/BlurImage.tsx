@@ -7,13 +7,16 @@ import {
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { userInfoContext } from "../../context/userInfoContext";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import axios from "axios";
 
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function BlurImage({ image }) {
+export default function BlurImage(props) {
+    var image = props.image
+    const rank = props.rank === undefined ? undefined : props.rank
     const ctx = useContext(userInfoContext);
 
     const [isLoading, setLoading] = useState(true);
@@ -32,6 +35,20 @@ export default function BlurImage({ image }) {
             image_id: image.id,
             user_id: ctx.UserInfo.id,
           });
+          (async() => {
+            await axios.post(
+              "/api/likes",
+              JSON.stringify({ 
+                "token": `${supabaseClient?.auth?.session()?.access_token}`,
+                "image_id": `${image.id}`
+              }), 
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                }
+              }
+            );
+          })()
           setisliked(true);
         }
       }
@@ -90,6 +107,11 @@ export default function BlurImage({ image }) {
             <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
               R-18G
             </p>
+          )}
+          {rank !== undefined && (
+            <div className={`absolute top-2 right-2 text-base flex items-center justify-center font-semibold ${rank === 1 && "bg-yellow-500"} ${rank === 2 && "bg-gray-400"} ${rank === 3 && "bg-orange-400"} ${rank > 3 && "bg-gray-500"} text-white w-10 h-10 rounded-full`}>
+              {rank}
+            </div>
           )}
             <button className="absolute bottom-1 right-1 text-sm font-semibold px-2 rounded-md" onClick={(e) => handlelike(e)}>
               {isliked ? (
