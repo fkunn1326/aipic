@@ -95,6 +95,20 @@ const Images = ({data, host, children}) => {
           image_id: image.id,
           user_id: ctx.UserInfo.id,
         });
+        (async() => {
+          await axios.post(
+            "/api/likes",
+            JSON.stringify({ 
+              "token": `${supabaseClient?.auth?.session()?.access_token}`,
+              "image_id": `${image.id}`
+            }), 
+            {
+              headers: {
+                "Content-Type": "application/json",
+              }
+            }
+          );
+        })()
         setisliked(true);
       }
     }

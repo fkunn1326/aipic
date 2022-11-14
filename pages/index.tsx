@@ -11,6 +11,7 @@ import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import OtherImages from "../components/common/images";
+import DailyRanking from "../components/common/DailyRanking"
 import Head from "next/head";
 
 
@@ -137,6 +138,14 @@ export default function App() {
             <BlurImage key={image.id} image={image} />
           ))}
         </div>
+      </div>
+      <div>   
+        <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
+          <div className="mt-6 text-xl font-semibold">
+            デイリーランキング
+          </div>
+        </div>
+        <DailyRanking />
       </div>
       <button className="fixed right-0 bottom-0" onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>
         <ArrowUpIcon className="w-12 h-12 bg-gray-400 text-white rounded-full p-3 m-12" />
