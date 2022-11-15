@@ -156,11 +156,7 @@ export default function App() {
           </a>
         </div>
       </div>
-      <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-        <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          <TagImages count={5} tag="AIPICリリース記念" />
-        </div>
-      </div>
+      <TagImages count={5} tag="AIPICリリース記念" />
 
       {/* <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
