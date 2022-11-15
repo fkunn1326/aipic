@@ -77,7 +77,6 @@ const Upload = (props) => {
   }, [tags])
 
   const onValidate = useCallback((newTag) => {
-    console.log(newTag)
     var flag: boolean = tags.find(tag => {return tag.name.slice(1) === newTag.name}) === undefined
     return flag
   }, [])

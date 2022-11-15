@@ -89,7 +89,6 @@ const Settings = () => {
   };
 
   const handleconfirm = async (e) => {
-    console.log(invalid)
     if(!invalid){
       if (states["userid"] !== undefined) {
         if (!idregex.test(states["userid"])) {

@@ -48,7 +48,6 @@ const Header = () => {
             <div className="md:hidden mr-5 flex items-center">
               <button onClick={() => {
                 setshowsearch(!showsearch)
-                console.log(showsearch)
               }}>
                 <MagnifyingGlassIcon className="w-6 h-6"/>
               </button>

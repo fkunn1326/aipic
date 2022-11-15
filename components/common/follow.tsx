@@ -47,7 +47,6 @@ export default function FollowBtn({following_uid, followed_uid}) {
             if (data !== null && data?.length !== 0){
                 setisfollowed(true)
             }
-            console.log(data)
         })()
         router.events.on("routeChangeComplete", handleComplete);
     }, [ischanged])

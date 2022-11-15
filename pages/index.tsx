@@ -68,7 +68,7 @@ export default function App() {
     "../api/images/list10" + access_limit,
      fetcher,
      {
-        fallbackData: []
+        fallbackData: [],
      }
   );
 
@@ -143,8 +143,15 @@ export default function App() {
       </div>
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
-          <div className="mt-6 text-xl font-semibold">
-            デイリーランキング
+          <div className="mt-6 w-full flex flex-row justify-between">
+            <div className="text-xl font-semibold">
+              デイリーランキング
+            </div>
+            <a className="text-sky-600">
+              <Link href="/daily_ranking">
+                すべて見る
+              </Link>
+            </a>
           </div>
         </div>
         <DailyRanking />

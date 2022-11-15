@@ -2210,6 +2210,11 @@
   resolved "https://registry.npmjs.org/@tailwindcss/aspect-ratio/-/aspect-ratio-0.4.2.tgz"
   integrity sha512-8QPrypskfBa7QIMuKHg2TA7BqES6vhBrDLOv8Unb6FcFyd3TjKbc6lcmb9UPQHxfl24sXoJ41ux/H7qQQvfaSQ==
 
+"@tailwindcss/line-clamp@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/line-clamp/-/line-clamp-0.4.2.tgz#f353c5a8ab2c939c6267ac5b907f012e5ee130f9"
+  integrity sha512-HFzAQuqYCjyy/SX9sLGB1lroPzmcnWv1FHkIpmypte10hptf4oPUfucryMKovZh2u0uiS9U5Ty3GghWfEJGwVw==
+
 "@tootallnate/once@2":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
@@ -2346,11 +2351,6 @@
   dependencies:
     "@typescript-eslint/types" "5.39.0"
     eslint-visitor-keys "^3.3.0"
-
-"@videsk/tailwind-random-color@^0.2.0-beta":
-  version "0.2.0-beta"
-  resolved "https://registry.yarnpkg.com/@videsk/tailwind-random-color/-/tailwind-random-color-0.2.0-beta.tgz#378445c5250bed60369157c5ae163cf04f9d4e1f"
-  integrity sha512-RSwT59cb4qihrTRXiLTxCYNXfv+q1BXphaZKPTetXtCIR9nCKaPreENxUASgzgr+LFgS0efT4aw2iStUT12EWQ==
 
 abab@^2.0.6:
   version "2.0.6"

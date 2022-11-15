@@ -67,26 +67,54 @@ const Meta = ({data}) => {
   )
 }
 
-const Images = ({data, host, children}) => {
+const LikeBtn = ({data}) => {
+  const [isliked, setisliked] = useState(false)
+  const [isfocus, setisfocus] = useState(true)
+  const [image, setimage] = useState<any>({})
   const ctx = useContext(userInfoContext);
+  const router = useRouter()
 
-  const [isImageOpen, setisImageOpen] = useState(false);
-  const [isPromptOpen, setisPromptOpen] = useState(false);
-  const [isShareOpen, setisShareOpen] = useState(false);
+  useEffect(() => {
+    setimage(data)
+  },[])
 
-  const [isliked, setisliked] = useState(false);
-  const [limittype, setlimittype] = useState("");
+  useEffect(() => {
+    if (image !== undefined && Object.keys(image).length !== 0) {
+      image.likes.map((like) => {
+        if (like.user_id === ctx.UserInfo.id) setisliked(true);
+      });
+    }
 
-  const router = useRouter();
-  const pid = router.query.id;
+    const handleFocus = () => {
+      setisfocus(true);
+    };
 
-  const uri = `https://${host}/images/${pid}`
+    const handleBlur = () => {
+      setisfocus(false);
+    };
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
+    };
+  }, [image, ctx]);
+
+  useEffect(() => {
+    (async() => {
+      const res = await fetch(`/api/images/${data.id}`)
+      var limage = await res.json()
+      setimage(limage[0])
+    })()
+  }, [isfocus])
 
   const handlelike = async (e) => {
     if (ctx.UserInfo.id !== undefined) {
       if (isliked) {
         await supabaseClient.from("likes").delete().match({
-          image_id: image.id,
+          image_id: data.id,
           user_id: ctx.UserInfo.id,
         });
         setisliked(false);
@@ -94,7 +122,7 @@ const Images = ({data, host, children}) => {
           "/api/likes",
           JSON.stringify({ 
             "token": `${supabaseClient?.auth?.session()?.access_token}`,
-            "image_id": `${image.id}`,
+            "image_id": `${data.id}`,
             "type": "delete"
           }), 
           {
@@ -105,7 +133,7 @@ const Images = ({data, host, children}) => {
         );
       } else {
         await supabaseClient.from("likes").insert({
-          image_id: image.id,
+          image_id: data.id,
           user_id: ctx.UserInfo.id,
         });
         setisliked(true);
@@ -113,7 +141,7 @@ const Images = ({data, host, children}) => {
           "/api/likes",
           JSON.stringify({ 
             "token": `${supabaseClient?.auth?.session()?.access_token}`,
-            "image_id": `${image.id}`,
+            "image_id": `${data.id}`,
             "type": "add"
           }), 
           {
@@ -126,12 +154,38 @@ const Images = ({data, host, children}) => {
     }
   };
 
+  return (
+    <button
+    className="w-8 h-8"
+    onClick={(e) => handlelike(e)}
+    >
+      {isliked ? (
+        <HeartSolidIcon className="w-8 h-8 text-pink-500"/>
+      ) : (
+        <HeartIcon className="w-8 h-8"/>
+      )}
+    </button>
+  )  
+}
+
+const Images = ({data, host, children}) => {
+  const ctx = useContext(userInfoContext);
+
+  const [isImageOpen, setisImageOpen] = useState(false);
+  const [isPromptOpen, setisPromptOpen] = useState(false);
+  const [isShareOpen, setisShareOpen] = useState(false);
+
+  const [limittype, setlimittype] = useState("");
+
+  const router = useRouter();
+  const pid = router.query.id;
+
+  const uri = `https://${host}/images/${pid}`
+
+
   useEffect(() => {
     if (data !== undefined) {
       if (image !== undefined) {
-        image.likes.map((like) => {
-          if (like.user_id === ctx.UserInfo.id) setisliked(true);
-        });
         if (ctx.UserInfo.id === undefined) {
           setlimittype("unauth");
         } else {
@@ -340,16 +394,7 @@ const Images = ({data, host, children}) => {
                           ))}</p>
                           </div>
                         </Modal>
-                        <button
-                          className="w-8 h-8"
-                          onClick={(e) => handlelike(e)}
-                        >
-                          {isliked ? (
-                            <HeartSolidIcon className="w-8 h-8 text-pink-500"/>
-                          ) : (
-                            <HeartIcon className="w-8 h-8"/>
-                          )}
-                        </button>
+                        <LikeBtn data={image}></LikeBtn>
                         <button
                           className="w-8 h-8"
                           onClick={() => setisShareOpen(true)}
@@ -447,18 +492,18 @@ const Images = ({data, host, children}) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex ml-8 lg:mx-24 lg:ml-12 lg:justify-center">
-                    <div className="flex flex-col w-[40vw]">
-                      <h1 className="text-xl lg:text-2xl font-bold mt-5 w-max" style={{"overflowWrap": "anywhere"}}>{image.title}</h1>
+                  <div className="flex ml-8 lg:mx-24 lg:ml-12 justify-center">
+                    <div className="flex flex-col w-[85vh] 2xl:w-[45vw]">
+                      <h1 className="text-xl lg:text-2xl font-bold mt-18" style={{"overflowWrap": "anywhere"}}>{image.title}</h1>
                       <div
-                        className="mt-2 text-sm lg:text-base"
+                        className="mt-5 text-sm lg:text-base"
                         dangerouslySetInnerHTML={{
                           __html: text2Link(image.caption)
                         }}
                       />
-                      <div className="flex flex-row mt-2 text-sky-600 font-semibold w-max text-sm lg:text-base">
+                      <div className="flex flex-row mt-5 text-sky-600 font-semibold text-sm lg:text-base">
                         {image.tags !== null && image.tags.map((tag, idx) => (
-                          <Link href={`/tags/${tag}`} key={idx} style={{"overflowWrap": "anywhere"}}>
+                          <Link href={`/search/${tag}`} key={idx} style={{"overflowWrap": "anywhere"}}>
                             <a className="mr-2">#{tag}</a>
                           </Link>
                         ))}
