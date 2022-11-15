@@ -40,7 +40,7 @@ export default function DailyRanking() {
     <div>
       <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {data.map((image,idx) => (
+          {data.slice(0, 5).map((image,idx) => (
             <BlurImage key={image.id} image={image} rank={idx+1} />
           ))}
         </div>
