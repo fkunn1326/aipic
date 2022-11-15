@@ -13,6 +13,9 @@ import Link from "next/link";
 import OtherImages from "../components/common/images";
 import DailyRanking from "../components/common/DailyRanking"
 import TagsList from "../components/common/tags"
+import TagImages from "../components/common/tagimages"
+import Challenge from "../components/common/challange"
+import ChallengeImages from "../components/common/challengeimages"
 import Head from "next/head";
 
 
@@ -141,6 +144,42 @@ export default function App() {
           ))}
         </div>
       </div>
+      <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
+        <div className="mt-6 w-full flex flex-row justify-between">
+          <div className="text-xl font-semibold">
+            リリース記念！
+          </div>
+          <a className="text-sky-600">
+            <Link href="/new">
+              すべて見る
+            </Link>
+          </a>
+        </div>
+      </div>
+      <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
+          <TagImages count={5} tag="AIPICリリース記念" />
+        </div>
+      </div>
+
+      {/* <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
+        <div className="mt-6 w-full flex flex-row justify-between">
+          <div className="text-xl font-semibold">
+            今日のチャレンジ
+          </div>
+          <a className="text-sky-600">
+            <Link href="/new">
+              すべて見る
+            </Link>
+          </a>
+        </div>
+      </div>
+      <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
+          <Challenge />
+          <ChallengeImages count={8}/>
+        </div>
+      </div> */}
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 w-full flex flex-row justify-between">
