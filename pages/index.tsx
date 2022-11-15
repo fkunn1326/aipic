@@ -150,7 +150,7 @@ export default function App() {
             リリース記念！
           </div>
           <a className="text-sky-600">
-            <Link href="/new">
+            <Link href="/special/aipic_release">
               すべて見る
             </Link>
           </a>
