@@ -53,7 +53,7 @@ const Upload = (props) => {
   const [title, settitle] = useState("");
   const [caption, setcaption] = useState("");
   const [composing, setComposition] = useState(false);
-  const [agelimit, setagelimit] = useState("");
+  const [agelimit, setagelimit] = useState("all");
   const [imagedata, setimagedata] = useState(null);
   const [tags, setTags] = useState<any[]>([]);
   const [suggestions, setSuggestions] = useState<tags[]>([]);
@@ -479,6 +479,8 @@ const Upload = (props) => {
                           onClick={() => {
                             setagelimit("all");
                           }}
+                          onChange={() => {;}}
+                          checked={agelimit === "all"}
                           required
                         ></input>
                         全年齢
@@ -496,6 +498,8 @@ const Upload = (props) => {
                           onClick={() => {
                             setagelimit("r18");
                           }}
+                          onChange={() => {;}}
+                          checked={agelimit === "r18"}
                           required
                         ></input>
                         R18
@@ -513,6 +517,8 @@ const Upload = (props) => {
                           onClick={() => {
                             setagelimit("r18g");
                           }}
+                          onChange={() => {;}}
+                          checked={agelimit === "r18g"}
                           required
                         ></input>
                         R18-G

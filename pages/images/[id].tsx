@@ -398,6 +398,7 @@ const Images = ({data, host, children}) => {
                         <button
                           className="w-8 h-8"
                           onClick={() => setisShareOpen(true)}
+                          title="共有する"
                         >
                           <ArrowUpOnSquareIcon className="w-8 h-8"></ArrowUpOnSquareIcon>
                         </button>
@@ -486,9 +487,7 @@ const Images = ({data, host, children}) => {
                             </button>
                           </div>
                         </ShareModal>
-                        {image.user_id === ctx.UserInfo.id &&
-                          <PopOver id={image.id}/>
-                        }
+                          <PopOver id={image.id} type={image.user_id === ctx.UserInfo.id} />
                       </div>
                     </div>
                   </div>
@@ -510,15 +509,15 @@ const Images = ({data, host, children}) => {
                       </div>
                       <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
                         <div className="flex flex-row items-center ">
-                          <HeartSolidIcon className="w-4 h-4 mr-1"/>
+                          <HeartSolidIcon className="w-4 h-4 mr-1" title="いいね"/>
                           {image.likes.length}
                         </div>
-                        <div className="flex flex-row items-center ">
+                        <div className="flex flex-row items-center" title="閲覧数">
                           <EyeIcon className="w-4 h-4 mr-1"/>
                           {image.views}
                         </div>
-                        <div className="flex flex-row items-center ">
-                          <ClipboardIcon className="w-4 h-4 mr-1"/>
+                        <div className="flex flex-row items-center">
+                          <ClipboardIcon className="w-4 h-4 mr-1" title="コピー数"/>
                           {image.copies}
                         </div>
                       </div>
