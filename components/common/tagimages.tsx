@@ -16,14 +16,6 @@ export default function TagImages({ count, tag }) {
     access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
   }
 
-  const shuffle = ([...array]) => {
-    for (let i = array.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
   const { data, error } = useSWR(
     `../api/tags/${tag}` + access_limit,
      fetcher,
@@ -31,7 +23,7 @@ export default function TagImages({ count, tag }) {
 
   useEffect(() => {
     if (data !== undefined){
-      var images = shuffle(data.slice(0, data.length));
+      var images = data.slice(0, data.length);
       setimages(images.slice(0, count))
     }
   },[data])
