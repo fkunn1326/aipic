@@ -15,7 +15,7 @@ const getTagList = async (req: NextApiRequest, res: NextApiResponse) => {
     .select(`*, author: user_id(name, avatar_url), likes: likes(id, user_id)`)
     .contains("tags", [tag])
     .filter("age_limit", "in", filter)
-    .order("created_at")
+    .order("created_at", {ascending: false})
     
     if (error) return res.status(401).json({ error: error.message });
   return res.status(200).json(data);
