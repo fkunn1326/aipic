@@ -230,31 +230,36 @@ const Upload = (props) => {
     formdata.append("name", uuid)
     formdata.append("type", file.type)
     formdata.append("file", file)
-    await axios.post(
-      "/api/r2/upload",
-      formdata, 
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+    try{
+      await axios.post(
+        "/api/r2/upload",
+        formdata, 
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      }
-    );
-
-    const { data, error } = await supabaseClient.from("images").insert({
-      id: uuid,
-      prompt: prompt,
-      nprompt: nprompt,
-      promptarr: prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
-      npromptarr: nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
-      caption: caption,
-      model: selectedModel.name,
-      href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/images/${uuid}.png`,
-      age_limit: agelimit,
-      title: title,
-      tags: tagsarr,
-      user_id: ctx.UserInfo["id"],
-    });
-    router.push("/");
+      );
+  
+      const { data, error } = await supabaseClient.from("images").insert({
+        id: uuid,
+        prompt: prompt,
+        nprompt: nprompt,
+        promptarr: prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
+        npromptarr: nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
+        caption: caption,
+        model: selectedModel.name,
+        href: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/images/${uuid}.png`,
+        age_limit: agelimit,
+        title: title,
+        tags: tagsarr,
+        user_id: ctx.UserInfo["id"],
+      });
+      router.push("/");
+    }catch(e){
+      alert("アップロード中にエラーが発生しました。再試行してください。")
+      setisSending(false);
+    }
   };
 
   const handlePromptChange = (e) => {
