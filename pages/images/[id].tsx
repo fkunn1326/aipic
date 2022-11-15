@@ -500,7 +500,7 @@ const Images = ({data, host, children}) => {
                           __html: text2Link(image.caption)
                         }}
                       />
-                      <div className="flex flex-row mt-5 text-sky-600 font-semibold text-sm lg:text-base">
+                      <div className="flex flex-row flex-wrap mt-5 text-sky-600 font-semibold text-sm lg:text-base">
                         {image.tags !== null && image.tags.map((tag, idx) => (
                           <Link href={`/search/${tag}`} key={idx} style={{"overflowWrap": "anywhere"}}>
                             <a className="mr-2">#{tag}</a>

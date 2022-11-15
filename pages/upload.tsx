@@ -60,8 +60,20 @@ const Upload = (props) => {
   const [file, setfile] = useState<any>()
 
   const router = useRouter();
-
   const reactTags = useRef()
+
+  const query = router.query;
+  useEffect(() => {
+      if(router.isReady) {
+          if(query.tag !== undefined){
+            var localNewTag = {
+              "id": query.tag,
+              "name": `#${query.tag}`
+            }
+            setTags([...tags, localNewTag])
+          }
+      };
+  },[query, router]);
 
   const onDelete = useCallback((tagIndex) => {
     setTags(tags.filter((tag, index) => index !== tagIndex));
