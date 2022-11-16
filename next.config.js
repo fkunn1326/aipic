@@ -34,4 +34,13 @@ module.exports = withPlugins([withTM, withPWA], {
       "media.discordapp.net"
     ],
   },
+  // async redirects() {
+  //     return [
+  //       {
+  //         source: "/",
+  //         destination: "/maintenance.html",
+  //         permanent: false,
+  //       },
+  //     ];
+  //   },
 });
