@@ -23,7 +23,7 @@ export default function App() {
 
   if (!data || data.__proto__.map === undefined)
     return (
-      <div>
+      <div className="dark:bg-slate-900">
         <Header></Header>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
@@ -43,10 +43,10 @@ export default function App() {
     })
 
     return (
-    <div>
+    <div className="dark:bg-slate-900">
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
-        <div className="mt-6 text-2xl font-semibold">
+        <div className="mt-6 text-2xl font-semibold dark:text-white">
           いいねをした作品
         </div>
       </div>

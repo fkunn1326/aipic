@@ -49,30 +49,30 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-gray-50 pt-10 pb-10">
+    <div className="bg-gray-50 dark:bg-slate-900 pt-10 pb-10">
       <div className="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link href="/">
           <a
-            className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
+            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
           >
             {SiteName}
           </a>
         </Link>
-        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
+        <div className="w-full bg-white dark:bg-slate-800 rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           {!ismailsent ? (
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
                 サインアップ
               </h1>
               <form className="space-y-2 md:space-y-6" onSubmit={clickForms}>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">
                     メール
                     <input
                       type="email"
                       name="email"
                       id="email"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                       autoComplete="username"
                       placeholder="name@example.com"
                       onChange={(e) => {
@@ -107,14 +107,14 @@ const Signup = () => {
                   </label>
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">
+                  <label className="block mb-2 text-sm font-medium dark:text-slate-300 text-gray-900">
                     パスワード
                     <input
                       type="password"
                       name="password"
                       id="password1"
                       placeholder="••••••••"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                      className="bg-gray-50 border border-gray-300 text-gray-900  dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                       autoComplete="new-password"
                       onChange={(e) => {
                         var textel = document.getElementById(
@@ -139,14 +139,14 @@ const Signup = () => {
                   </label>
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">
                     パスワード（確認）
                     <input
                       type="password"
                       name="password"
                       id="password2"
                       placeholder="••••••••"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                       autoComplete="new-password"
                       onChange={(e) => {
                         var textel = document.getElementById(
@@ -179,7 +179,7 @@ const Signup = () => {
                           className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
                           required
                         ></input>
-                        <div className="ml-3 text-sm cursor-pointer">
+                        <div className="ml-3 text-sm cursor-pointer dark:text-slate-300">
                           <Link href="/terms/tos">
                             <a
                               href=""
@@ -200,7 +200,7 @@ const Signup = () => {
                 >
                   アカウントを作る
                 </button>
-                <p className="text-sm font-light text-gray-500 text-center">
+                <p className="text-sm font-light text-gray-500 dark:text-slate-300 text-center">
                   または
                 </p>
                 <button
@@ -245,7 +245,7 @@ const Signup = () => {
                   </svg>
                   Googleで続行
                 </button>
-                <p className="text-sm font-light text-gray-500">
+                <p className="text-sm font-light text-gray-500 dark:text-slate-300">
                   すでにアカウントがありますか？
                   <Link href="/signin">
                     <a className="font-medium text-sky-600 hover:underline">

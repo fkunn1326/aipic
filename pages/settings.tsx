@@ -143,25 +143,25 @@ const Settings = () => {
   }, [user, ctx]);
 
   return (
-    <div>
+    <div className="dark:bg-slate-900">
       <Header></Header>
       <div className="mx-auto px-6 sm:max-w-full sm:px-6 lg:max-w-7xl lg:px-7 w-full h-full">
-        <div className="p-4 w-full bg-gray-50 rounded-lg border border-gray-300 sm:p-8 my-8">
-          <h5 className="mb-2 text-xl font-bold text-gray-900">アカウント</h5>
-          <p className="mb-5 text-gray-500 sm:text-base">
+        <div className="p-4 w-full bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 sm:p-8 my-8">
+          <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">アカウント</h5>
+          <p className="mb-5 text-gray-500 dark:text-slate-300 sm:text-base">
             アカウントについての情報を確認したり、変更したりします。
           </p>
           <div>
             <div className="mt-6">
-              <div className="block text-base font-medium text-gray-900 mb-2">
+              <div className="block text-base font-medium text-gray-900 dark:text-white mb-2">
                 ユーザーID
               </div>
               <div className="flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300">
+                <span className="inline-flex items-center px-3 text-sm text-gray-900 dark:text-white bg-gray-200 dark:bg-slate-600 rounded-l-md border border-r-0 border-gray-300 dark:border-none">
                   @
                 </span>
                 <input
-                  className="outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-r-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
+                  className="bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-none text-gray-900 dark:text-white sm:text-sm rounded-r-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
                   required
                   value={states["userid"]}
                   onChange={(e) => {
@@ -184,7 +184,7 @@ const Settings = () => {
           <div className="mt-6">
             <div className="mt-6">
               <div className="grid items-center mb-2">
-                <div className="block text-base font-medium text-gray-900">
+                <div className="block text-base font-medium text-gray-900 dark:text-white">
                   現在のメールアドレス
                 </div>
                 {user?.app_metadata.provider !== "google" ?
@@ -198,7 +198,7 @@ const Settings = () => {
                 </div>
                 :
                 <div>
-                  <p className="ml-2 block text-sm font-medium text-slate-500">
+                  <p className="mt-2 block text-sm font-medium text-slate-500 dark:text-slate-400">
                     ※このアカウントはGoogleアカウントに連携されているので、メールアドレスは変更できません。
                   </p>
                 </div>
@@ -206,7 +206,7 @@ const Settings = () => {
 
               </div>
               <input
-                className="outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
+                className="bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-none text-gray-900 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
                 required
                 value={states["email"]}
                 readOnly
@@ -216,8 +216,8 @@ const Settings = () => {
           </div>
           <div>
             <div className="mt-6">
-              <div className="block text-sm font-medium text-gray-900 mb-2">
-                ニックネームやアバターは、、
+              <div className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                ニックネームやアバターは、
                 <Link href={`/users/${ctx.UserInfo.uid}`}>
                   <a className="text-sky-600">プロフィールページ</a>
                 </Link>
@@ -226,15 +226,15 @@ const Settings = () => {
             </div>
           </div>
           <div className="mt-6">
-            <div className="block text-base font-medium text-gray-900 mb-3">
+            <div className="block text-base font-medium text-gray-900 mb-3 dark:text-white">
               閲覧制限
             </div>
             <div className="flex flex-col gap-y-1 sm:flex-row sm:items-center">
-              <p className="font-semibold block text-sm text-gray-900">
+              <p className="font-semibold block text-sm text-gray-900 dark:text-white">
                 閲覧制限作品(R-18)
               </p>
               <div className="sm:ml-4 flex items-center">
-                <label className="sm:ml-2 text-sm font-medium text-gray-900">
+                <label className="sm:ml-2 text-sm font-medium text-gray-900 dark:text-white">
                   <input
                     checked={states["access_limit"]["r18"]}
                     type="radio"
@@ -250,7 +250,7 @@ const Settings = () => {
                 </label>
               </div>
               <div className="sm:ml-4 flex items-center">
-                <label className="sm:ml-2 text-sm font-medium text-gray-900">
+                <label className="sm:ml-2 text-sm font-medium text-gray-900 dark:text-white">
                   <input
                     checked={!states["access_limit"]["r18"]}
                     type="radio"
@@ -268,11 +268,11 @@ const Settings = () => {
               </div>
             </div>
             <div className="mt-2 flex flex-col gap-y-1 sm:flex-row sm:items-center">
-              <p className="font-semibold block text-sm text-gray-900">
+              <p className="font-semibold block text-sm text-gray-900 dark:text-white">
                 グロテスクな作品（R-18G）
               </p>
               <div className="sm:ml-4 flex items-center">
-                <label className="sm:ml-2 text-sm font-medium text-gray-900">
+                <label className="sm:ml-2 text-sm font-medium text-gray-900 dark:text-white">
                   <input
                     checked={states["access_limit"]["r18g"]}
                     type="radio"
@@ -288,7 +288,7 @@ const Settings = () => {
                 </label>
               </div>
               <div className="sm:ml-4 flex items-center">
-                <label className="text-sm font-medium text-gray-900">
+                <label className="text-sm font-medium text-gray-900 dark:text-white">
                   <input
                     checked={!states["access_limit"]["r18g"]}
                     type="radio"
@@ -328,10 +328,10 @@ const Settings = () => {
           </div>
           <div className="mt-12">
             <div className="mt-6">
-              <div className="block text-base font-medium text-gray-900 mb-3">
+              <div className="block text-base font-medium text-gray-900 dark:text-white mb-3">
                 アカウントの削除
               </div>
-              <p className="text-gray-900 sm:text-sm rounded-lg font-semibold block w-full">
+              <p className="text-gray-900 dark:text-slate-300 sm:text-sm rounded-lg font-semibold block w-full">
                 アカウントを削除すると、二度と復元ができなくなります。
               </p>
               <button

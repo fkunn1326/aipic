@@ -6,7 +6,6 @@ import React from "react";
 import UserInfoProvider from "../components/auth/userInfoProvider";
 import useTransition from "../components/hooks/useTransition";
 import { SiteName } from "../components/core/const"
-import "../styles/taginput.css"
 
 function MyApp({ Component, pageProps }: AppProps) {
   useTransition();

@@ -30,7 +30,7 @@ export default function App() {
 
   if (!data || data[0] === undefined)
     return (
-      <div>
+      <div className="bg-white dark:bg-slate-900">
         <Header></Header>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
@@ -46,10 +46,10 @@ export default function App() {
   var images = data[0].images.slice(0, data[0].images.length);
 
   return (
-    <div>
+    <div className="bg-white dark:bg-slate-900">
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
-        <div className="mt-6 text-2xl font-semibold">
+        <div className="mt-6 text-2xl font-semibold dark:text-white">
           投稿した作品
         </div>
       </div>

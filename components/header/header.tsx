@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <div
-      className="relative bg-white border-b"
+      className="relative bg-white dark:bg-slate-900 border-b dark:border-slate-700"
       onLoad={() => setUpdate(update ? false : true)}
     >
       <div onClick={() => {setShowSidebar(!showSidebar)}} className={`${!showSidebar && "pointer-events-none"}`}>
@@ -38,18 +38,18 @@ const Header = () => {
             <div className="flex justify-start items-center lg:flex-none">
               <div className="md:hidden mr-5 flex items-center">
                 <button onClick={() => {setShowSidebar(!showSidebar)}}>
-                  <Bars3Icon className="w-6 h-6"/>
+                  <Bars3Icon className="w-6 h-6 dark:text-slate-300"/>
                 </button>
               </div>
               <Link href="/">
-                <a className="cursor-pointer text-2xl">{SiteName}</a>
+                <a className="cursor-pointer text-2xl text-black dark:text-white">{SiteName}</a>
               </Link>
             </div>
             <div className="md:hidden mr-5 flex items-center">
               <button onClick={() => {
                 setshowsearch(!showsearch)
               }}>
-                <MagnifyingGlassIcon className="w-6 h-6"/>
+                <MagnifyingGlassIcon className="w-6 h-6 dark:text-slate-300"/>
               </button>
             </div>
           </div>
@@ -59,7 +59,7 @@ const Header = () => {
                 type="search"
                 id="searchbox"
                 placeholder="作品を検索する"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 w-[32rem] focus:ring-sky-500 focus:border-4 px-3 py-2.5"
+                className="bg-gray-50 dark:bg-slate-700 border dark:border-none border-gray-300 text-gray-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 w-[32rem] focus:ring-sky-500 focus:border-4 px-3 py-2.5"
               ></input>
             </form>
           }
@@ -68,14 +68,14 @@ const Header = () => {
               type="search"
               id="searchbox"
               placeholder="作品を検索する"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 w-[32rem] focus:ring-sky-500 focus:border-4 px-3 py-2.5"
+              className="bg-gray-50 dark:bg-slate-700 border dark:border-none border-gray-300 text-gray-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 w-[32rem] focus:ring-sky-500 focus:border-4 px-3 py-2.5"
             ></input>
           </form>
           {ctx.UserInfo === false || ctx.UserInfo === null ? (
             <div className="flex-1">
               <div className="hidden md:flex justify-end items-center">
                 <Link href="/signin">
-                  <a className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                  <a className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-300">
                     サインイン
                   </a>
                 </Link>

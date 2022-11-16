@@ -20,6 +20,7 @@ import axios from "axios";
 import useSWR from "swr";
 import { parseCookies } from "nookies"
 import { NextPageContext } from "next";
+import Link from "next/link";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
@@ -365,10 +366,10 @@ const Upload = (props) => {
   };
   
   return (
-    <div className="relative bg-white items-center">
+    <div className="relative bg-white dark:bg-slate-900 items-center">
       <Header></Header>
       <div className="mt-4 mb-60 flex flex-col items-center justify-center lg:py-0">
-        <div className="w-full bg-white md:mt-0 max-w-[22rem] sm:max-w-2xl xl:p-0">
+        <div className="w-11/12 bg-white dark:bg-slate-900 md:mt-0 max-w-[22rem] sm:max-w-2xl xl:p-0">
           <div className="">
             <form
               className="space-y-4 md:space-y-6"
@@ -384,14 +385,14 @@ const Upload = (props) => {
               >
                 {!isSelected ? (
                   <label
-                    className={`flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 ${
-                      isdropping && "border-4 border-sky-500 bg-sky-100"
-                    }`}
+                    className={`flex flex-col justify-center items-center w-full h-64 bg-gray-50 dark:bg-slate-800 dark:border-slate-600 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 ${
+                    isdropping && "border-4 border-sky-500 bg-sky-100 dark:bg-slate-700"
+                  }`}
                   >
                     <div className="flex flex-col justify-center items-center pt-5 pb-6">
                       <svg
                         aria-hidden="true"
-                        className="mb-3 w-10 h-10 text-gray-400"
+                        className="mb-3 w-10 h-10 text-gray-400 dark:text-slate-300"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -404,10 +405,10 @@ const Upload = (props) => {
                           d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                         ></path>
                       </svg>
-                      <p className="mb-2 text-sm text-gray-500">
+                      <p className="mb-2 text-sm text-gray-500 dark:text-slate-300">
                         ファイルを選択
                       </p>
-                      <p className="text-xs text-gray-500 text-center">
+                      <p className="text-xs text-gray-500 dark:text-slate-300 text-center">
                         PNG,JPG
                         <br />
                         1枚50MB以内
@@ -428,9 +429,9 @@ const Upload = (props) => {
                     />
                   </label>
                 ) : (
-                  <div className="flex flex-col justify-center items-center w-full h-96 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer relative">
+                  <div className="flex flex-col justify-center items-center w-full h-96 bg-gray-50 dark:bg-slate-800 dark:border-slate-600  rounded-lg border-2 border-gray-300 border-dashed cursor-pointer relative">
                     <XCircleIcon
-                      className="absolute z-10 text-sky-400 w-8 h-8 top-2 right-2 bg-gray-50 rounded-full hover:text-sky-500"
+                      className="absolute z-10 text-sky-400 w-8 h-8 top-2 right-2 bg-gray-50 dark:bg-slate-800 dark:border-slate-600  rounded-full hover:text-sky-500"
                       onClick={() => {
                         setisSelected(false);
                       }}
@@ -445,11 +446,11 @@ const Upload = (props) => {
                 )}
               </div>
               <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900">
+                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   タイトル
                 </div>
                 <input
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5"
                   required
                   onChange={(e) => settitle(e.target.value)}
                   value={title}
@@ -457,11 +458,11 @@ const Upload = (props) => {
                 ></input>
               </div>
               <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900">
+                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   説明
                 </div>
                 <textarea
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-24 w-full p-2.5 resize-none"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-24 w-full p-2.5 resize-none"
                   onChange={(e) => {
                     handleCaptionChange(e);
                   }}
@@ -470,7 +471,7 @@ const Upload = (props) => {
                 ></textarea>
               </div>
               <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900">
+                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   タグ
                 </div>
                 <ReactTags
@@ -486,13 +487,13 @@ const Upload = (props) => {
                   addOnBlur={true}
                   placeholderText={"タグを追加"}
                   classNames={{
-                    root: 'relative p-2.5 border border-gray-300 cursor-text bg-gray-50 border border-gray-300 rounded-lg',
+                    root: 'relative p-2.5 border border-gray-300 cursor-text bg-gray-50 dark:border-slate-600 dark:bg-slate-800 dark:text-white border border-gray-300 rounded-lg',
                     rootFocused: '',
                     selected: 'inline',
                     selectedTag: 'inline-block box-border text-base text-sky-600 mr-2 !cursor-pointer hover:line-through',
                     search: 'inline-block',
-                    searchInput: 'max-w-full outline-none bg-gray-50',
-                    suggestions: 'react-tags__suggestions',
+                    searchInput: 'max-w-full outline-none bg-gray-50 dark:bg-slate-800',
+                    suggestions: 'react-tags__suggestions dark:react-tags__suggestions_dark',
                     suggestionActive: 'is-active',
                     suggestionDisabled: 'is-disabled',
                     suggestionPrefix: 'react-tags__suggestion-prefix'
@@ -500,11 +501,11 @@ const Upload = (props) => {
                 />            
               </div>
               <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900">
+                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   プロンプト（単語ごとにコンマで区切るようにしてください）
                 </div>
                 <textarea
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
+                  className="bg-gray-50 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
                   id="prompt"
                   onChange={(e) => {
                     handlePromptChange(e);
@@ -515,11 +516,11 @@ const Upload = (props) => {
                 ></textarea>
               </div>
               <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900">
+                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   ネガティブプロンプト（単語ごとにコンマで区切るようにしてください）
                 </div>
                 <textarea
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
+                  className="bg-gray-50 border border-gray-300 text-gray-900  dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
                   id="nprompt"
                   onChange={(e) => {
                     handlenPromptChange(e);
@@ -529,13 +530,13 @@ const Upload = (props) => {
                 ></textarea>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   年齢制限
                 </label>
-                <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex">
-                  <li className="bg-gray-50 w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
+                  <li className="bg-gray-50 w-full border-b rounded-l-lg dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
                     <div className="pl-3">
-                      <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 cursor-pointer">
+                      <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900cursor-pointer dark:border-slate-600 dark:bg-slate-800 dark:text-white">
                         <input
                           id="horizontal-list-radio-license"
                           type="radio"
@@ -552,9 +553,9 @@ const Upload = (props) => {
                       </label>
                     </div>
                   </li>
-                  <li className="bg-gray-50 w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                  <li className="bg-gray-50 w-full border-b dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
                     <div className="pl-3">
-                      <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 cursor-pointer">
+                      <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
                         <input
                           id="horizontal-list-radio-id"
                           type="radio"
@@ -571,9 +572,9 @@ const Upload = (props) => {
                       </label>
                     </div>
                   </li>
-                  <li className="bg-gray-50 w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                  <li className="bg-gray-50 w-full border-b rounded-r-lg  dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
                     <div className="pl-3">
-                      <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 cursor-pointer">
+                      <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
                         <input
                           id="horizontal-list-radio-millitary"
                           type="radio"
@@ -593,12 +594,12 @@ const Upload = (props) => {
                 </ul>
               </div>
               <div className="w-full h-full">
-                <label className="block mb-2 text-sm font-medium text-gray-900">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   使用しているモデル名
                 </label>
                 <Listbox value={selectedModel} onChange={setSelectedModel}>
                   <div className="relative mt-1">
-                    <Listbox.Button className="outline-none relative w-full cursor-default rounded-lg bg-gray-50 py-2 pl-3 pr-10 text-left border border-gray-300">
+                    <Listbox.Button className="outline-none relative w-full cursor-default rounded-lg bg-gray-50 py-2 pl-3 pr-10 text-left border border-gray-300  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
                       <span className="block truncate">
                         {selectedModel.name}
                       </span>
@@ -615,13 +616,13 @@ const Upload = (props) => {
                       leaveFrom="opacity-100"
                       leaveTo="opacity-0"
                     >
-                      <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm  dark:border-slate-600 dark:bg-slate-800">
                         {models.map((model, modelIdx) => (
                           <Listbox.Option
                             key={modelIdx}
                             className={({ active }) =>
                               `relative cursor-default select-none py-2 pl-10 pr-4 text-gray-900 ${
-                                active ? "bg-sky-100" : ""
+                                active ? "bg-sky-100 dark:bg-slate-700" : ""
                               }`
                             }
                             value={model}
@@ -629,8 +630,8 @@ const Upload = (props) => {
                             {({ selected }) => (
                               <>
                                 <span
-                                  className={`block truncate ${
-                                    selected ? "font-medium" : "font-normal"
+                                  className={`block truncate dark:text-white ${
+                                    selected ? "font-medium " : "font-normal"
                                   }`}
                                 >
                                   {model.name}
@@ -652,6 +653,16 @@ const Upload = (props) => {
                   </div>
                 </Listbox>
               </div>
+              <p className="my-4 dark:text-slate-300">
+                <Link href="/terms/tos">
+                  <a className="text-sky-600 dark:text-sky-500">利用規約</a>
+                </Link>
+                や
+                <Link href="/terms/guideline">
+                  <a className="text-sky-600 dark:text-sky-500">ガイドライン</a>
+                </Link>
+                に違反する作品は削除の対象となります。
+              </p>
               <button
                 type="submit"
                 className={`flex flex-row justify-center w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${

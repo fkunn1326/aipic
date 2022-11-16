@@ -16,9 +16,9 @@ export default function Dropdawn(props) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="outline-none w-max items-center inline-flex justify-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 ring-white">
+        <Menu.Button className="outline-none w-max items-center inline-flex justify-center rounded-md bg-white dark:bg-slate-900 px-4 py-2 text-sm font-medium text-gray-700 ring-white">
           <img src={avatar} className="h-12 w-12 rounded-full"></img>
-          <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+          <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 dark:text-slate-400" aria-hidden="true" />
         </Menu.Button>
       </div>
 
@@ -31,13 +31,13 @@ export default function Dropdawn(props) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-slate-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
           <Menu.Item>
               {({ active }) => (
                 <a
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active ? "bg-gray-10 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
@@ -52,7 +52,7 @@ export default function Dropdawn(props) {
               {({ active }) => (
                 <a
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
@@ -67,7 +67,7 @@ export default function Dropdawn(props) {
               {({ active }) => (
                 <a
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
@@ -82,7 +82,7 @@ export default function Dropdawn(props) {
               {({ active }) => (
                 <a
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
@@ -97,7 +97,7 @@ export default function Dropdawn(props) {
             {({ active }) => (
                 <a
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
                     "block px-4 py-2 text-sm cursor-pointer"
                   )}
                   onClick={() => {
@@ -114,7 +114,7 @@ export default function Dropdawn(props) {
                   <button
                     type="button"
                     className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
                       "block w-full px-4 py-2 text-left text-sm"
                     )}
                     onClick={() => {
