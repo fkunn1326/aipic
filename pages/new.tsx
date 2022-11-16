@@ -94,7 +94,7 @@ export default function App() {
       <div className="flex justify-center gap-x-4 text-lg">
         {getpagenation().map((count,idx) => (
           <Link href={`${count !== "..." ? `/new?page=${count}` : `/new?page=${page}`}`} key={idx}>
-            <button key={idx} className={`${page === count && "font-semibold text-sky-600"}`} >{count}</button>
+            <button key={idx} className={`w-10 h-10 border dark:text-white rounded-lg  ${page === count && "bg-sky-500 border-none text-white"}`} >{count}</button>
           </Link>
         ))}
       </div>
