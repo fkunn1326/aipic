@@ -9,7 +9,7 @@ const Document = () => {
         <link rel="apple-touch-icon" href="/icon.png"></link>
         <meta name="theme-color" content="#38bdf8" />
       </Head> 
-      <body>
+      <body className="dark:bg-slate-900">
         <Main />
         <NextScript />
       </body>
