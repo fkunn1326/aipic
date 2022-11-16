@@ -11,4 +11,106 @@
       /* Chrome, Safari 対応 */
       display: none;
     }
+    .react-tags__suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+    }
+    
+    @media screen and (min-width: 30em) {
+    
+      .react-tags__suggestions {
+        width: 240px;
+      }
+    
+    }
+    
+    .react-tags__suggestions ul {
+      margin: 4px -1px;
+      list-style: none;
+      background: white;
+      border: 1px solid #D1D1D1;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+  
+    .react-tags__suggestions li mark {
+      background: none;
+    }
+    
+    .react-tags__suggestions li {
+      font-size: 0.875rem; /* 14px */
+      line-height: 1.25rem; /* 20px */
+      margin-top: 0.5rem; /* 8px */
+      margin-bottom: 0.5rem; /* 8px */
+      padding: 6px 8px;
+    }
+    
+    .react-tags__suggestions li:hover {
+      cursor: pointer;
+      background: #e0f2fe;
+    }
+    
+    .react-tags__suggestions li.is-active {
+      background: #e0f2fe;
+    }
+    
+    .react-tags__suggestions li.is-disabled {
+      opacity: 0.5;
+      cursor: auto;
+    }
+
+
+    .react-tags__suggestions_dark {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+    }
+    
+    @media screen and (min-width: 30em) {
+    
+      .react-tags__suggestions_dark {
+        width: 240px;
+      }
+    
+    }
+    
+    .react-tags__suggestions_dark ul {
+      margin: 4px -1px;
+      list-style: none;
+      background: #1e293b;
+      border: 1px solid #475569;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+  
+    .react-tags__suggestions_dark li mark {
+      background: none;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    
+    .react-tags__suggestions_dark li {
+      font-size: 0.875rem; /* 14px */
+      line-height: 1.25rem; /* 20px */
+      margin-top: 0.5rem; /* 8px */
+      margin-bottom: 0.5rem; /* 8px */
+      padding: 6px 8px;
+    }
+    
+    .react-tags__suggestions_dark li:hover {
+      cursor: pointer;
+      background: #334155;
+    }
+    
+    .react-tags__suggestions_dark li.is-active {
+      background: #334155;
+    }
+    
+    .react-tags__suggestions_dark li.is-disabled {
+      opacity: 0.5;
+      cursor: auto;
+    }
   }

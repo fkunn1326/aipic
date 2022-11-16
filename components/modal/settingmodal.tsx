@@ -44,7 +44,7 @@ const SettingModal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full sm:w-[650px] p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-xl">
+            <div className="inline-block w-full sm:w-[650px] p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white dark:bg-slate-900 shadow-xl rounded-xl">
               {children}
             </div>
           </Transition.Child>

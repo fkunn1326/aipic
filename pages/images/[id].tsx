@@ -162,7 +162,7 @@ const LikeBtn = ({data}) => {
       {isliked ? (
         <HeartSolidIcon className="w-8 h-8 text-pink-500"/>
       ) : (
-        <HeartIcon className="w-8 h-8"/>
+        <HeartIcon className="w-8 h-8 text-black dark:text-white"/>
       )}
     </button>
   )  
@@ -261,14 +261,14 @@ const Images = ({data, host, children}) => {
   if (!image) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="bg-white dark:bg-slate-900">
       <Meta data={data} />
       <Header />
       <div className="overflow-x-hidden lg:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
         <div className="glow lg:mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 lg:mx-6 mb:my-auto mb:py-7 lg:py-6">
           <div className="flex-nowrap flex-col">
             <main className="lg:pt-16 mb-16 flex-col lg:flex-row flex-nowrap items-start flex basis-auto">
-              <div className="lg:mr-8 flex-col flex w-full basis-3/4 lg:border rounded-3xl">
+              <div className="lg:mr-8 flex-col flex w-full basis-3/4 lg:border dark:border-slate-500 rounded-3xl">
                 <div className="h-max w-full lg:py-12">
                   <div className="flex mb-8 relative h-[70vh] items-center w-full">
                     <div className="flex flex-col absolute inset-0 items-center justify-center">
@@ -345,7 +345,7 @@ const Images = ({data, host, children}) => {
                   <div className="flex flex-row mx-auto lg:mx-24 lg:justify-end flex-nowrap mt-6 w-10/12">
                     <div className="flex justify-between lg:justify-end w-full lg:flex-end flex-row flex-nowrap xl:px-6 lg:py-6 gap-4">
                       <button
-                        className="h-8 xl:mr-2"
+                        className="h-8 xl:mr-2 text-black dark:text-white"
                         onClick={() => setisPromptOpen(true)}
                       >
                         プロンプトを表示する
@@ -355,18 +355,18 @@ const Images = ({data, host, children}) => {
                           isOpen={isPromptOpen}
                           onClose={() => setisPromptOpen(false)}
                         >
-                          <div className="bg-slate-50 p-8 rounded-3xl">
-                            <p className="text-gray-600 text-sm">使用モデル</p>
-                            <p className="mt-2 font-semibold text-2xl">
+                          <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl">
+                            <p className="text-gray-600 dark:text-slate-300 text-sm">使用モデル</p>
+                            <p className="mt-2 font-semibold text-2xl text-black dark:text-white">
                               {image.model}
                             </p>
                           </div>
-                          <div className="bg-slate-50 p-8 rounded-3xl mt-4">
+                          <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl mt-4">
                             <div className="flex justify-between">
-                              <p className="text-gray-600 text-sm">プロンプト</p>
-                              <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
+                              <p className="text-gray-600 dark:text-slate-300 text-sm">プロンプト</p>
+                              <button className="border dark:border-slate-400 rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                 <ClipboardDocumentIcon
-                                  className="w-5 h-5 text-gray-600 m-2 break-all"
+                                  className="w-5 h-5 text-gray-600 dark:text-slate-400 m-2 break-all"
                                   onClick={() => {
                                     handlecopy(image.prompt, image.id);
                                   }}
@@ -374,15 +374,15 @@ const Images = ({data, host, children}) => {
                               </button>
                             </div>
                             <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str} </a>
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white" key={idx}>{str} </a>
                           ))}</p>
                           </div>
-                          <div className="bg-slate-50 p-8 rounded-3xl mt-4">
+                          <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl mt-4">
                             <div className="flex justify-between">
-                              <p className="text-gray-600 text-sm">ネガティブプロンプト</p>
-                              <button className="border rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
+                              <p className="text-gray-600 dark:text-slate-300 text-sm">ネガティブプロンプト</p>
+                              <button className="border dark:border-slate-400 rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                 <ClipboardDocumentIcon
-                                  className="w-5 h-5 text-gray-600 m-2"
+                                  className="w-5 h-5 text-gray-600 dark:text-slate-400 m-2 break-all"
                                   onClick={() => {
                                     handlecopy(image.nprompt, image.id);
                                   }}
@@ -390,7 +390,7 @@ const Images = ({data, host, children}) => {
                               </button>
                             </div>
                             <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 rounded-sm px-1" key={idx}>{str}</a>
+                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white" key={idx}>{str}</a>
                           ))}</p>
                           </div>
                         </Modal>
@@ -400,21 +400,21 @@ const Images = ({data, host, children}) => {
                           onClick={() => setisShareOpen(true)}
                           title="共有する"
                         >
-                          <ArrowUpOnSquareIcon className="w-8 h-8"></ArrowUpOnSquareIcon>
+                          <ArrowUpOnSquareIcon className="w-8 h-8 text-black dark:text-white"></ArrowUpOnSquareIcon>
                         </button>
                         <ShareModal
                           isOpen={isShareOpen}
                           onClose={() => setisShareOpen(false)}
                         >
                           <div className="p-5 rounded-3xl">
-                            <p className="text-gray-600 text-sm">
+                            <p className="text-gray-600 dark:text-slate-300 text-sm">
                               この作品を共有
                             </p>
                           </div>
                           <div className="grid grid-cols-4 gap-4 px-6">
-                            <div className="flex flex-col items-center text-sm text-gray-700">
+                            <div className="flex flex-col items-center text-sm text-gray-700 dark:text-slate-300">
                               <a
-                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 dark:bg-slate-600 dark:hover:bg-slate-700 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 href={`https://twitter.com/intent/tweet?text=${image.title}\n&url=${uri}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -426,9 +426,9 @@ const Images = ({data, host, children}) => {
                               </a>
                               Twitter
                             </div>
-                            <div className="flex flex-col items-center text-sm text-gray-700">
+                            <div className="flex flex-col items-center text-sm text-gray-700 dark:text-slate-300">
                               <a
-                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 dark:bg-slate-600 dark:hover:bg-slate-700 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 href={`http://www.facebook.com/share.php?u=${uri}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -440,9 +440,9 @@ const Images = ({data, host, children}) => {
                               </a>
                               Facebook
                             </div>
-                            <div className="flex flex-col items-center text-sm text-gray-700">
+                            <div className="flex flex-col items-center text-sm text-gray-700 dark:text-slate-300">
                               <a
-                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 dark:bg-slate-600 dark:hover:bg-slate-700 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 href={`https://social-plugins.line.me/lineit/share?url=${uri}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -454,9 +454,9 @@ const Images = ({data, host, children}) => {
                               </a>
                               LINE
                             </div>
-                            <div className="flex flex-col items-center text-sm text-gray-700">
+                            <div className="flex flex-col items-center text-sm text-gray-700 dark:text-slate-300">
                               <button
-                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
+                                className="group w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-slate-50 dark:bg-slate-600 dark:hover:bg-slate-700 flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 mb-1"
                                 onClick={async () => {
                                   try {
                                     await navigator.share({
@@ -473,13 +473,13 @@ const Images = ({data, host, children}) => {
                               その他
                             </div>
                           </div>
-                          <div className="relative">
-                            <div className="m-6 h-14 rounded-2xl bg-slate-50 flex items-center whitespace-nowrap overflow-x-scroll">
+                          <div className="relative hidden-scrollbar">
+                            <div className="m-6 h-14 rounded-2xl bg-slate-50 dark:bg-slate-600 text-white flex items-center whitespace-nowrap overflow-x-scroll">
                               <p className="mx-4">{uri}</p>
                             </div>
-                            <button className="absolute right-8 top-2 border rounded-lg bg-slate-50 hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
+                            <button className="absolute right-8 top-2 border rounded-lg bg-slate-50 dark:bg-slate-500 dark:border-slate-400 hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                   <ClipboardDocumentIcon
-                                    className="w-5 h-5 text-gray-600 m-2"
+                                    className="w-5 h-5 text-gray-600 dark:text-slate-300 m-2 "
                                     onClick={() => {
                                       handlecopy(uri, image.id);
                                     }}
@@ -493,9 +493,9 @@ const Images = ({data, host, children}) => {
                   </div>
                   <div className="flex ml-8 lg:mx-24 lg:ml-12 justify-center">
                     <div className="flex flex-col w-[85vh] 2xl:w-[45vw]">
-                      <h1 className="text-xl lg:text-2xl font-bold mt-18" style={{"overflowWrap": "anywhere"}}>{image.title}</h1>
+                      <h1 className="text-xl lg:text-2xl font-bold mt-18 text-black dark:text-white" style={{"overflowWrap": "anywhere"}}>{image.title}</h1>
                       <div
-                        className="mt-5 text-sm lg:text-base"
+                        className="mt-5 text-sm lg:text-base text-black dark:text-slate-400"
                         dangerouslySetInnerHTML={{
                           __html: text2Link(image.caption)
                         }}
@@ -538,7 +538,7 @@ const Images = ({data, host, children}) => {
                                   src={image.author.avatar_url}
                                   className="h-9 w-9 rounded-full"
                                 ></img>
-                                <p className="ml-2 font-semibold">
+                                <p className="ml-2 font-semibold dark:text-white">
                                   {image.author.name}
                                 </p>
                               </a>
@@ -576,7 +576,7 @@ export default function App({data, host, children}) {
   return (
     <Images data={data} host={host}>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
-        <div className="text-xl font-semibold">
+        <div className="text-xl font-semibold dark:text-white">
           その他の作品
         </div>
       </div>

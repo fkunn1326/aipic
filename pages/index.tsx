@@ -82,7 +82,7 @@ export default function App() {
 
   if (!(data && followdata))
     return (
-      <div>
+      <div className="bg-white dark:bg-slate-900">
         <Meta/>
         <Header></Header>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -96,14 +96,14 @@ export default function App() {
   );
 
   return (
-    <div>
+    <div className="bg-white dark:bg-slate-900">
       <Meta/>
       <Header></Header>
       <TagsList/>
       {follows !== "()" ?
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
-          <div className="mt-6 text-xl font-semibold">
+          <div className="mt-6 text-xl font-semibold dark:text-white">
             フォローユーザーの作品
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function App() {
       :
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
-          <div className="mt-6 text-xl font-semibold">
+          <div className="mt-6 text-xl font-semibold text-black dark:text-white">
             おすすめ
           </div>
         </div>
@@ -127,10 +127,10 @@ export default function App() {
       }
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
-          <div className="text-xl font-semibold">
+          <div className="text-xl font-semibold text-black dark:text-white">
             新着
           </div>
-          <a className="text-sky-600">
+          <a className="text-sky-600 dark:text-sky-400">
             <Link href="/new">
               すべて見る
             </Link>
@@ -146,10 +146,10 @@ export default function App() {
       </div>
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
-          <div className="text-xl font-semibold">
+          <div className="text-xl font-semibold text-black dark:text-white">
             リリース記念！
           </div>
-          <a className="text-sky-600">
+          <a className="text-sky-600 dark:text-sky-400">
             <Link href="/special/aipic_release">
               すべて見る
             </Link>
@@ -179,10 +179,10 @@ export default function App() {
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 w-full flex flex-row justify-between">
-            <div className="text-xl font-semibold">
+            <div className="text-xl font-semibold text-black dark:text-white">
               デイリーランキング
             </div>
-            <a className="text-sky-600">
+            <a className="text-sky-600 dark:text-sky-400">
               <Link href="/daily_ranking">
                 すべて見る
               </Link>

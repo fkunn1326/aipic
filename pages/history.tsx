@@ -28,7 +28,7 @@ export default function App() {
   
   if (!data)
     return (
-      <div>
+      <div className="dark:bg-slate-900">
         <Header></Header>
         <div className="mx-auto max-w-7xl flex px-6 sm:px-12">
             <div className="pt-6 text-2xl font-semibold">
@@ -47,10 +47,10 @@ export default function App() {
     );
   var images = data.slice(0, data.length);
   return (
-    <div>
-      <Header></Header>
+    <div className="dark:bg-slate-900">
+    <Header></Header>
       <div className="pt-6 flex flex-row items-center mx-auto max-w-7xl px-6 sm:px-12">
-        <div className="text-2xl font-semibold">
+        <div className="text-2xl font-semibold dark:text-white">
             閲覧履歴
         </div>
         <button 
@@ -60,7 +60,7 @@ export default function App() {
             履歴を削除
         </button>
       </div>
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
           {images.reverse().map((image) => (
             <BlurImage key={image.id} image={image} />

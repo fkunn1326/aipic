@@ -30,7 +30,7 @@ export default function App() {
 
   if (!data)
     return (
-      <div>
+      <div className="dark:bg-slate-900">
         <Header></Header>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
@@ -44,11 +44,11 @@ export default function App() {
   );
 
   return (
-    <div>
+    <div className="dark:bg-slate-900">
       <Header></Header>
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
-          <div className="text-xl font-semibold">
+          <div className="text-xl font-semibold dark:text-white">
             リリース記念!
           </div>
         </div>

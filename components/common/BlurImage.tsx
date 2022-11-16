@@ -133,7 +133,7 @@ export default function BlurImage(props) {
               )}
             </button>
         </div>
-        <p className="mt-2 text-base font-semibold text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">
+        <p className="mt-2 text-base font-semibold text-gray-900 dark:text-slate-50 text-ellipsis whitespace-nowrap overflow-hidden">
           {image.title}
         </p>
         <Link href={`/users/${image.author.uid}`}>
@@ -144,7 +144,7 @@ export default function BlurImage(props) {
               height={20}
               className="rounded-full"
             ></Image>
-            <h3 className="ml-2 text-base text-gray-700">{image.author.name}</h3>
+            <h3 className="ml-2 text-base text-gray-700 dark:text-slate-300">{image.author.name}</h3>
           </a>
         </Link>
       </div>

@@ -8,7 +8,7 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
     
     return (
       <div
-        className={`top-0 left-0 w-[76vw] bg-white rounded-r fixed h-full z-40 ease-in-out duration-[400ms] ${
+        className={`top-0 left-0 w-[76vw] bg-white dark:bg-slate-900 rounded-r fixed h-full z-40 ease-in-out duration-[400ms] ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -16,12 +16,12 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
           {avatar === null ?
           <div className="flex flex-col gap-y-4">
             <Link href="/signin">
-              <a className="mt-4 text-gray-600 font-semibold p-2">
+              <a className="mt-4 text-gray-600 dark:text-slate-400 font-semibold p-2">
                 サインイン
               </a>
             </Link>
             <Link href="/signup">
-              <a className="text-gray-600 font-semibold p-2">
+              <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
                 サインアップ
               </a>
             </Link>
@@ -32,44 +32,44 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
               <div className="flex flex-row items-center">
                 <img src={avatar} className="h-12 w-12 rounded-full"></img>
                 <div className="flex flex-col ml-3">
-                  <p className="font-semibold">{name}</p>
-                  <p className="text-sm text-gray-600">{`@${id}`}</p>
+                  <p className="font-semibold dark:text-white">{name}</p>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">{`@${id}`}</p>
                 </div>
               </div>
             </Link>
             <Link href="/">
-              <a className="mt-4 text-gray-600 font-semibold p-2">
+              <a className="mt-4 text-gray-600  dark:text-slate-400 font-semibold p-2">
                 ホーム
               </a>
             </Link>
             <Link href="/upload">
-              <a className="text-gray-600 font-semibold p-2">
+              <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
                 作品の投稿
               </a>
             </Link>
             <Link href="/dashboard">
-              <a className="text-gray-600 font-semibold p-2">
+              <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
                 ダッシュボード
               </a>
             </Link>
             <Link href="/likes">
-              <a className="text-gray-600 font-semibold p-2">
+              <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
                 いいねをした作品
               </a>
             </Link>
             <Link href="/settings">
-              <a className="text-gray-600 font-semibold p-2">
+              <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
                 アカウントの設定
               </a>
             </Link>
             <Link href="/history">
-              <a className="text-gray-600 font-semibold p-2">
+              <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
                 閲覧履歴
               </a>
             </Link>
             <Link href="/">
               <a 
-                className="text-gray-600 font-semibold p-2"
+                className="text-gray-600 dark:text-slate-400 font-semibold p-2"
                 onClick={() => {
                   supabaseClient.auth.signOut();
                   router.push("/");

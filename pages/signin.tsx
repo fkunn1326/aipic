@@ -43,30 +43,29 @@ const Signin = () => {
   };
 
   return (
-    <div className="bg-gray-50 pt-10">
+    <div className="bg-gray-50 dark:bg-slate-900 pt-10">
       <div className="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link href="/">
           <a
-            href="#"
-            className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
+            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
           >
             {SiteName}
           </a>
         </Link>
-        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
+        <div className="w-full bg-white dark:bg-slate-800 dark:border-slate-600 rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
               サインイン
             </h1>
             <form className="space-y-2 md:space-y-6" onSubmit={clickForms}>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">
+                <label className="block mb-3 text-sm font-medium text-gray-900 dark:text-slate-300">
                   メール
                   <input
                     type="email"
                     name="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                     autoComplete="username"
                     placeholder="name@example.com"
                     onChange={(e) => {
@@ -101,14 +100,14 @@ const Signin = () => {
                 </label>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">
                   パスワード
                   <input
                     type="password"
                     name="password"
                     id="password1"
                     placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                     autoComplete="new-password"
                     onChange={(e) => {
                       handlePasswordChange(e);
@@ -123,7 +122,7 @@ const Signin = () => {
               >
                 サインイン
               </button>
-              <p className="text-sm text-gray-500 text-center">または</p>
+              <p className="text-sm text-gray-500 text-center dark:text-slate-300">または</p>
               <button
                 type="button"
                 className="w-full bg-slate-100 hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium text-gray-900 rounded-lg text-sm px-5 py-2.5 text-center flex justify-center"
@@ -166,7 +165,7 @@ const Signin = () => {
                 </svg>
                 Googleで続行
               </button>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-slate-300">
                 アカウントがありませんか？
                 <Link href="/signup">
                   <a className="font-medium text-sky-600 hover:underline">

@@ -4,7 +4,7 @@ import Footer from "../../components/footer";
 
 const tos = () => {
     return (
-        <div>
+        <div className="dark:bg-slate-900 dark:text-white">
             <Header />
             <div className="py-12 px-10 sm:px-32 m-auto xl:max-w-7xl">
                 <div>
