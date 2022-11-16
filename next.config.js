@@ -14,9 +14,11 @@ const withTM = require("next-transpile-modules")([
   "@react-dnd/asap",
   "@react-dnd/shallowequal",
 ])
+const { i18n } = require('./next-i18next.config');
 
 
 module.exports = withPlugins([withTM, withPWA], {
+  i18n,
   reactStrinctMode: true,
   experimental: { 
     esmExternals: "loose",

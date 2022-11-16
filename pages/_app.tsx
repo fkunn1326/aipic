@@ -6,6 +6,7 @@ import React from "react";
 import UserInfoProvider from "../components/auth/userInfoProvider";
 import useTransition from "../components/hooks/useTransition";
 import { SiteName } from "../components/core/const"
+import { appWithTranslation } from 'next-i18next';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useTransition();
@@ -18,4 +19,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);
