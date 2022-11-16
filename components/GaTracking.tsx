@@ -24,9 +24,10 @@ export const GATracking = ({trackingId}) => {
         <Script
           async
           strategy='lazyOnload'
+          id="gtag"
           src={`https://www.googletagmanager.com/gtag/js?id=${trackingId}`}
         />
-        <Script strategy='afterInteractive'>
+        <Script strategy='afterInteractive' id="myscript">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
