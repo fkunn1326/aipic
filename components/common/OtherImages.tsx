@@ -36,7 +36,7 @@ export default function OtherImages({ count }) {
 
   useEffect(() => {
     if (data !== undefined){
-      var images = shuffle(data.slice(0, data.length));
+      var images = shuffle(data.body.slice(0, data.body.length));
       setimages(images.slice(0, count))
     }
   },[data])

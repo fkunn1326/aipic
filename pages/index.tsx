@@ -10,7 +10,7 @@ import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import OtherImages from "../components/common/images";
+import OtherImages from "../components/common/OtherImages";
 import DailyRanking from "../components/common/DailyRanking"
 import TagsList from "../components/common/tags"
 import TagImages from "../components/common/tagimages"

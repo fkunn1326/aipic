@@ -27,7 +27,7 @@ import Head from 'next/head'
 import axios from "axios";
 import PopOver from "../../components/popover"
 import { text2Link } from "../../components/common/text2link";
-import OtherImages from "../../components/common/images";
+import OtherImages from "../../components/common/OtherImages";
 import FollowBtn from "../../components/common/follow";
 
 
