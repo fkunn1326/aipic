@@ -17,7 +17,9 @@ import TagImages from "../components/common/tagimages"
 import Challenge from "../components/common/challange"
 import ChallengeImages from "../components/common/challengeimages"
 import Head from "next/head";
-
+import { useTranslation, Trans } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { GetStaticProps } from "next";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -42,12 +44,13 @@ const Meta = () => {
   )
 }
 
-export default function App() {
+export default function App(_props) {
   var ctx = useContext(userInfoContext);
   var access_limit = ""
   const router = useRouter();
   const [follows, setfollows] = useState("()")
   const [isloading, setisloading] = useState(false);
+  const { t } = useTranslation('home')
 
   if (ctx.UserInfo !== null) {
     access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
@@ -104,7 +107,7 @@ export default function App() {
       <div>   
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 text-xl font-semibold dark:text-white">
-            フォローユーザーの作品
+            {t("フォローユーザーの作品")}
           </div>
         </div>
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -198,3 +201,9 @@ export default function App() {
     </div>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...await serverSideTranslations(locale ?? 'ja', ['common', 'home']),
+  },
+})
