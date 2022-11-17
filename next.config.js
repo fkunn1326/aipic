@@ -31,7 +31,8 @@ module.exports = withPlugins([withTM, withPWA], {
       "xefsjwahbvrgjqysodbm.supabase.co", 
       "lh3.googleusercontent.com",
       "pub-25066e52684e449b90f5170d93e6c396.r2.dev",
-      "media.discordapp.net"
+      "media.discordapp.net",
+      "imagedelivery.net"
     ],
   },
   // async redirects() {
