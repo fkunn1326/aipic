@@ -5,6 +5,7 @@ const withPWA = require('next-pwa')({
   dest: 'public',    
   register: true,
   skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
 })
 const withTM = require("next-transpile-modules")([
   "react-tag-input",
@@ -23,6 +24,7 @@ module.exports = withPlugins([withTM, withPWA], {
   experimental: { 
     esmExternals: "loose",
     scrollRestoration: true,
+    nextScriptWorkers: true,
   },
   reactStrictMode: false,
   swcMinify: true,

@@ -53,15 +53,15 @@ const Meta = ({data}) => {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@fkunn1326" />
       <meta name="twitter:title" content={data[0].title} />
-      <meta name="twitter:image" content={data[0].href} />
       <meta name="twitter:description" content={data[0].caption} />
       <meta property="og:site_name" content="AIPIC"  />
-      <meta property="og:image" content={data[0].href} />
       <meta property="og:type" content="article" />
       <meta property="og:title" content={`${data[0].author.name}`} />
       <meta property="og:description" content={data[0].caption} />
       <meta property="og:url" content={`https://aipic.vercel.app/images/${data[0].id}`}/>
       <link rel="alternate" type="application/json+oembed" href={`https://www.aipic.app/api/oembed/${data[0].id}`} />
+      {data[0].age_limit === "all" && <meta name="twitter:image" content={data[0].href} />}
+      {data[0].age_limit === "all" && <meta property="og:image" content={data[0].href} />}
       <meta name="robots" content="index,follow" />
     </Head>
   )
