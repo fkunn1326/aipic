@@ -6,6 +6,7 @@ import React from "react";
 import UserInfoProvider from "../components/auth/userInfoProvider";
 import useTransition from "../components/hooks/useTransition";
 import { SiteName } from "../components/core/const"
+import Script from 'next/script';
 import { appWithTranslation } from 'next-i18next';
 import { GATracking } from "../components/GaTracking" 
 
@@ -19,6 +20,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <GATracking trackingId={GA_TRACKING_ID} />
         <Component {...pageProps} />
       </UserInfoProvider>
+      {/* @ts-ignore */}
+      {process.env.NODE_ENV === "development" && <Script src='https://unpkg.com/vconsole@latest/dist/vconsole.min.js' onLoad={() => { const vConsole = new window.VConsole() }} />}
     </UserProvider>
   );
 }

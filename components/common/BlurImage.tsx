@@ -77,7 +77,7 @@ export default function BlurImage(props) {
     return (
       <div className="group">
         <div className="relative">
-          <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+          <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-600">
             <Link href={`/images/${image.id}`}>
               <a>
                 <Image
