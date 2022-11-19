@@ -21,6 +21,11 @@ import useSWR from "swr";
 import { parseCookies } from "nookies"
 import { NextPageContext } from "next";
 import Link from "next/link";
+import InputForm from "../../components/form/InputForm";
+import SelectMenu from "../../components/form/SelectMenu";
+import TagsInput from "../../components/form/TagsInput";
+import TextAreaForm from "../../components/form/TextAreaForm";
+import { chunk_reader } from "../../utils/chunk_reader"
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
@@ -54,10 +59,8 @@ const Upload = (props) => {
   const [imageurl, setimageurl] = useState("");
   const [prompt, setprompt] = useState("");
   const [nprompt, setnprompt] = useState("");
-  const [href, sethref] = useState("");
   const [title, settitle] = useState("");
   const [caption, setcaption] = useState("");
-  const [composing, setComposition] = useState(false);
   const [agelimit, setagelimit] = useState("");
   const [imagedata, setimagedata] = useState(null);
   const [tags, setTags] = useState<any[]>([]);
@@ -65,6 +68,9 @@ const Upload = (props) => {
   const [file, setfile] = useState<any>()
   const [isdeleting, setisdeleting] = useState<boolean>(false)
   const [ischanging, setischanging] = useState<boolean>(false)
+  const [step, setstep] = useState<number>()
+  const [sampler, setsampler] = useState("")
+  const [images, setimages] = useState<any[]>([])
 
   const reactTags = useRef()
 
@@ -127,117 +133,29 @@ const Upload = (props) => {
     }
   }, [data, ctx])
 
-  const handleupload = (e) => {
-    var file = e.target.files[0];
-    setimagedata(file);
-    if (file !== undefined) {
-      var fileReader = new FileReader();
-      fileReader.onload = async function webViewerChangeFileReaderOnload(evt) {
-        var buffer = evt!.target!.result as ArrayBuffer;
-        setfile(new Blob([buffer], {type: file.type}))
-        var prompt = "";
-        var negativeprompt = "";
-        var metadata = {};
-        try {
-          var chunks = getChunks(new Uint8Array(buffer));
-          for (var i = 0; i < chunks.length; i++) {
-            if (chunks[i]["chunkType"] == "tEXt") {
-              var chunk = new TextDecoder().decode(chunks[i]["data"]);
-              if (chunk.startsWith("parameters")) {
-                //Stable Diffusion Web UIのメタデータのみ
-                prompt = chunk;
-              } else if (chunk.startsWith("Description")) {
-                //Novel AIのメタデータ（positive）
-                prompt = chunk.substring(12);
-              } else if (chunk.startsWith("Comment")) {
-                //Novel AIのメタデータ（いろいろ）
-                var obj = JSON.parse(chunk.substring(8));
-                negativeprompt = obj["uc"];
-                metadata = {
-                  Steps: obj["steps"],
-                  Sampler: obj["sampler"],
-                  Strength: obj["strength"],
-                  Noise: obj["noise"],
-                  Scale: obj["scale"],
-                  Seed: obj["seed"],
-                };
-              } else if (chunk.startsWith("Software")) {
-                if (chunk.substring(9) === "NovelAI") {
-                  setSelectedModel(models[2]);
-                }
-              }
-            }
-          }
-          var input_prompt = document.getElementById(
-            "prompt"
-          ) as HTMLInputElement;
-          var input_nprompt = document.getElementById(
-            "nprompt"
-          ) as HTMLInputElement;
-          if (prompt === "" && negativeprompt === "") {
-            setprompt(prompt);
-            input_prompt.value = prompt;
-            let event = new Event("change", { bubbles: true });
-            input_prompt.dispatchEvent(event);
-            handlePromptChange(event);
-          } else {
-            if (negativeprompt === "") {
-              //sd
-              setprompt(prompt);
-              const index_of_negative = prompt.indexOf("Negative prompt:");
-              const index_of_steps = prompt.indexOf("Steps:");
-
-              negativeprompt = prompt.substring(index_of_negative + "Negative prompt ".length, index_of_steps - 1);
-              prompt = prompt.substring("parameters ".length, index_of_negative - 1);
-
-              input_prompt.value = prompt;
-              input_nprompt.value = negativeprompt;
-
-              let event = new Event("change", { bubbles: true });
-              let eventn = new Event("change", { bubbles: true });
-              
-              input_prompt.dispatchEvent(event);
-              input_nprompt.dispatchEvent(eventn);
-
-              handlePromptChange(event);
-              handlenPromptChange(eventn);
-            } else {
-              //NAI
-              setprompt(prompt);
-              setnprompt(negativeprompt)
-              input_prompt.value = prompt;
-              input_nprompt.value = negativeprompt;
-
-              let event = new Event("change", { bubbles: true });
-              let eventn = new Event("change", { bubbles: true });
-
-              input_prompt.dispatchEvent(event);
-              input_nprompt.dispatchEvent(eventn);
-
-              handlePromptChange(event);
-              handlenPromptChange(eventn);
-            }
-          }
-        } catch (e) {
-          var blob = new Blob([file], { type: file.type });
-          setfile(blob)
-          var bitmap = await createImageBitmap(blob);
-          var canvas = document.createElement("canvas");
-          canvas.width = bitmap.width;
-          canvas.height = bitmap.height;
-          canvas.getContext("2d")?.drawImage(bitmap, 0, 0);
-          canvas.toBlob((blob) => {
-            setimageurl(URL.createObjectURL(blob as Blob));
-          });
+  const handleupload = async (e) => {
+    var blob = e.target.files[0];
+    setfile(new Blob([blob], {"type": blob.type}))
+    for (const file of e.target.files){
+      setimages((images) => ([ ...images, new Blob([blob], {"type": blob.type}) ]));
+      if (file.type === "image/png"){
+        const buffer = await new Blob([file], {"type": file.type}).arrayBuffer()
+        const chunk = chunk_reader(buffer)
+        if (Object.values(chunk).every((v) => {return v !== "NaN"})) {
+          if(chunk.negative !== "NaN") setnprompt(chunk.negative)
+          if(chunk.positive !== "NaN") setprompt(chunk.positive)
+          if(chunk.sampler !== "NaN") setsampler(chunk.sampler)
+          if(chunk.steps !== "NaN") setstep(chunk.steps)
+          if(chunk.software === "NovelAI") setSelectedModel(models[2])
         }
-        setisSelected(true);
-        setimageurl(
-          URL.createObjectURL(new Blob([buffer], { type: "image/png" }))
-        );
-      };
-      fileReader.readAsArrayBuffer(file);
+      }
     }
+    setisSelected(true);
+    setimageurl(
+      URL.createObjectURL(new Blob([blob], { type: "image/png" }))
+    );
   };
+
 
   const handledrag = (e) => {
     e.type === "dragleave" ? setisdropping(false) : setisdropping(true);
@@ -261,15 +179,37 @@ const Upload = (props) => {
     tags.map(tag=>{
       tagsarr.push(tag["name"].slice(1))
     })
+
     setisSending(true);
     setischanging(true);
+  
     if (file !== undefined){
-      var formdata = new FormData()
-      formdata.append("name", data[0].id)
-      formdata.append("type", file.type)
-      formdata.append("file", file)
       await axios.post(
+        "/api/r2/delete",
+        JSON.stringify({ 
+          "token": `${supabaseClient?.auth?.session()?.access_token}`,
+          "image_id": `${data[0].id}`
+        }), 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+
+      var formdata = new FormData()
+
+      formdata.append("id",`image-${data[0].id}`)
+      formdata.append("file", file)
+
+      const responseUploadURL = await axios.post(
         "/api/r2/upload",
+      );
+      
+      const url = JSON.parse(JSON.stringify(responseUploadURL.data))
+
+      await axios.post(
+        url.uploadURL,
         formdata, 
         {
           headers: {
@@ -282,6 +222,7 @@ const Upload = (props) => {
     await supabaseClient.from("images").update({
       prompt: prompt,
       nprompt: nprompt,
+      href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${data[0].id}/public`,
       promptarr: prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       npromptarr: nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       caption: caption,
@@ -301,10 +242,11 @@ const Upload = (props) => {
     if (check) {
       setisSending(true)
       setisdeleting(true)
+
+      
       await axios.post(
         "/api/r2/delete",
         JSON.stringify({ 
-          "filename": `${data[0].id}.png`,
           "token": `${supabaseClient?.auth?.session()?.access_token}`,
           "image_id": `${data[0].id}`
         }), 
@@ -314,6 +256,20 @@ const Upload = (props) => {
           }
         }
       );
+
+      await axios.post(
+        "/api/r2/deleteimage",
+        JSON.stringify({ 
+          "token": `${supabaseClient?.auth?.session()?.access_token}`,
+          "image_id": `${data[0].id}`
+        }), 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+
       router.push("/")
     }
   }
@@ -386,8 +342,8 @@ const Upload = (props) => {
                 {!isSelected ? (
                   <label
                     className={`flex flex-col justify-center items-center w-full h-64 bg-gray-50 dark:bg-slate-800 dark:border-slate-600 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 ${
-                    isdropping && "border-4 border-sky-500 bg-sky-100 dark:bg-slate-700"
-                  }`}
+                      isdropping && "border-4 border-sky-500 bg-sky-100 dark:bg-slate-700"
+                    }`}
                   >
                     <div className="flex flex-col justify-center items-center pt-5 pb-6">
                       <svg
@@ -411,12 +367,9 @@ const Upload = (props) => {
                       <p className="text-xs text-gray-500 dark:text-slate-300 text-center">
                         PNG,JPG
                         <br />
-                        1枚50MB以内
+                        1枚4MB以内
                         <br />
                         アップロードできます。
-                        <br />
-                        <br />
-                        画像を更新した場合は、反映まで少し時間がかかることがあります。
                       </p>
                     </div>
                     <input
@@ -425,6 +378,7 @@ const Upload = (props) => {
                       className="hidden"
                       accept="image/png, image/jpeg, image/webp"
                       onChange={(e) => handleupload(e)}
+                      multiple
                       required
                     />
                   </label>
@@ -445,90 +399,23 @@ const Upload = (props) => {
                   </div>
                 )}
               </div>
-              <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  タイトル
-                </div>
-                <input
-                  className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5"
-                  required
-                  onChange={(e) => settitle(e.target.value)}
-                  value={title}
-                  spellCheck="false"
-                ></input>
-              </div>
-              <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  説明
-                </div>
-                <textarea
-                  className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-24 w-full p-2.5 resize-none"
-                  onChange={(e) => {
-                    handleCaptionChange(e);
-                  }}
-                  value={caption}
-                  spellCheck="false"
-                ></textarea>
-              </div>
-              <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  タグ
-                </div>
-                <ReactTags
-                  allowNew
-                  ref={reactTags}
-                  tags={tags}
-                  suggestions={suggestions}
-                  onDelete={onDelete}
-                  onAddition={onAddition}
-                  onValidate={onValidate}
-                  onInput={onInput}
-                  minQueryLength={1}
-                  addOnBlur={true}
-                  placeholderText={"タグを追加"}
-                  classNames={{
-                    root: 'relative p-2.5 border border-gray-300 cursor-text bg-gray-50 dark:border-slate-600 dark:bg-slate-800 dark:text-white border border-gray-300 rounded-lg',
-                    rootFocused: '',
-                    selected: 'inline',
-                    selectedTag: 'inline-block box-border text-base text-sky-600 mr-2 !cursor-pointer hover:line-through',
-                    search: 'inline-block',
-                    searchInput: 'max-w-full outline-none bg-gray-50 dark:bg-slate-800',
-                    suggestions: 'react-tags__suggestions dark:react-tags__suggestions_dark',
-                    suggestionActive: 'is-active',
-                    suggestionDisabled: 'is-disabled',
-                    suggestionPrefix: 'react-tags__suggestion-prefix'
-                  }} 
-                />            
-              </div>
-              <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  プロンプト（単語ごとにコンマで区切るようにしてください）
-                </div>
-                <textarea
-                  className="bg-gray-50 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
-                  id="prompt"
-                  onChange={(e) => {
-                    handlePromptChange(e);
-                  }}
-                  required
-                  value={prompt}
-                  spellCheck="false"
-                ></textarea>
-              </div>
-              <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  ネガティブプロンプト（単語ごとにコンマで区切るようにしてください）
-                </div>
-                <textarea
-                  className="bg-gray-50 border border-gray-300 text-gray-900  dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none"
-                  id="nprompt"
-                  onChange={(e) => {
-                    handlenPromptChange(e);
-                  }}
-                  value={nprompt}
-                  spellCheck="false"
-                ></textarea>
-              </div>
+              {/* <div className="grid grid-cols-6 gap-4">
+              {images.map(function (image, i) {
+                return (
+                  <div className="group" key={i}>
+                    <Preview image={image} />
+                  </div>
+                );
+              })}
+              </div> */}
+              <InputForm caption={"タイトル"} state={title} setState={settitle} required/>
+              <TextAreaForm caption={"説明"} state={caption} setState={setcaption} required/>
+              <TextAreaForm caption={"プロンプト"} state={prompt} setState={setprompt}/>
+              <TextAreaForm caption={"ネガティブプロンプト"} state={nprompt} setState={setnprompt} />
+              <InputForm caption={"ステップ数"} state={step} setState={setstep} />
+              <InputForm caption={"サンプラー"} state={sampler} setState={setsampler} />
+              <TagsInput caption={"タグ"} state={tags} setState={setTags}  />
+              <SelectMenu caption={"使用したモデル"} state={selectedModel} setState={setSelectedModel} object={models} />
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   年齢制限
@@ -593,66 +480,7 @@ const Upload = (props) => {
                   </li>
                 </ul>
               </div>
-              <div className="w-full h-full">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  使用しているモデル名
-                </label>
-                <Listbox value={selectedModel} onChange={setSelectedModel}>
-                  <div className="relative mt-1">
-                    <Listbox.Button className="outline-none relative w-full cursor-default rounded-lg bg-gray-50 py-2 pl-3 pr-10 text-left border border-gray-300  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
-                      <span className="block truncate">
-                        {selectedModel.name}
-                      </span>
-                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                        <ChevronUpDownIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </Listbox.Button>
-                    <Transition
-                      as={Fragment}
-                      leave="transition ease-in duration-100"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
-                    >
-                      <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm  dark:border-slate-600 dark:bg-slate-800">
-                        {models.map((model, modelIdx) => (
-                          <Listbox.Option
-                            key={modelIdx}
-                            className={({ active }) =>
-                              `relative cursor-default select-none py-2 pl-10 pr-4 text-gray-900 ${
-                                active ? "bg-sky-100 dark:bg-slate-700" : ""
-                              }`
-                            }
-                            value={model}
-                          >
-                            {({ selected }) => (
-                              <>
-                                <span
-                                  className={`block truncate dark:text-white ${
-                                    selected ? "font-medium " : "font-normal"
-                                  }`}
-                                >
-                                  {model.name}
-                                </span>
-                                {selected ? (
-                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sky-600">
-                                    <CheckIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
-                                  </span>
-                                ) : null}
-                              </>
-                            )}
-                          </Listbox.Option>
-                        ))}
-                      </Listbox.Options>
-                    </Transition>
-                  </div>
-                </Listbox>
-              </div>
+
               <p className="my-4 dark:text-slate-300">
                 <Link href="/terms/tos">
                   <a className="text-sky-600 dark:text-sky-500">利用規約</a>

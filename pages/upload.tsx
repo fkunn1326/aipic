@@ -18,6 +18,7 @@ import InputForm from "../components/form/InputForm";
 import TextAreaForm from "../components/form/TextAreaForm";
 import TagsInput from "../components/form/TagsInput";
 import SelectMenu from "../components/form/SelectMenu";
+import Preview from "../components/form/Preview"
 import { chunk_reader } from "../utils/chunk_reader"
 import axios from "axios";
 import Link from "next/link";
@@ -46,17 +47,14 @@ const Upload = (props) => {
   const [imageurl, setimageurl] = useState("");
   const [prompt, setprompt] = useState("");
   const [nprompt, setnprompt] = useState("");
-  const [href, sethref] = useState("");
   const [title, settitle] = useState("");
   const [caption, setcaption] = useState("");
-  const [composing, setComposition] = useState(false);
   const [agelimit, setagelimit] = useState("all");
-  const [imagedata, setimagedata] = useState<Blob>();
   const [tags, setTags] = useState<any[]>([]);
   const [step, setstep] = useState<number>()
   const [sampler, setsampler] = useState("")
   const [file, setfile] = useState<any>()
-  const [images, setimages] = useState([])
+  const [images, setimages] = useState<any[]>([])
   const [selectedimage, setselectedimage] = useState("")
 
   const router = useRouter();
@@ -77,14 +75,13 @@ const Upload = (props) => {
 
   const handleupload = async (e) => {
     var blob = e.target.files[0];
-    setimagedata(new Blob([blob], {"type": blob.type}));
     setfile(new Blob([blob], {"type": blob.type}))
     for (const file of e.target.files){
+      setimages((images) => ([ ...images, new Blob([blob], {"type": blob.type}) ]));
       if (file.type === "image/png"){
         const buffer = await new Blob([file], {"type": file.type}).arrayBuffer()
         const chunk = chunk_reader(buffer)
         if (Object.values(chunk).every((v) => {return v !== "NaN"})) {
-          console.log(chunk)
           if(chunk.negative !== "NaN") setnprompt(chunk.negative)
           if(chunk.positive !== "NaN") setprompt(chunk.positive)
           if(chunk.sampler !== "NaN") setsampler(chunk.sampler)
@@ -264,6 +261,15 @@ const Upload = (props) => {
                   </div>
                 )}
               </div>
+              {/* <div className="grid grid-cols-6 gap-4">
+              {images.map(function (image, i) {
+                return (
+                  <div className="group" key={i}>
+                    <Preview image={image} />
+                  </div>
+                );
+              })}
+              </div> */}
               <InputForm caption={"タイトル"} state={title} setState={settitle} required/>
               <TextAreaForm caption={"説明"} state={caption} setState={setcaption} required/>
               <TextAreaForm caption={"プロンプト"} state={prompt} setState={setprompt}/>

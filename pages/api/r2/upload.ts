@@ -34,8 +34,6 @@ const ImageUploadProfile = async (req: NextApiRequest, res: NextApiResponse) => 
 
     const cloudflareImages = await response.data
 
-    console.log(cloudflareImages)
-
     if (cloudflareImages.success) {
       results.code = 200
       ;(results.uploadURL = cloudflareImages.result.uploadURL),
