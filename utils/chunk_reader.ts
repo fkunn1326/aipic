@@ -126,6 +126,5 @@ function parseStableDiffusion (chunks) {
   diff.scale = getbetweenstr(str, "CFG scale: ", ", Seed:")
   diff.strength = "-"
   diff.noise = "-"
-  console.log(diff)
   return diff
 }

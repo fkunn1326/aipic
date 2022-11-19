@@ -21,7 +21,7 @@ const Header = () => {
 
   const handlesubmit = (e) => {
     e.preventDefault()
-    var value = e.target.children[0].value.startsWith("#") ? e.target.children[0].value.split("#")[1] : e.target.children[0].value.startsWith 
+    var value = e.target.children[0].value.startsWith("#") ? e.target.children[0].value.split("#")[1] : e.target.children[0].value 
     if (e.target.children[0].value !== "") router.push(`/search/${value}`)
   }
 

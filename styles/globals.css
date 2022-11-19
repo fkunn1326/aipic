@@ -16,6 +16,7 @@
       top: 100%;
       left: 0;
       width: 100%;
+      z-index: 10000;
     }
     
     @media screen and (min-width: 30em) {
@@ -67,6 +68,7 @@
       top: 100%;
       left: 0;
       width: 100%;
+      z-index: 10000;
     }
     
     @media screen and (min-width: 30em) {
