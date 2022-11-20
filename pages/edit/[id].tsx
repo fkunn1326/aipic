@@ -47,7 +47,8 @@ const models = [
   { id: 7, name: "ERNIE-ViLG", unavailable: false },
   { id: 8, name: "Unstable Diffusion", unavailable: false },
   { id: 9, name: "Hentai Diffusion", unavailable: false },
-  { id: 10, name: "Custom Model", unavailable: false },
+  { id: 10, name: "niji · journey", unavailable: false },
+  { id: 11, name: "Custom Model", unavailable: false },
 ];
 
 const Upload = (props) => {
