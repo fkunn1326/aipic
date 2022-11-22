@@ -223,7 +223,7 @@ const Upload = (props) => {
     await supabaseClient.from("images").update({
       prompt: prompt,
       nprompt: nprompt,
-      href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${data[0].id}/public`,
+      href: file !== undefined ? `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${data[0].id}/public` : imageurl,
       promptarr: prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       npromptarr: nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
       caption: caption,
