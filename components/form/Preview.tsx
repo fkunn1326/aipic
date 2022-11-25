@@ -1,17 +1,29 @@
 import Image from "next/image"
 import React, { useState } from "react"
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  XMarkIcon
+} from "@heroicons/react/20/solid";
 
 function cn(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
 }
 
-export default function Preview({image}) {
+export default function Preview({image, id, deleteimage, selected=false}) {
     const [isLoading, setLoading] = useState(true);
+    const [imageurl, setimageurl] = useState(URL.createObjectURL(image))
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
 
     return (
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-600">
+      <div className={`relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg select-none bg-gray-200 dark:bg-gray-600 ${selected ? 'outline outline-sky-500 outline-[5px] z-10' : ''}`}  ref={setNodeRef} style={style} {...attributes} {...listeners} >
+        <XMarkIcon className="absolute top-2 left-2 w-6 h-6 z-10 p-1 bg-slate-200 rounded-lg" onClick={(e) => {deleteimage(e)}} />
         <Image
-          src={URL.createObjectURL(image)}
+          src={imageurl}
           layout="fill"
           objectFit="cover"
           priority={true}
@@ -26,6 +38,7 @@ export default function Preview({image}) {
           )}
           onLoadingComplete={() => {
             setLoading(false);
+            URL.revokeObjectURL(imageurl)
           }}
         />
       </div>

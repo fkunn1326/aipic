@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
-const getDailyRank = async (req: NextApiRequest, res: NextApiResponse) => {
+const getArtworks = async (req: NextApiRequest, res: NextApiResponse) => {
   const query: any = req.query;
   const r18 =
     query.r18 === undefined ? false : JSON.parse(query.r18.toLowerCase());
@@ -12,12 +12,12 @@ const getDailyRank = async (req: NextApiRequest, res: NextApiResponse) => {
   const { data, error } = await supabaseClient
     .from("artworks")
     .select(`*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`)
-    .order("daily_point", { ascending: false })
+    .order("created_at", {ascending: false})
     .filter("age_limit", "in", filter)
-    .limit(20)
-
+    .limit(10)
+    
   if (error) return res.status(401).json({ error: error.message });
   return res.status(200).json(data);
 };
 
-export default getDailyRank;
+export default getArtworks;

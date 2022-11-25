@@ -12,7 +12,7 @@ const validate = () => {
 const Signup = () => {
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
-  const emailregex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+  const emailregex = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/g;
   const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
 
@@ -72,7 +72,7 @@ const Signup = () => {
                       type="email"
                       name="email"
                       id="email"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                       autoComplete="username"
                       placeholder="name@example.com"
                       onChange={(e) => {
@@ -114,7 +114,7 @@ const Signup = () => {
                       name="password"
                       id="password1"
                       placeholder="••••••••"
-                      className="bg-gray-50 border border-gray-300 text-gray-900  dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                      className="bg-gray-50 border border-gray-300 text-gray-900  dark:border-slate-600 dark:bg-slate-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                       autoComplete="new-password"
                       onChange={(e) => {
                         var textel = document.getElementById(
@@ -146,7 +146,7 @@ const Signup = () => {
                       name="password"
                       id="password2"
                       placeholder="••••••••"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                       autoComplete="new-password"
                       onChange={(e) => {
                         var textel = document.getElementById(
@@ -257,10 +257,10 @@ const Signup = () => {
             </div>
           ) : (
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-center font-bold leading-tight tracking-tight text-gray-900">
+              <h1 className="text-center font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
                 確認メールを送信しました
               </h1>
-              <p className="text-center font-bold leading-tight tracking-tight text-gray-900">
+              <p className="text-center font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
                 ご登録のメールアドレスにURLをお送りしました。
                 <br />
                 記載してあるURLをクリックし、登録を完了してください。

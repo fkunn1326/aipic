@@ -37,13 +37,13 @@ module.exports = withPlugins([withTM, withPWA], {
       "imagedelivery.net"
     ],
   },
-  // async redirects() {
-  //     return [
-  //       {
-  //         source: "/",
-  //         destination: "/maintenance.html",
-  //         permanent: false,
-  //       },
-  //     ];
-  //   },
+  async redirects() {
+    return [
+      {
+        source: '/images/:id*',
+        destination: '/artworks/:id*',
+        permanent: false
+      },
+    ]
+  },
 });

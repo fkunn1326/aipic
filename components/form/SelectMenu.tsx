@@ -2,17 +2,17 @@ import { Listbox, Transition } from "@headlessui/react"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid"
 import React, { Fragment } from "react"
 
-export default function SelectMenu({caption, state, setState, object, required=false}) {
+export default function SelectMenu({caption, state, setState, object, batch=false, required=false}:any) {
     return (
-    <div className="w-full h-full">
+    <div className="w-full">
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            {caption}{required && <p className="text-red-500 ml-1">*</p>}
+            {caption}{required && <p className="text-red-500 ml-1">*</p>}{batch && <button type="button" className="text-sky-500 ml-2" onClick={() => {batch(state)}}>一括入力</button>}
         </label>
         <Listbox value={state} onChange={setState}>
           <div className="relative mt-1">
             <Listbox.Button className="outline-none relative w-full cursor-default rounded-lg bg-gray-50 py-2 pl-3 pr-10 text-left border border-gray-300  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
               <span className="block truncate">
-                {state.name}
+                {state?.name}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
@@ -27,7 +27,7 @@ export default function SelectMenu({caption, state, setState, object, required=f
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm  dark:border-slate-600 dark:bg-slate-800">
+              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dark:border dark:border-slate-600 dark:bg-slate-800">
                 {object.map((model, modelIdx) => (
                   <Listbox.Option
                     key={modelIdx}

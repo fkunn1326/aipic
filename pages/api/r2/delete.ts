@@ -43,7 +43,6 @@ const Delete = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         
     }catch (err) {
-        console.log(err)
         return res.status(403).json({"error": err});
     }
     return res.status(200);

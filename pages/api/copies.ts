@@ -18,9 +18,9 @@ const Copies = async (req: NextApiRequest, res: NextApiResponse) => {
     const { token, image_id } = req.body;
     try {
         var decoded = jwt.decode(token)
-        var { data, error }: any = await supabaseAdmin.from("images").select("copies,daily_point").eq("id", image_id)
+        var { data, error }: any = await supabaseAdmin.from("artworks").select("copies,daily_point").eq("id", image_id)
         await supabaseAdmin
-            .from('images')
+            .from('artworks')
             .update({
                 copies: data[0].copies + 1,
                 daily_point: data[0].daily_point + 2

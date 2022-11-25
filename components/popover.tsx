@@ -47,7 +47,7 @@ export default function PopOver({id, type}) {
                       className={`${
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700"
                       } group flex w-full items-center px-3 py-2 text-sm`}
-                      href={`https://docs.google.com/forms/d/e/1FAIpQLSfTt9ODMK8b0_zJTl3XhnBbtgBKCLQWskq-QwcOHKi7vGRyKw/viewform?usp=pp_url&entry.750653281=https://www.aipic.app/images/${id}`} 
+                      href={`https://docs.google.com/forms/d/e/1FAIpQLSfTt9ODMK8b0_zJTl3XhnBbtgBKCLQWskq-QwcOHKi7vGRyKw/viewform?usp=pp_url&entry.750653281=https://www.aipic.app/artworks/${id}`} 
                       target="_blank" 
                       rel="noopener noreferrer" 
                       title="報告する"

@@ -372,7 +372,7 @@ function BlurImage({ image, data }) {
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (image !== undefined) {
       image.likes.map((like) => {
         if (like.user_id === ctx.UserInfo.id) setisliked(true);
@@ -384,7 +384,7 @@ function BlurImage({ image, data }) {
     <div className="group">
       <div className="relative">
         <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
-          <Link href={`/images/${image.id}`}>
+          <Link href={`/artworks/${image.id}`}>
             <a>
               <Image
                 alt={image.title}

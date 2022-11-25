@@ -14,7 +14,7 @@ const getImage = async (req: NextApiRequest, res: NextApiResponse) => {
     "height": 315,
     "width": 600,
     "work_type": "illust",
-    "html": `<iframe width=\"600\" height=\"315\" src=\"https://www.aipic.app/images/${id}\" frameborder=\"0\"></iframe>`,
+    "html": `<iframe width=\"600\" height=\"315\" src=\"https://www.aipic.app/artworks/${id}\" frameborder=\"0\"></iframe>`,
     "title": data[0].title,
     "thumbnail_url": data[0].href,
     "author_name": data[0].author.name,

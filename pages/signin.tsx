@@ -2,13 +2,15 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SiteName } from "../components/core/const"
+import { useRouter } from "next/router";
 
 const Signin = () => {
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
-  const emailregex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+  const emailregex = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/g;
   const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
+  const router = useRouter()
 
   const origin =
     typeof window !== "undefined" && window.location.origin
@@ -21,11 +23,11 @@ const Signin = () => {
     setForms({ ...forms, password: e.target.value });
   const clickForms = (e) => {
     supabaseClient.auth.signIn(forms).then((result) => {
-      if (result!.user!.identities!.length === 0) {
-        var el = document.getElementById("email_peer2") as HTMLElement;
-        el.classList.remove("hidden");
-      } else {
-        setisMailsent(true);
+      if(result?.error){
+        document.getElementById("email_peer2")?.classList.remove("hidden")
+      }else{
+        document.getElementById("email_peer2")?.classList.add("hidden")
+        router.push("/")
       }
     });
     e.preventDefault();
@@ -91,12 +93,6 @@ const Signin = () => {
                   >
                     有効なメールアドレスを入力してください。
                   </p>
-                  <p
-                    id="email_peer2"
-                    className="mt-2 hidden text-pink-600 text-sm"
-                  >
-                    アカウントが存在しないか、パスワードが間違っています。
-                  </p>
                 </label>
               </div>
               <div>
@@ -107,13 +103,18 @@ const Signin = () => {
                     name="password"
                     id="password1"
                     placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
-                    autoComplete="new-password"
+                    className="bg-gray-50 border border-gray-300 dark:text-white text-gray-900 dark:border-slate-600 dark:bg-slate-900 sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:border-4 block w-full p-2.5"
                     onChange={(e) => {
                       handlePasswordChange(e);
                     }}
                     required
                   ></input>
+                  <p
+                    id="email_peer2"
+                    className="mt-2 hidden text-pink-600 text-sm"
+                  >
+                    アカウントが存在しないか、パスワードが間違っています。
+                  </p>
                 </label>
               </div>
               <button

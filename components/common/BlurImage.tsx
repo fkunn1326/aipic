@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image"
-import React, { useContext, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
   HeartIcon,
+  DocumentIcon
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { userInfoContext } from "../../context/userInfoContext";
@@ -26,7 +27,7 @@ export default function BlurImage(props) {
       if (ctx.UserInfo.id !== undefined) {
         if (isliked) {
           await supabaseClient.from("likes").delete().match({
-            image_id: image.id,
+            artwork_id: image.id,
             user_id: ctx.UserInfo.id,
           });
           setisliked(false);
@@ -34,7 +35,7 @@ export default function BlurImage(props) {
             "/api/likes",
             JSON.stringify({ 
               "token": `${supabaseClient?.auth?.session()?.access_token}`,
-              "image_id": `${image.id}`,
+              "artwork_id": `${image.id}`,
               "type": "delete"
             }), 
             {
@@ -45,7 +46,7 @@ export default function BlurImage(props) {
           );
         } else {
           await supabaseClient.from("likes").insert({
-            image_id: image.id,
+            artwork_id: image.id,
             user_id: ctx.UserInfo.id,
           });
           setisliked(true);
@@ -53,7 +54,7 @@ export default function BlurImage(props) {
             "/api/likes",
             JSON.stringify({ 
               "token": `${supabaseClient?.auth?.session()?.access_token}`,
-              "image_id": `${image.id}`,
+              "artwork_id": `${image.id}`,
               "type": "add"
             }), 
             {
@@ -66,9 +67,9 @@ export default function BlurImage(props) {
       }
     };
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (image !== undefined) {
-        image.likes.map((like) => {
+        image?.likes?.map((like) => {
           if (like.user_id === ctx.UserInfo.id) setisliked(true);
         });
       }
@@ -78,11 +79,11 @@ export default function BlurImage(props) {
       <div className="group">
         <div className="relative">
           <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-600">
-            <Link href={`/images/${image.id}`}>
+            <Link href={`/artworks/${image.id}`}>
               <a>
                 <Image
                   alt={image.title}
-                  src={image.href}
+                  src={image.href !== undefined ? image.href : image.image_contents[0]?.href}
                   layout="fill"
                   objectFit="cover"
                   priority={true}
@@ -118,6 +119,11 @@ export default function BlurImage(props) {
           {image.age_limit === "r18g" && (
             <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
               R-18G
+            </p>
+          )}
+          {image.image_contents?.length > 1 && (
+            <p className="absolute top-2 right-2 text-sm flex flex-row justify-center items-center font-semibold bg-gray-600 opacity-80 text-white px-2 rounded-md">
+              <DocumentIcon className="w-3 h-3 mr-0.5 stroke-[2.5]" />{image.image_contents?.length}
             </p>
           )}
           {rank !== undefined && (

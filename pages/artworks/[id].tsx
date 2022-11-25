@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import Image from "next/image";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
@@ -29,11 +29,12 @@ import PopOver from "../../components/popover"
 import { text2Link } from "../../components/common/text2link";
 import OtherImages from "../../components/common/OtherImages";
 import FollowBtn from "../../components/common/follow";
-
+import '@splidejs/react-splide/css/skyblue';
+import { Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
-  const res = await fetch(`https://aipic.vercel.app/api/images/${id}`)
+  const res = await fetch(process.env.NODE_ENV === "development" ? `https://preview.aipic-dev.tk/api/artworks/${id}` : `https://aipic.vercel.app/api/artworks/${id}`)
   const data = await res.json()
 
   return { props: {
@@ -58,7 +59,7 @@ const Meta = ({data}) => {
       <meta property="og:type" content="article" />
       <meta property="og:title" content={`${data[0].author.name}`} />
       <meta property="og:description" content={data[0].caption} />
-      <meta property="og:url" content={`https://aipic.vercel.app/images/${data[0].id}`}/>
+      <meta property="og:url" content={`https://aipic.vercel.app/artworks/${data[0].id}`}/>
       <link rel="alternate" type="application/json+oembed" href={`https://www.aipic.app/api/oembed/${data[0].id}`} />
       {data[0].age_limit === "all" && <meta name="twitter:image" content={data[0].href} />}
       {data[0].age_limit === "all" && <meta property="og:image" content={data[0].href} />}
@@ -77,38 +78,6 @@ const LikeBtn = ({data}) => {
   useEffect(() => {
     setimage(data)
   },[])
-
-  useEffect(() => {
-    if (image !== undefined && Object.keys(image).length !== 0) {
-      image.likes.map((like) => {
-        if (like.user_id === ctx.UserInfo.id) setisliked(true);
-      });
-    }
-
-    const handleFocus = () => {
-      setisfocus(true);
-    };
-
-    const handleBlur = () => {
-      setisfocus(false);
-    };
-
-    window.addEventListener('focus', handleFocus);
-    window.addEventListener('blur', handleBlur);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      window.removeEventListener('blur', handleBlur);
-    };
-  }, [image, ctx]);
-
-  useEffect(() => {
-    (async() => {
-      const res = await fetch(`/api/images/${data.id}`)
-      var limage = await res.json()
-      setimage(limage[0])
-    })()
-  }, [isfocus])
 
   const handlelike = async (e) => {
     if (ctx.UserInfo.id !== undefined) {
@@ -174,14 +143,22 @@ const Images = ({data, host, children}) => {
   const [isImageOpen, setisImageOpen] = useState(false);
   const [isPromptOpen, setisPromptOpen] = useState(false);
   const [isShareOpen, setisShareOpen] = useState(false);
+  const [splideindex, setsplideindex] = useState(0)
 
   const [limittype, setlimittype] = useState("");
 
   const router = useRouter();
   const pid = router.query.id;
 
-  const uri = `https://${host}/images/${pid}`
+  const uri = `https://${host}/artworks/${pid}`
 
+  const splideref = useRef<any>(null)
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+  };
 
   useEffect(() => {
     if (data !== undefined) {
@@ -205,7 +182,7 @@ const Images = ({data, host, children}) => {
       localStorage.setItem("history", JSON.stringify([data[0]]))
     }else{
       var localhistory = JSON.parse(localStorage.getItem("history") as string)
-      var samehistory = localhistory.find(item => item.id === data[0].id)
+      var samehistory = localhistory.find(item => item?.id === data[0]?.id)
       if (samehistory === undefined){
         localhistory.push(data[0])
         localStorage.setItem("history", JSON.stringify(localhistory))
@@ -255,17 +232,16 @@ const Images = ({data, host, children}) => {
     return result;
   };
 
-
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <div className="text-white">Loading...</div>;
   var image = data[0];
-  if (!image) return <div>Loading...</div>;
+  if (!image) return <div className="text-white">Loading...</div>;
 
   return (
     <div className="bg-white dark:bg-slate-900">
       <Meta data={data} />
       <Header />
       <div className="overflow-x-hidden lg:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
-        <div className="glow lg:mx-4 my-auto px-0 lg:mx-9 lg:my-auto lg:py-4 lg:mx-6 mb:my-auto mb:py-7 lg:py-6">
+        <div className="glow lg:mx-4 my-auto px-0 lg:my-auto lg:py-4 mb:my-auto mb:py-7">
           <div className="flex-nowrap flex-col">
             <main className="lg:pt-16 mb-16 flex-col lg:flex-row flex-nowrap items-start flex basis-auto">
               <div className="lg:mr-8 flex-col flex w-full basis-3/4 lg:border dark:border-slate-500 rounded-3xl">
@@ -280,21 +256,32 @@ const Images = ({data, host, children}) => {
                           style={{letterSpacing: 0, wordSpacing: 0, fontSize: 0}}
                         >
                           {limittype !== "unauth" && (
-                            <Image
-                              alt={image.title}
-                              src={image.href}
-                              layout="fill"
-                              objectFit="contain"
-                              className={`rounded-t-3xl w-full h-full min-h-[70vh] z-10 ${
-                                limittype === "ok" && "cursor-zoom-in"
-                              } ${
-                                limittype === "unsafe" &&
-                                "blur-xl opacity-60 pointer-events-none"
-                              }`}
-                              onClick={() => {
-                                if (limittype === "ok") setisImageOpen(true);
-                              }}
-                            />
+                          <Splide role="group" aria-label="Images" className="h-[70vh] group" tag="div" hasTrack={ false } options={{ gap: 2 }} ref={splideref}>
+                            <div>
+                              <SplideTrack>
+                                {image.image_contents.map((img, idx) => (
+                                  <SplideSlide className="relative w-full h-[70vh]" key={img?.id}>
+                                    <Image
+                                      alt={img.title}
+                                      src={img.href}
+                                      layout="fill"
+                                      objectFit="contain"
+                                      className={`rounded-t-3xl w-full h-full min-h-[70vh] z-10 ${
+                                        limittype === "ok" && "cursor-zoom-in"
+                                      } ${
+                                        limittype === "unsafe" &&
+                                        "blur-xl opacity-60 pointer-events-none"
+                                      }`}
+                                      onClick={() => {
+                                        if (limittype === "ok") setisImageOpen(true);
+                                      }}
+                                    />
+                                  </SplideSlide>
+                                ))}
+                              </SplideTrack>
+                              <div className="transition-opacity ease-in-out delay-150 splide__arrows text-sm opacity-0 group-hover:opacity-100" onClick={() => {setsplideindex(splideref.current?.splide.index)}} />
+                            </div>
+                          </Splide>
                           )}
                           <ImageModal
                             isOpen={isImageOpen}
@@ -302,12 +289,12 @@ const Images = ({data, host, children}) => {
                           >
                             <div className="relative w-full h-full">
                               <Image
-                                src={image.href}
+                                src={image.image_contents[splideindex]?.href}
                                 layout="fill"
                                 objectFit="contain"
                                 className="rounded-lg w-full h-full min-h-[70vh]"
                                 onClick={() => {
-                                  setisImageOpen(false);
+                                  setisImageOpen(false)
                                 }}
                               />
                             </div>
@@ -338,7 +325,7 @@ const Images = ({data, host, children}) => {
                               </Link>
                             </div>
                           )}
-                        </div>
+                       </div>
                       </div>
                     </div>
                   </div>
@@ -358,7 +345,7 @@ const Images = ({data, host, children}) => {
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl">
                             <p className="text-gray-600 dark:text-slate-300 text-sm">使用モデル</p>
                             <p className="mt-2 font-semibold text-2xl text-black dark:text-white">
-                              {image.model}
+                              {image.image_contents[splideindex]?.model}
                             </p>
                           </div>
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl mt-4">
@@ -368,12 +355,12 @@ const Images = ({data, host, children}) => {
                                 <ClipboardDocumentIcon
                                   className="w-5 h-5 text-gray-600 dark:text-slate-400 m-2 break-all"
                                   onClick={() => {
-                                    handlecopy(image.prompt, image.id);
+                                    handlecopy(image.image_contents[splideindex]?.prompt, image.id);
                                   }}
                                 />
                               </button>
                             </div>
-                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.prompt.split(",").map(i => i.trim()).map((str, idx) => (
+                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.image_contents[splideindex]?.prompt?.split(",").map(i => i.trim()).map((str, idx) => (
                               <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white" key={idx}>{str} </a>
                           ))}</p>
                           </div>
@@ -384,12 +371,12 @@ const Images = ({data, host, children}) => {
                                 <ClipboardDocumentIcon
                                   className="w-5 h-5 text-gray-600 dark:text-slate-400 m-2 break-all"
                                   onClick={() => {
-                                    handlecopy(image.nprompt, image.id);
+                                    handlecopy(image.image_contents[splideindex]?.nprompt, image.id);
                                   }}
                                 />
                               </button>
                             </div>
-                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.nprompt.split(",").map(i => i.trim()).map((str, idx) => (
+                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.image_contents[splideindex]?.nprompt?.split(",").map(i => i.trim()).map((str, idx) => (
                               <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white" key={idx}>{str}</a>
                           ))}</p>
                           </div>
@@ -474,7 +461,7 @@ const Images = ({data, host, children}) => {
                             </div>
                           </div>
                           <div className="relative hidden-scrollbar">
-                            <div className="m-6 h-14 rounded-2xl bg-slate-50 dark:bg-slate-600 text-white flex items-center whitespace-nowrap overflow-x-scroll">
+                            <div className="m-6 h-14 rounded-2xl bg-slate-50 dark:bg-slate-600 dark:text-white flex items-center whitespace-nowrap overflow-x-scroll">
                               <p className="mx-4">{uri}</p>
                             </div>
                             <button className="absolute right-8 top-2 border rounded-lg bg-slate-50 dark:bg-slate-500 dark:border-slate-400 hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
@@ -510,7 +497,7 @@ const Images = ({data, host, children}) => {
                       <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
                         <div className="flex flex-row items-center ">
                           <HeartSolidIcon className="w-4 h-4 mr-1" title="いいね"/>
-                          {image.likes.length}
+                          {image.likes === null ? 0 : image.likes?.length }
                         </div>
                         <div className="flex flex-row items-center" title="閲覧数">
                           <EyeIcon className="w-4 h-4 mr-1"/>

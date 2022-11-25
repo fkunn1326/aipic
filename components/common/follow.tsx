@@ -1,6 +1,6 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 export default function FollowBtn({following_uid, followed_uid}) {
     const router = useRouter();
@@ -35,7 +35,7 @@ export default function FollowBtn({following_uid, followed_uid}) {
         }
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         (async() => {
             const {data, error} = await supabaseClient
                 .from("follows")

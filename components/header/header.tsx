@@ -64,12 +64,13 @@ const Header = () => {
               ></input>
             </form>
           }
-          <form className="hidden md:flex flex-1" onSubmit={(e) => {handlesubmit(e)}}>
+          <form className="hidden md:flex items-center relative flex-1" onSubmit={(e) => {handlesubmit(e)}}>
+            <MagnifyingGlassIcon className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none w-8 h-full text-gray-400 stroke-4 dark:text-slate-300" />
             <input
               type="search"
               id="searchbox"
               placeholder="作品を検索する"
-              className="bg-gray-50 dark:bg-slate-700 border dark:border-none border-gray-300 text-gray-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 w-[32rem] focus:ring-sky-500 focus:border-4 px-3 py-2.5"
+              className="pl-10 pr-3 w-full py-2 text-sm text-black-700 placeholder-gray-500 rounded-md border border-gray-300 shadow-sm focus:border-white focus:outline-none dark:bg-black-900 dark:text-white dark:placeholder-gray-400 block focus:ring-2 focus:ring-sky-500 dark:focus:ring-4 dark:bg-slate-700 dark:outline-none dark:border-none"
             ></input>
           </form>
           {ctx.UserInfo === false || ctx.UserInfo === null ? (

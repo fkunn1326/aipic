@@ -72,7 +72,7 @@ function BlurImage({ image, data }) {
     <div className="group">
       <div className="relative">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
-          <Link href={`/images/${image.id}`}>
+          <Link href={`/artworks/${image.id}`}>
             <Image
               alt={image.title}
               src={image.href}
