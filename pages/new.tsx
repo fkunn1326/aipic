@@ -25,7 +25,7 @@ export default function App() {
   }
 
   const { data, error } = useSWR(
-    "../api/images/list" + access_limit + "&page=" + page,
+    "../api/artworks/list" + access_limit + "&page=" + page,
      fetcher,
   );
 

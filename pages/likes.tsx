@@ -39,7 +39,7 @@ export default function App() {
     var images: any[] = [];
 
     data.map((i) => {
-        images.push(i["image"])
+        images.push(i["artworks"])
     })
 
     return (

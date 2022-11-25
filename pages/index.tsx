@@ -60,18 +60,20 @@ export default function App(_props) {
     var followarr: any[] = [];
     try{
       (async() => {
-        const {data, error} = await supabaseClient.from("follows").select("*").eq("following_uid", ctx.UserInfo.id)
-        data?.map(id => {
-          followarr.push(id["followed_uid"])
-        })
-        setfollows(`(${followarr.join(",")})`)
+        if(ctx.UserInfo.id !== undefined){
+          const {data, error} = await supabaseClient.from("follows").select("*").eq("following_uid", ctx.UserInfo.id)
+          data?.map(id => {
+            followarr.push(id["followed_uid"])
+          })
+          setfollows(`(${followarr.join(",")})`)
+        }
       })()
     }catch(e){;}
   },[ctx, isloading])
 
 
   const { data, error } = useSWR(
-    "../api/images/list10" + access_limit,
+    "../api/artworks/list10" + access_limit,
      fetcher,
      {
         fallbackData: [],
@@ -112,7 +114,7 @@ export default function App(_props) {
         </div>
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-            {followdata.map((image) => (
+            {followdata?.map((image) => (
               <BlurImage key={image.id} image={image} />
             ))}
           </div>

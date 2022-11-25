@@ -9,12 +9,14 @@ import SkeletonImage from "../../components/common/SkeltonImage"
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
   const ctx = useContext(userInfoContext);
   const router = useRouter()
+  const page = router.query.page !== undefined ? parseInt(router.query.page as string) : 1
   const { keyword } = router.query
   var access_limit = ""
 
@@ -22,28 +24,50 @@ export default function App() {
     access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     var el = document.getElementById("searchbox") as HTMLInputElement
     el.value = keyword as string
   },[router.isReady])
 
   const { data, error } = useSWR(
-    "../api/search" + access_limit + "&keyword=" + keyword,
+    "../api/search" + access_limit + "&keyword=" + keyword + "&page=" + page,
      fetcher,
      {
         fallbackData: []
      }
   );
 
-  const count = data?.length
+  const getpagenation = () => {
+    var startPage = page - 2;
+    var endPage = page + 2;
+    var arr: any[] = []
 
-  if (!data)
+    if (startPage <= 0) {
+        endPage -= (startPage - 1);
+        startPage = 1;
+    }
+
+    if (endPage > totalPage)
+        endPage = totalPage;
+
+    if (startPage > 1) arr.push("...");
+    for(var i=startPage; i<=endPage; i++) arr.push(i);
+    if (endPage < totalPage) arr.push("...");
+    if (endPage < totalPage) arr.push(totalPage)
+    if (startPage > 1 && endPage < totalPage) arr.splice(0,1)
+    
+    return arr
+  }
+
+  const count = data?.count
+
+  if (!(data && data?.count !== undefined))
     return (
       <div className="bg-white dark:bg-slate-900">
         <Header></Header>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-            {Array.apply(0, Array(10)).map(function (x, i) {
+            {Array.apply(0, Array(20)).map(function (x, i) {
               return <SkeletonImage key={i} />;
             })}
           </div>
@@ -51,6 +75,9 @@ export default function App() {
         <Footer/>
       </div>
   );
+
+  
+  const totalPage = Math.ceil(data.count / 20)
 
   return (
     <div className="bg-white dark:bg-slate-900">
@@ -64,7 +91,7 @@ export default function App() {
       </div>
       <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {data.map((image) => (
+          {data?.body?.map((image) => (
             <BlurImage key={image.id} image={image} />
           ))}
         </div>
@@ -72,6 +99,13 @@ export default function App() {
       <button className="fixed right-0 bottom-0" onClick={() => {window.scrollTo({top: 0, behavior: 'smooth'})}}>
         <ArrowUpIcon className="w-12 h-12 bg-gray-400 text-white rounded-full p-3 m-12" />
       </button>
+      <div className="flex justify-center gap-x-4 text-lg">
+        {getpagenation().map((count,idx) => (
+          <Link href={`${count !== "..." ? `/search/${keyword}/?page=${count}` : `/new?page=${page}`}`} key={idx}>
+            <button key={idx} className={`w-10 h-10 border dark:text-white rounded-lg  ${page === count && "bg-sky-500 border-none text-white"}`} >{count}</button>
+          </Link>
+        ))}
+      </div>
       <Footer/>
     </div>
   );

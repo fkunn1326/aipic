@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { UserCircleIcon, ListBulletIcon, HeartIcon, Cog6ToothIcon, ClockIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline"
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import Router, { useRouter } from "next/router";
 import React from "react";
@@ -35,88 +36,105 @@ export default function Dropdawn(props) {
           <div className="py-1">
           <Menu.Item>
               {({ active }) => (
-                <a
-                  className={classNames(
-                    active ? "bg-gray-10 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
-                    "block px-4 py-2 text-sm cursor-pointer"
-                  )}
-                  onClick={() => {
-                    router.push(`/users/${props.id}`);
-                  }}
-                >
-                  マイページ
-                </a>
+                <div className={classNames(
+                  active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
+                  "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
+                )}>
+                  <UserCircleIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
+                  <a
+                    className={classNames( "block text-sm cursor-pointer")}
+                    onClick={() => {
+                      router.push(`/users/${props.id}`);
+                    }}
+                  >
+                    マイページ
+                  </a>
+                </div>
               )}
           </Menu.Item>
           <Menu.Item>
               {({ active }) => (
-                <a
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
-                    "block px-4 py-2 text-sm cursor-pointer"
-                  )}
-                  onClick={() => {
-                    router.push("/dashboard");
-                  }}
-                >
-                  ダッシュボード
-                </a>
+                <div className={classNames(
+                  active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
+                  "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
+                )}>
+                  <ListBulletIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
+                  <a
+                    className={classNames( "block text-sm cursor-pointer")}
+                    onClick={() => {
+                      router.push("/dashboard");
+                    }}
+                  >
+                    ダッシュボード
+                  </a>
+                </div>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <a
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
-                    "block px-4 py-2 text-sm cursor-pointer"
-                  )}
-                  onClick={() => {
-                    router.push("/likes");
-                  }}
-                >
-                  いいねをした作品
-                </a>
+                <div className={classNames(
+                  active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
+                  "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
+                )}>
+                  <HeartIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
+                  <a
+                    className={classNames( "block text-sm cursor-pointer")}
+                    onClick={() => {
+                      router.push("/likes");
+                    }}
+                  >
+                    いいね一覧
+                  </a>
+                </div>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <a
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
-                    "block px-4 py-2 text-sm cursor-pointer"
-                  )}
-                  onClick={() => {
-                    router.push("/settings");
-                  }}
-                >
-                  アカウントの設定
-                </a>
+                <div className={classNames(
+                  active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
+                  "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
+                )}>
+                  <Cog6ToothIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
+                  <a
+                    className={classNames( "block text-sm cursor-pointer")}
+                    onClick={() => {
+                      router.push("/settings");
+                    }}
+                  >
+                    アカウントの設定
+                  </a>
+                </div>
               )}
             </Menu.Item>
             <Menu.Item>
             {({ active }) => (
-                <a
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "text-gray-700 dark:text-slate-200",
-                    "block px-4 py-2 text-sm cursor-pointer"
-                  )}
-                  onClick={() => {
-                    router.push("/history");
-                  }}
-                >
-                  閲覧履歴
-                </a>
+                <div className={classNames(
+                  active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
+                  "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
+                )}>
+                  <ClockIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
+                  <a
+                    className={classNames("block text-sm cursor-pointer")}
+                    onClick={() => {
+                      router.push("/history");
+                    }}
+                  >
+                    閲覧履歴
+                  </a>
+                </div>  
               )}
             </Menu.Item>
             <form method="" action="">
               <Menu.Item>
                 {({ active }) => (
+                <div className={classNames(
+                  active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
+                  "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
+                )}>
+                  <ArrowRightOnRectangleIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <button
                     type="button"
-                    className={classNames(
-                      active ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200" : "dark:text-slate-200 text-gray-700",
-                      "block w-full px-4 py-2 text-left text-sm"
-                    )}
+                    className={classNames("block text-sm cursor-pointer")}
                     onClick={() => {
                       supabaseClient.auth.signOut();
                       router.push("/");
@@ -124,6 +142,7 @@ export default function Dropdawn(props) {
                   >
                     サインアウト
                   </button>
+                </div>
                 )}
               </Menu.Item>
             </form>

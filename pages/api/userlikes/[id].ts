@@ -6,8 +6,11 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
   var { data, error }: any = await supabaseClient
     .from("likes")
-    .select("*, image:images(*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id))")
-    .eq("user_id", id)
+    .select("*, artworks:artworks(*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id))")
+    .match({
+      "user_id": id
+    })
+    .not( "artwork_id", "is", "null" )
     .order("created_at")
 
   if (error) return res.status(401).json({ error: error.message });
