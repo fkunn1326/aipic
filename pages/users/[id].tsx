@@ -13,6 +13,7 @@ import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import axios from "axios";
 import FollowBtn from "../../components/common/follow";
+import { text2Link } from "../../components/common/text2link";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -346,9 +347,12 @@ export default function App() {
             <h1 className="line-clamp-1 dark:text-white">{data[0].name}</h1>
           </div>
           <div className="py-2 sm:py-6 max-w-xl sm:max-w-full">
-            <h1 className="line-clamp-2 dark:text-slate-300">
-              {data[0].introduce}
-            </h1>
+            <div
+              className="line-clamp-2 dark:text-slate-300"
+              dangerouslySetInnerHTML={{
+                __html: text2Link(data[0].introduce),
+              }}
+            />
           </div>
         </div>
       </div>
@@ -365,6 +369,12 @@ export default function App() {
 }
 
 function BlurImage({ image, data }) {
+  const gethref = (str: string) => {
+    if (str.endsWith("/public")) {
+      return str.replace("/public", "/w=256");
+    } else return str;
+  };
+  
   const ctx = useContext(userInfoContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -428,17 +438,11 @@ function BlurImage({ image, data }) {
         <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
           <Link href={`/artworks/${image.id}`}>
             <a>
-              <Image
+              <img
                 alt={image.title}
-                src={image.href}
-                layout="fill"
-                objectFit="cover"
-                priority={true}
-                sizes="(max-width: 768px) 50vw,
-                (max-width: 1200px) 30vw,
-                20vw"
+                src={gethref(image.href)}
                 className={cn(
-                  "duration-700 ease-in-out group-hover:opacity-75",
+                  "duration-700 ease-in-out group-hover:opacity-75 h-full w-full object-cover",
                   isLoading
                     ? "scale-110 blur-2xl grayscale"
                     : "scale-100 blur-0 grayscale-0"
@@ -446,7 +450,7 @@ function BlurImage({ image, data }) {
                   //   ? 'blur-md'
                   //   : ''
                 )}
-                onLoadingComplete={() => {
+                onLoad={() => {
                   setLoading(false);
                 }}
               />
