@@ -11,10 +11,12 @@ const getDailyRank = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { data, error } = await supabaseClient
     .from("artworks")
-    .select(`*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`)
+    .select(
+      `*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`
+    )
     .order("daily_point", { ascending: false })
     .filter("age_limit", "in", filter)
-    .limit(20)
+    .limit(20);
 
   if (error) return res.status(401).json({ error: error.message });
   return res.status(200).json(data);

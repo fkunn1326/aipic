@@ -1,19 +1,20 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import { userInfoContext } from "../../context/userInfoContext";
-import useSWRImmutable from 'swr/immutable'
-import BlurImage from "./BlurImage"
-import SkeletonImage from "./SkeltonImage"
+import useSWRImmutable from "swr/immutable";
+import BlurImage from "./BlurImage";
+import SkeletonImage from "./SkeltonImage";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function OtherImages({ count }) {
   var ctx = useContext(userInfoContext);
-  var access_limit = ""
-  const [images, setimages] = useState<any[]>([])
-  
+  var access_limit = "";
+  const [images, setimages] = useState<any[]>([]);
+
   if (ctx.UserInfo !== null) {
-    access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
+    access_limit =
+      "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString();
   }
 
   const shuffle = ([...array]) => {
@@ -22,12 +23,12 @@ export default function OtherImages({ count }) {
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  }
+  };
 
   const { data, error } = useSWRImmutable(
     "../api/artworks/list" + access_limit,
-     fetcher,
-     {
+    fetcher,
+    {
       dedupingInterval: 3600000,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -35,11 +36,11 @@ export default function OtherImages({ count }) {
   );
 
   useEffect(() => {
-    if (data !== undefined){
+    if (data !== undefined) {
       var images = shuffle(data.body.slice(0, data.body.length));
-      setimages(images.slice(0, count))
+      setimages(images.slice(0, count));
     }
-  },[data])
+  }, [data]);
 
   if (!data)
     return (
@@ -53,7 +54,7 @@ export default function OtherImages({ count }) {
         </div>
       </div>
     );
-  
+
   return (
     <div>
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">

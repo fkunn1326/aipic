@@ -1,11 +1,11 @@
-import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline"
-import React from 'react'
-import { useRouter } from 'next/router'
+import { Menu, Transition } from "@headlessui/react";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import React from "react";
+import { useRouter } from "next/router";
 
-export default function PopOver({id, type}) {
-  const router = useRouter()
+export default function PopOver({ id, type }) {
+  const router = useRouter();
   return (
     <div>
       <Menu as="div" className="relative inline-block text-left">
@@ -23,8 +23,8 @@ export default function PopOver({id, type}) {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            {type &&
+          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            {type && (
               <div className="pt-1">
                 <Menu.Item>
                   {({ active }) => (
@@ -39,29 +39,29 @@ export default function PopOver({id, type}) {
                   )}
                 </Menu.Item>
               </div>
-            }
-              <div className="pb-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      className={`${
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                      } group flex w-full items-center px-3 py-2 text-sm`}
-                      href={`https://docs.google.com/forms/d/e/1FAIpQLSfTt9ODMK8b0_zJTl3XhnBbtgBKCLQWskq-QwcOHKi7vGRyKw/viewform?usp=pp_url&entry.750653281=https://www.aipic.app/artworks/${id}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      title="報告する"
-                    >
-                      問題を報告する
-                    </a>
-                  )}
-                </Menu.Item>
-              </div>
+            )}
+            <div className="pb-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    className={`${
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                    } group flex w-full items-center px-3 py-2 text-sm`}
+                    href={`https://docs.google.com/forms/d/e/1FAIpQLSfTt9ODMK8b0_zJTl3XhnBbtgBKCLQWskq-QwcOHKi7vGRyKw/viewform?usp=pp_url&entry.750653281=https://www.aipic.app/artworks/${id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="報告する"
+                  >
+                    問題を報告する
+                  </a>
+                )}
+              </Menu.Item>
+            </div>
           </Menu.Items>
         </Transition>
       </Menu>
     </div>
-  )
+  );
 }
 
 function EditInactiveIcon(props) {
@@ -79,7 +79,7 @@ function EditInactiveIcon(props) {
         strokeWidth="2"
       />
     </svg>
-  )
+  );
 }
 
 function EditActiveIcon(props) {
@@ -97,7 +97,7 @@ function EditActiveIcon(props) {
         strokeWidth="2"
       />
     </svg>
-  )
+  );
 }
 
 function DuplicateInactiveIcon(props) {
@@ -121,7 +121,7 @@ function DuplicateInactiveIcon(props) {
         strokeWidth="2"
       />
     </svg>
-  )
+  );
 }
 
 function DuplicateActiveIcon(props) {
@@ -145,7 +145,7 @@ function DuplicateActiveIcon(props) {
         strokeWidth="2"
       />
     </svg>
-  )
+  );
 }
 
 function ArchiveInactiveIcon(props) {
@@ -176,7 +176,7 @@ function ArchiveInactiveIcon(props) {
       />
       <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
     </svg>
-  )
+  );
 }
 
 function ArchiveActiveIcon(props) {
@@ -207,7 +207,7 @@ function ArchiveActiveIcon(props) {
       />
       <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
     </svg>
-  )
+  );
 }
 
 function MoveInactiveIcon(props) {
@@ -222,7 +222,7 @@ function MoveInactiveIcon(props) {
       <path d="M16 4L8 12" stroke="#A78BFA" strokeWidth="2" />
       <path d="M8 6H4V16H14V12" stroke="#A78BFA" strokeWidth="2" />
     </svg>
-  )
+  );
 }
 
 function MoveActiveIcon(props) {
@@ -237,7 +237,7 @@ function MoveActiveIcon(props) {
       <path d="M16 4L8 12" stroke="#C4B5FD" strokeWidth="2" />
       <path d="M8 6H4V16H14V12" stroke="#C4B5FD" strokeWidth="2" />
     </svg>
-  )
+  );
 }
 
 function DeleteInactiveIcon(props) {
@@ -260,7 +260,7 @@ function DeleteInactiveIcon(props) {
       <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
       <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
     </svg>
-  )
+  );
 }
 
 function DeleteActiveIcon(props) {
@@ -283,5 +283,5 @@ function DeleteActiveIcon(props) {
       <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
       <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
     </svg>
-  )
+  );
 }

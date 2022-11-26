@@ -1,8 +1,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { SiteName } from "../components/core/const"
-
+import { SiteName } from "../components/core/const";
 
 const validate = () => {
   const regex = /^(?=.?[a-z])(?=.?\d)(?=.*?[!-/:-@[-`{-~])[!-~]{8,100}$/i;
@@ -12,7 +11,8 @@ const validate = () => {
 const Signup = () => {
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
-  const emailregex = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/g;
+  const emailregex =
+    /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/g;
   const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
 
@@ -52,9 +52,7 @@ const Signup = () => {
     <div className="bg-gray-50 dark:bg-slate-900 pt-10 pb-10">
       <div className="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link href="/">
-          <a
-            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-          >
+          <a className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
             {SiteName}
           </a>
         </Link>

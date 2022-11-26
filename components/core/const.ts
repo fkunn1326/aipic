@@ -1,1 +1,1 @@
-export const SiteName = "AIPIC"
+export const SiteName = "AIPIC";

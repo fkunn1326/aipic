@@ -11,10 +11,12 @@ const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { data, error } = await supabaseClient
     .from("images")
-    .select(`*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`)
+    .select(
+      `*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`
+    )
     .order("created_at", { ascending: false })
     .filter("age_limit", "in", filter)
-    .limit(10)
+    .limit(10);
 
   if (error) return res.status(401).json({ error: error.message });
   return res.status(200).json(data);

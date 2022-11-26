@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useHash } from "../components/hooks/useHash";
 import { setCookie } from "nookies";
-import { SiteName } from "../components/core/const"
+import { SiteName } from "../components/core/const";
 
 const AuthPage = () => {
   const [hash, setHash] = useHash();

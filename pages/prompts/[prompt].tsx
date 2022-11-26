@@ -8,14 +8,20 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 export const getServerSideProps = async (context) => {
-  const { prompt } = context.query
-  const res = await fetch(`https:/${context.req.headers.host}/api/prompts/${decodeURIComponent(prompt)}`)
-  const data = await res.json()
+  const { prompt } = context.query;
+  const res = await fetch(
+    `https:/${context.req.headers.host}/api/prompts/${decodeURIComponent(
+      prompt
+    )}`
+  );
+  const data = await res.json();
 
-  return { props: {
-    data: data,
-  }}
-}
+  return {
+    props: {
+      data: data,
+    },
+  };
+};
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -23,8 +29,8 @@ function cn(...classes: string[]) {
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function Prompt({data}) {
-  const router = useRouter()
+export default function Prompt({ data }) {
+  const router = useRouter();
   const { prompt }: any = router.query;
 
   if (!data)
@@ -45,9 +51,7 @@ export default function Prompt({data}) {
     <div>
       <Header></Header>
       <div className="mx-auto max-w-7xl px-12">
-        <div className="pt-6 text-2xl font-semibold">
-          {prompt}
-        </div>
+        <div className="pt-6 text-2xl font-semibold">{prompt}</div>
         <div className="flex flex-row gap-x-1 pt-6 items-center font-semibold">
           <p className="text-base">{images.length}</p>
           <p className="text-sm text-gray-600">作品</p>

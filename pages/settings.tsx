@@ -30,7 +30,7 @@ const Settings = () => {
   });
   const [ischanged, setischanged] = useState(false);
   const [idstate, setidstate] = useState(0);
-  const [invalid, setinvalid] = useState(false)
+  const [invalid, setinvalid] = useState(false);
 
   const router = useRouter();
 
@@ -52,23 +52,23 @@ const Settings = () => {
       peer1.classList.add("hidden");
       peer2.classList.add("hidden");
       peer3.classList.add("hidden");
-      setinvalid(false)
+      setinvalid(false);
       if (e.target.value !== "") {
         if (data === undefined) {
           if (idregex.test(e.target.value)) {
             peer3.classList.remove("hidden");
-            setinvalid(true)
+            setinvalid(true);
           }
         } else {
           if (data["id"] === user!["id"]) {
           } else {
             peer1.classList.remove("hidden");
-            setinvalid(true)
+            setinvalid(true);
           }
         }
       } else {
         peer2.classList.remove("hidden");
-        setinvalid(true)
+        setinvalid(true);
       }
     })();
   };
@@ -89,7 +89,7 @@ const Settings = () => {
   };
 
   const handleconfirm = async (e) => {
-    if(!invalid){
+    if (!invalid) {
       if (states["userid"] !== undefined) {
         if (!idregex.test(states["userid"])) {
           var new_obj = Object.assign(ctx["UserInfo"]);
@@ -103,23 +103,25 @@ const Settings = () => {
   };
 
   const handledelete = async (e) => {
-    const check = confirm(`本当にアカウントを削除しますか？\nアカウントを削除すると関連付けられているデータがすべて削除されます。`)
-    if (check){
-      supabaseClient.auth.signOut()
+    const check = confirm(
+      `本当にアカウントを削除しますか？\nアカウントを削除すると関連付けられているデータがすべて削除されます。`
+    );
+    if (check) {
+      supabaseClient.auth.signOut();
       await axios.post(
         "/api/account/delete",
-        JSON.stringify({ 
-          "token": `${supabaseClient?.auth?.session()?.access_token}`,
-        }), 
+        JSON.stringify({
+          token: `${supabaseClient?.auth?.session()?.access_token}`,
+        }),
         {
           headers: {
             "Content-Type": "application/json",
-          }
+          },
         }
       );
     }
-    router.push("/")
-  }
+    router.push("/");
+  };
 
   const isdataloaded = useRef(false);
 
@@ -147,7 +149,9 @@ const Settings = () => {
       <Header></Header>
       <div className="mx-auto px-6 sm:max-w-full sm:px-6 lg:max-w-7xl lg:px-7 w-full h-full">
         <div className="p-4 w-full bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 sm:p-8 my-8">
-          <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">アカウント</h5>
+          <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+            アカウント
+          </h5>
           <p className="mb-5 text-gray-500 dark:text-slate-300 sm:text-base">
             アカウントについての情報を確認したり、変更したりします。
           </p>
@@ -187,23 +191,22 @@ const Settings = () => {
                 <div className="block text-base font-medium text-gray-900 dark:text-white">
                   現在のメールアドレス
                 </div>
-                {user?.app_metadata.provider !== "google" ?
-                <div>
-                  <button className="ml-2 block text-sm font-medium text-sky-600">
-                    変更する
-                  </button>
-                  <button className="ml-2 block text-sm font-medium text-sky-600">
-                    パスワードを変更する
-                  </button>
-                </div>
-                :
-                <div>
-                  <p className="mt-2 block text-sm font-medium text-slate-500 dark:text-slate-400">
-                    ※このアカウントはGoogleアカウントに連携されているので、メールアドレスは変更できません。
-                  </p>
-                </div>
-                }
-
+                {user?.app_metadata.provider !== "google" ? (
+                  <div>
+                    <button className="ml-2 block text-sm font-medium text-sky-600">
+                      変更する
+                    </button>
+                    <button className="ml-2 block text-sm font-medium text-sky-600">
+                      パスワードを変更する
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="mt-2 block text-sm font-medium text-slate-500 dark:text-slate-400">
+                      ※このアカウントはGoogleアカウントに連携されているので、メールアドレスは変更できません。
+                    </p>
+                  </div>
+                )}
               </div>
               <input
                 className="bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-none text-gray-900 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
@@ -336,7 +339,9 @@ const Settings = () => {
               </p>
               <button
                 type="button"
-                onClick={(e)=> {handledelete(e)}}
+                onClick={(e) => {
+                  handledelete(e);
+                }}
                 className="text-red-600 font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center border border-red-600 hover:text-white hover:bg-red-500"
               >
                 アカウントを削除する
@@ -345,7 +350,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

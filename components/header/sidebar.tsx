@@ -1,19 +1,19 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import Link from "next/link"
+import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react"
+import React, { useState } from "react";
 
 const Sidebar = ({ isOpen, avatar, name, id }) => {
-    const router = useRouter();
-    
-    return (
-      <div
-        className={`top-0 left-0 w-[76vw] bg-white dark:bg-slate-900 rounded-r fixed h-full z-40 ease-in-out duration-[400ms] ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col gap-y-6 h-full p-10">
-          {avatar === null ?
+  const router = useRouter();
+
+  return (
+    <div
+      className={`top-0 left-0 w-[76vw] bg-white dark:bg-slate-900 rounded-r fixed h-full z-40 ease-in-out duration-[400ms] ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
+      <div className="flex flex-col gap-y-6 h-full p-10">
+        {avatar === null ? (
           <div className="flex flex-col gap-y-4">
             <Link href="/signin">
               <a className="mt-4 text-gray-600 dark:text-slate-400 font-semibold p-2">
@@ -26,7 +26,7 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
               </a>
             </Link>
           </div>
-          :
+        ) : (
           <div className="flex flex-col gap-y-4">
             <Link href={`/users/${id}`}>
               <div className="flex flex-row items-center">
@@ -68,7 +68,7 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
               </a>
             </Link>
             <Link href="/">
-              <a 
+              <a
                 className="text-gray-600 dark:text-slate-400 font-semibold p-2"
                 onClick={() => {
                   supabaseClient.auth.signOut();
@@ -79,11 +79,10 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
               </a>
             </Link>
           </div>
-          }
-        </div>
+        )}
       </div>
-    )
-}
-  
-export default Sidebar
-  
+    </div>
+  );
+};
+
+export default Sidebar;

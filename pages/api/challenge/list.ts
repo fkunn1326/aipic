@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
-const getChallengeImages = async (req: NextApiRequest, res: NextApiResponse) => {
+const getChallengeImages = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   const query: any = req.query;
   const r18 =
     query.r18 === undefined ? false : JSON.parse(query.r18.toLowerCase());
@@ -11,7 +14,9 @@ const getChallengeImages = async (req: NextApiRequest, res: NextApiResponse) => 
 
   const { data, error } = await supabaseClient
     .from("images")
-    .select(`*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`)
+    .select(
+      `*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`
+    )
     .filter("created_at", "gt", `today`)
     .contains("tags", ["今日のチャレンジ"])
     .filter("age_limit", "in", filter);
