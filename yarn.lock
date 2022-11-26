@@ -4021,6 +4021,11 @@ hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   dependencies:
     react-is "^16.7.0"
 
+hono@^2.5.5:
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-2.5.5.tgz#eba18942c7d4932747436c26db8d537feb4c12e5"
+  integrity sha512-4punTWHtSQwk7I1fUpTiYuF8DuELAIm5v10ou80QpLeeUt3w2e74Pa39LT+PFVgraDQlwI+/vsbM+B2yzfJAlQ==
+
 html-encoding-sniffer@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/html-encoding-sniffer/-/html-encoding-sniffer-3.0.0.tgz#2cb1a8cf0db52414776e5b2a7a04d5dd98158de9"

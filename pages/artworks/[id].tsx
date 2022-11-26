@@ -305,7 +305,7 @@ const Images = ({ data, host, children }) => {
                             >
                               <div>
                                 <SplideTrack>
-                                  {image.image_contents.map((img, idx) => (
+                                  {image.image_contents?.map((img, idx) => (
                                     <SplideSlide
                                       className="relative w-full h-[70vh]"
                                       key={img?.id}
