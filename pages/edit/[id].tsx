@@ -96,6 +96,7 @@ const Edit = (props) => {
   const [step, setstep] = useState<number>();
   const [sampler, setsampler] = useState("");
   const [images, setimages] = useState<any[]>([]);
+  const [defaultimages, setdefaultimages] = useState<any[]>([])
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { distance: 5 } })
@@ -158,6 +159,7 @@ const Edit = (props) => {
           setimageurl(data[0].image_contents[0].href);
           settitle(data[0].title);
           setcaption(data[0].caption);
+          setagelimit(data[0].age_limit)
           var localtag: tags[] = [];
           data[0].tags.map((i) => {
             localtag.push({
@@ -172,6 +174,20 @@ const Edit = (props) => {
             let blob = await fetch(img.href).then((r) => r.blob());
             setimages((images) => [
               ...images,
+              {
+                prompt: img.prompt,
+                nprompt: img.nprompt,
+                steps: img.steps,
+                sampler: img.sampler,
+                selectedModel: models.find((model) => {
+                  return model["name"] === img.model;
+                }),
+                image: blob,
+                id: img.id,
+              },
+            ]);
+            setdefaultimages((defaultimages) => [
+              ...defaultimages,
               {
                 prompt: img.prompt,
                 nprompt: img.nprompt,
@@ -294,63 +310,64 @@ const Edit = (props) => {
       setisSending(true);
       setischanging(true);
 
-      images.map(async (image) => {
-        await axios.post(
-          "/api/r2/delete",
-          JSON.stringify({
-            token: `${supabaseClient?.auth?.session()?.access_token}`,
-            artwork_id: `${image.id}`,
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const responseUploadURL = await axios.post("/api/r2/upload");
-
-        const url = JSON.parse(JSON.stringify(responseUploadURL.data));
-
-        var formdata = new FormData();
-
-        formdata.append("file", image.image);
-        formdata.append("id", `image-${image.id}`);
-
-        await axios.post(url.uploadURL, formdata, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      if(images !== defaultimages) {
+        defaultimages.map(async (image) => {
+          await axios.post(
+            "/api/r2/delete",
+            JSON.stringify({
+              token: `${supabaseClient?.auth?.session()?.access_token}`,
+              image_id: `${image.id}`,
+            }),
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          await supabaseClient.from("images").delete().eq("id", image.id)
         });
-
-        const { data, error } = await supabaseClient
-          .from("images")
-          .update({
-            id: image.id,
-            href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${image.id}/public`,
-            model: image.selectedModel.name,
-            prompt: image.prompt,
-            nprompt: image.nprompt,
-            promptarr: image.prompt
-              .split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g)
-              .map((i) => i.trim())
-              .filter(function (i) {
-                return i !== "";
-              }),
-            npromptarr: image.nprompt
-              .split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g)
-              .map((i) => i.trim())
-              .filter(function (i) {
-                return i !== "";
-              }),
-            steps: image.steps,
-            sampler: image.sampler,
-            user_id: ctx.UserInfo["id"],
-          })
-          .match({
-            id: image.id,
+        images.map(async (image) => {
+          const responseUploadURL = await axios.post("/api/r2/upload");
+  
+          const url = JSON.parse(JSON.stringify(responseUploadURL.data));
+  
+          var formdata = new FormData();
+  
+          formdata.append("file", image.image);
+          formdata.append("id", `image-${image.id}`);
+  
+          await axios.post(url.uploadURL, formdata, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           });
-      });
+  
+          const { data, error } = await supabaseClient
+            .from("images")
+            .insert({
+              id: image.id,
+              href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${image.id}/public`,
+              model: image.selectedModel.name,
+              prompt: image.prompt,
+              nprompt: image.nprompt,
+              promptarr: image.prompt
+                .split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g)
+                .map((i) => i.trim())
+                .filter(function (i) {
+                  return i !== "";
+                }),
+              npromptarr: image.nprompt
+                .split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g)
+                .map((i) => i.trim())
+                .filter(function (i) {
+                  return i !== "";
+                }),
+              steps: image.steps,
+              sampler: image.sampler,
+              user_id: ctx.UserInfo["id"],
+            })
+        })
+      }
 
       const imagesarr = images.map((image) => {
         return image.id;
@@ -372,7 +389,7 @@ const Edit = (props) => {
           id: data[0].id,
         });
 
-      router.push(`/artworks/${data[0].id}`);
+      // router.push(`/artworks/${data[0].id}`);
     } catch (e) {
       alert("アップロード中にエラーが発生しました。再試行してください。");
       setisSending(false);

@@ -17,34 +17,34 @@ const Delete = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { token, artwork_id } = req.body;
+  const { token, image_id } = req.body;
 
   try {
     var decoded = jwt.decode(token);
 
     var { data, error }: any = await supabaseAdmin
       .from("images")
-      .select("*")
-      .eq("id", artwork_id);
+      .select("id")
+      .eq("id", image_id);
 
     if (data[0].user_id === decoded.sub) {
       try {
-        await axios.delete(
-          `https://api.cloudflare.com/client/v4/accounts/${account_id}/images/v1/image-${artwork_id}`,
+        var { data, error }: any = await axios.delete(
+          `https://api.cloudflare.com/client/v4/accounts/${account_id}/images/v1/image-${image_id}`,
           {
             headers: {
               Authorization: `Bearer ${api_key}`,
             },
           }
         );
-      } catch (e) {
-        return res.status(200).end();
+      } catch (err) {
+        return res.status(403).json({ error: error });
       }
 
       return res.status(200).end();
     }
   } catch (err) {
-    return res.status(403).json({ error: err });
+    return res.status(403).json({ error: error });
   }
   return res.status(200);
 };
