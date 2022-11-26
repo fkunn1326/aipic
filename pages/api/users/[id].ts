@@ -21,12 +21,12 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
   var { data, error }: any = await supabaseClient
     .from("profiles")
     .select(
-      `id, uid, name, header_url, avatar_url, introduce, images:images(*, likes:likes(*))`
+      `id, uid, name, header_url, avatar_url, introduce, artworks:artworks(*, likes:likes(*))`
     )
-    .filter("images.age_limit", "in", filter)
+    .filter("artworks.age_limit", "in", filter)
     .eq("id", id)
-    .eq("images.user_id", id)
-    .order("created_at", { foreignTable: "images" });
+    .eq("artworks.user_id", id)
+    .order("created_at", { foreignTable: "artworks" });
 
   if (error) return res.status(401).json({ error: error.message });
   return res.status(200).json(data);
