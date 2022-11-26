@@ -1,5 +1,5 @@
-import { Html, Head, Main, NextScript } from "next/document"
-import Script from 'next/script';
+import { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 import React from "react";
 
 const Document = () => {
@@ -9,7 +9,7 @@ const Document = () => {
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon.png"></link>
         <meta name="theme-color" content="#38bdf8" />
-      </Head> 
+      </Head>
       <body className="dark:bg-slate-900">
         <Main />
         <NextScript />

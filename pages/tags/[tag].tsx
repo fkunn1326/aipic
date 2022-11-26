@@ -4,14 +4,14 @@ import Header from "../../components/header/header";
 import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import BlurImage from "../../components/common/BlurImage"
-import SkeletonImage from "../../components/common/SkeltonImage"
+import BlurImage from "../../components/common/BlurImage";
+import SkeletonImage from "../../components/common/SkeltonImage";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function Tag() {
   const ctx = useContext(userInfoContext);
-  const router = useRouter()
+  const router = useRouter();
   const { tag }: any = router.query;
   const { data, error } = useSWR(
     `../api/tags/${tag}?` +
@@ -37,9 +37,7 @@ export default function Tag() {
     <div>
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
-        <div className="pt-6 text-2xl font-semibold">
-          #{tag}
-        </div>
+        <div className="pt-6 text-2xl font-semibold">#{tag}</div>
         <div className="flex flex-row gap-x-1 pt-6 items-center font-semibold">
           <p className="text-base">{images.length}</p>
           <p className="text-sm text-gray-600">作品</p>

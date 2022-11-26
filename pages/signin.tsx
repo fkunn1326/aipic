@@ -1,16 +1,17 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { SiteName } from "../components/core/const"
+import { SiteName } from "../components/core/const";
 import { useRouter } from "next/router";
 
 const Signin = () => {
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
-  const emailregex = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/g;
+  const emailregex =
+    /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/g;
   const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const origin =
     typeof window !== "undefined" && window.location.origin
@@ -23,11 +24,11 @@ const Signin = () => {
     setForms({ ...forms, password: e.target.value });
   const clickForms = (e) => {
     supabaseClient.auth.signIn(forms).then((result) => {
-      if(result?.error){
-        document.getElementById("email_peer2")?.classList.remove("hidden")
-      }else{
-        document.getElementById("email_peer2")?.classList.add("hidden")
-        router.push("/")
+      if (result?.error) {
+        document.getElementById("email_peer2")?.classList.remove("hidden");
+      } else {
+        document.getElementById("email_peer2")?.classList.add("hidden");
+        router.push("/");
       }
     });
     e.preventDefault();
@@ -48,9 +49,7 @@ const Signin = () => {
     <div className="bg-gray-50 dark:bg-slate-900 pt-10">
       <div className="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link href="/">
-          <a
-            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-          >
+          <a className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
             {SiteName}
           </a>
         </Link>
@@ -123,7 +122,9 @@ const Signin = () => {
               >
                 サインイン
               </button>
-              <p className="text-sm text-gray-500 text-center dark:text-slate-300">または</p>
+              <p className="text-sm text-gray-500 text-center dark:text-slate-300">
+                または
+              </p>
               <button
                 type="button"
                 className="w-full bg-slate-100 hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium text-gray-900 rounded-lg text-sm px-5 py-2.5 text-center flex justify-center"

@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useContext } from "react";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer";
@@ -15,28 +21,41 @@ import { v4 as uuidv4 } from "uuid";
 import { userInfoContext } from "../../context/userInfoContext";
 import { useRouter } from "next/router";
 import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
-import ReactDOM from 'react-dom'
-import ReactTags from 'react-tag-autocomplete'
+import ReactDOM from "react-dom";
+import ReactTags from "react-tag-autocomplete";
 import axios from "axios";
 import useSWR from "swr";
-import { parseCookies } from "nookies"
+import { parseCookies } from "nookies";
 import { NextPageContext } from "next";
 import Link from "next/link";
 import InputForm from "../../components/form/InputForm";
 import SelectMenu from "../../components/form/SelectMenu";
 import TagsInput from "../../components/form/TagsInput";
 import TextAreaForm from "../../components/form/TextAreaForm";
-import { chunk_reader } from "../../utils/chunk_reader"
-import { DndContext, closestCenter, useSensors, MouseSensor, TouchSensor, useSensor, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
-import { SortableContext, rectSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import { chunk_reader } from "../../utils/chunk_reader";
+import {
+  DndContext,
+  closestCenter,
+  useSensors,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  DragEndEvent,
+  DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 import Preview from "../../components/form/Preview";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
 type tags = {
-  name: string,
-  id: string,
-  count: number
+  name: string;
+  id: string;
+  count: number;
 };
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -58,7 +77,7 @@ const models = [
 const Edit = (props) => {
   const ctx = useContext(userInfoContext);
   const [selectedModel, setSelectedModel] = useState(models[0]);
-  const [selectedindex, setselectedindex] = useState(0)
+  const [selectedindex, setselectedindex] = useState(0);
   const [isdropping, setisdropping] = useState(false);
   const [isSelected, setisSelected] = useState(true);
   const [isSending, setisSending] = useState(false);
@@ -71,40 +90,52 @@ const Edit = (props) => {
   const [imagedata, setimagedata] = useState(null);
   const [tags, setTags] = useState<any[]>([]);
   const [suggestions, setSuggestions] = useState<tags[]>([]);
-  const [file, setfile] = useState<any>()
-  const [isdeleting, setisdeleting] = useState<boolean>(false)
-  const [ischanging, setischanging] = useState<boolean>(false)
-  const [step, setstep] = useState<number>()
-  const [sampler, setsampler] = useState("")
-  const [images, setimages] = useState<any[]>([])
-  const sensors = useSensors(useSensor(MouseSensor, {activationConstraint: { distance: 5 }}), useSensor(TouchSensor, {activationConstraint: { distance: 5 }}));
+  const [file, setfile] = useState<any>();
+  const [isdeleting, setisdeleting] = useState<boolean>(false);
+  const [ischanging, setischanging] = useState<boolean>(false);
+  const [step, setstep] = useState<number>();
+  const [sampler, setsampler] = useState("");
+  const [images, setimages] = useState<any[]>([]);
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { distance: 5 } })
+  );
 
-  const reactTags = useRef()
+  const reactTags = useRef();
 
   const inputEl = useRef<null | any>(null!);
 
-  const onDelete = useCallback((tagIndex) => {
-    setTags(tags.filter((tag, index) => index !== tagIndex));
-  }, [tags])
+  const onDelete = useCallback(
+    (tagIndex) => {
+      setTags(tags.filter((tag, index) => index !== tagIndex));
+    },
+    [tags]
+  );
 
-  const onAddition = useCallback((newTag) => {
-    var name = newTag.name.startsWith("#") ? newTag.name : `#${newTag.name}`
-    var localNewTag = {
-      "id": newTag.id,
-      "name": name
-    }
-    setTags([...tags, localNewTag])
-  }, [tags])
+  const onAddition = useCallback(
+    (newTag) => {
+      var name = newTag.name.startsWith("#") ? newTag.name : `#${newTag.name}`;
+      var localNewTag = {
+        id: newTag.id,
+        name: name,
+      };
+      setTags([...tags, localNewTag]);
+    },
+    [tags]
+  );
 
   const onValidate = useCallback((newTag) => {
-    var flag: boolean = tags.find(tag => {return tag.name.slice(1) === newTag.name}) === undefined
-    return flag
-  }, [])
+    var flag: boolean =
+      tags.find((tag) => {
+        return tag.name.slice(1) === newTag.name;
+      }) === undefined;
+    return flag;
+  }, []);
 
-  const onInput = async query => {
-    if (query.length <= 2){
-      const result = await fetch(`/api/tags/suggest/?word=${query}`)
-      setSuggestions(await result.json())
+  const onInput = async (query) => {
+    if (query.length <= 2) {
+      const result = await fetch(`/api/tags/suggest/?word=${query}`);
+      setSuggestions(await result.json());
     }
   };
 
@@ -113,91 +144,126 @@ const Edit = (props) => {
 
   const { data, error } = useSWR(`../../api/artworks/${id}`, fetcher);
 
-  const loadflag = useRef<boolean>(false)
+  const loadflag = useRef<boolean>(false);
 
   const [isloaded, setisloaded] = useState(false);
 
   useEffect(() => {
-    if(!isloaded){
-      if(data){
-        try{
-          if(ctx.UserInfo.id !== data[0].user_id){
-            router.push("/")
+    if (!isloaded) {
+      if (data) {
+        try {
+          if (ctx.UserInfo.id !== data[0].user_id) {
+            router.push("/");
           }
-          setimageurl(data[0].image_contents[0].href)
-          settitle(data[0].title)
-          setcaption(data[0].caption)
-          var localtag: tags[] = []
-          data[0].tags.map(i => {
+          setimageurl(data[0].image_contents[0].href);
+          settitle(data[0].title);
+          setcaption(data[0].caption);
+          var localtag: tags[] = [];
+          data[0].tags.map((i) => {
             localtag.push({
-              "id": `#${i}`,
-              "name": `#${i}`,
-              "count": 0
-            })
-          })
-          setTags(localtag)
+              id: `#${i}`,
+              name: `#${i}`,
+              count: 0,
+            });
+          });
+          setTags(localtag);
 
           data[0].image_contents.map(async (img) => {
-            let blob = await fetch(img.href).then(r => r.blob())
-            setimages((images) => ([ ...images, {
-              "prompt": img.prompt,
-              "nprompt": img.nprompt,
-              "steps": img.steps,
-              "sampler": img.sampler,
-              "selectedModel": models.find(model => { return model["name"] === img.model }),
-              "image": blob,
-              "id": img.id
-            }]));
-          })
-          setisloaded(true)
-        }catch(e){
-          router.push("/")
+            let blob = await fetch(img.href).then((r) => r.blob());
+            setimages((images) => [
+              ...images,
+              {
+                prompt: img.prompt,
+                nprompt: img.nprompt,
+                steps: img.steps,
+                sampler: img.sampler,
+                selectedModel: models.find((model) => {
+                  return model["name"] === img.model;
+                }),
+                image: blob,
+                id: img.id,
+              },
+            ]);
+          });
+          setisloaded(true);
+        } catch (e) {
+          router.push("/");
         }
       }
     }
-  }, [data, ctx])
+  }, [data, ctx]);
 
   const handleupload = async (e) => {
-    var files = e.target.files
-    if (images.length + files.length > 30){
-      files = Array.prototype.slice.call( files, 0, 30 - images.length );
+    var files = e.target.files;
+    if (images.length + files.length > 30) {
+      files = Array.prototype.slice.call(files, 0, 30 - images.length);
     }
-    for (const file of files){
-      try{
-        if (file.type === "image/png"){
-          const buffer = await new Blob([file], {"type": file.type}).arrayBuffer()
-          const chunk = chunk_reader(buffer)
-          if (Object.values(chunk).every((v) => {return v !== "NaN"})) {
-            if(chunk.negative !== "NaN") setnprompt(chunk.negative)
-            if(chunk.positive !== "NaN") setprompt(chunk.positive)
-            if(chunk.sampler !== "NaN") setsampler(chunk.sampler)
-            if(chunk.steps !== "NaN") setstep(chunk.steps)
-            if(chunk.software === "NovelAI") setSelectedModel(models[2])
-            setimages((images) => ([ ...images, {
-              "prompt": chunk.positive !== "NaN" ? chunk.positive : "",
-              "nprompt": chunk.negative !== "NaN" ? chunk.negative : "",
-              "steps": chunk.steps !== "NaN" ? chunk.steps :"",
-              "sampler": chunk.sampler !== "NaN" ? chunk.sampler :"",
-              "selectedModel": chunk.software === "NovelAI" ? models[2] : models[0],
-              "image": new Blob([file], {"type": file.type}),
-              "id": uuidv4()
-            }]));
-          }else{
-            setimages((images) => ([...images, {"prompt": "", "nprompt": "", "steps": "", "sampler": "", "selectedModel": models[0], "image": new Blob([file], {"type": file.type}),"id": uuidv4()}]))
+    for (const file of files) {
+      try {
+        if (file.type === "image/png") {
+          const buffer = await new Blob([file], {
+            type: file.type,
+          }).arrayBuffer();
+          const chunk = chunk_reader(buffer);
+          if (
+            Object.values(chunk).every((v) => {
+              return v !== "NaN";
+            })
+          ) {
+            if (chunk.negative !== "NaN") setnprompt(chunk.negative);
+            if (chunk.positive !== "NaN") setprompt(chunk.positive);
+            if (chunk.sampler !== "NaN") setsampler(chunk.sampler);
+            if (chunk.steps !== "NaN") setstep(chunk.steps);
+            if (chunk.software === "NovelAI") setSelectedModel(models[2]);
+            setimages((images) => [
+              ...images,
+              {
+                prompt: chunk.positive !== "NaN" ? chunk.positive : "",
+                nprompt: chunk.negative !== "NaN" ? chunk.negative : "",
+                steps: chunk.steps !== "NaN" ? chunk.steps : "",
+                sampler: chunk.sampler !== "NaN" ? chunk.sampler : "",
+                selectedModel:
+                  chunk.software === "NovelAI" ? models[2] : models[0],
+                image: new Blob([file], { type: file.type }),
+                id: uuidv4(),
+              },
+            ]);
+          } else {
+            setimages((images) => [
+              ...images,
+              {
+                prompt: "",
+                nprompt: "",
+                steps: "",
+                sampler: "",
+                selectedModel: models[0],
+                image: new Blob([file], { type: file.type }),
+                id: uuidv4(),
+              },
+            ]);
           }
-        }else{
-          setimages((images) => ([...images, {"prompt": "", "nprompt": "", "steps": "", "sampler": "", "selectedModel": models[0], "image": new Blob([file], {"type": file.type}),"id": uuidv4()}]))
+        } else {
+          setimages((images) => [
+            ...images,
+            {
+              prompt: "",
+              nprompt: "",
+              steps: "",
+              sampler: "",
+              selectedModel: models[0],
+              image: new Blob([file], { type: file.type }),
+              id: uuidv4(),
+            },
+          ]);
         }
-      }catch(e){}
+      } catch (e) {}
     }
-    try{
+    try {
       var blob = e.target.files[0];
-      setfile(new Blob([blob], {"type": blob.type}))
+      setfile(new Blob([blob], { type: blob.type }));
       setisSelected(true);
-      setimageurl(
-        URL.createObjectURL(new Blob([blob], { type: "image/png" }))
-      );
-    }catch(e){}
+      setimageurl(URL.createObjectURL(new Blob([blob], { type: "image/png" })));
+    } catch (e) {}
   };
 
   const handledrag = (e) => {
@@ -219,11 +285,11 @@ const Edit = (props) => {
   const handlesubmit = async (e) => {
     e.preventDefault();
 
-    try{
-      var tagsarr: string[] = []
-      tags.map(tag=>{
-        tagsarr.push(tag["name"].slice(1))
-      })
+    try {
+      var tagsarr: string[] = [];
+      tags.map((tag) => {
+        tagsarr.push(tag["name"].slice(1));
+      });
 
       setisSending(true);
       setischanging(true);
@@ -231,111 +297,128 @@ const Edit = (props) => {
       images.map(async (image) => {
         await axios.post(
           "/api/r2/delete",
-          JSON.stringify({ 
-            "token": `${supabaseClient?.auth?.session()?.access_token}`,
-            "image_id": `${image.id}`
-          }), 
+          JSON.stringify({
+            token: `${supabaseClient?.auth?.session()?.access_token}`,
+            artwork_id: `${image.id}`,
+          }),
           {
             headers: {
               "Content-Type": "application/json",
-            }
+            },
           }
         );
 
-        const responseUploadURL = await axios.post(
-          "/api/r2/upload",
-        );
+        const responseUploadURL = await axios.post("/api/r2/upload");
 
-        const url = JSON.parse(JSON.stringify(responseUploadURL.data))
+        const url = JSON.parse(JSON.stringify(responseUploadURL.data));
 
-        var formdata = new FormData()
+        var formdata = new FormData();
 
-        formdata.append("file", image.image)
-        formdata.append("id",`image-${image.id}`)
+        formdata.append("file", image.image);
+        formdata.append("id", `image-${image.id}`);
 
-        await axios.post(
-          url.uploadURL,
-          formdata, 
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        );
+        await axios.post(url.uploadURL, formdata, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-        const { data, error } = await supabaseClient.from("images").update({
-          id: image.id,
-          href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${image.id}/public`,
-          model: image.selectedModel.name,
-          prompt: image.prompt,
-          nprompt: image.nprompt,
-          promptarr: image.prompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
-          npromptarr: image.nprompt.split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g).map(i => i.trim()).filter(function(i){return i !== "";}),
-          steps: image.steps,
-          sampler: image.sampler,
+        const { data, error } = await supabaseClient
+          .from("images")
+          .update({
+            id: image.id,
+            href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${image.id}/public`,
+            model: image.selectedModel.name,
+            prompt: image.prompt,
+            nprompt: image.nprompt,
+            promptarr: image.prompt
+              .split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g)
+              .map((i) => i.trim())
+              .filter(function (i) {
+                return i !== "";
+              }),
+            npromptarr: image.nprompt
+              .split(/,|\(|\)|\{|\}|\[|\]|\!|\||\:/g)
+              .map((i) => i.trim())
+              .filter(function (i) {
+                return i !== "";
+              }),
+            steps: image.steps,
+            sampler: image.sampler,
+            user_id: ctx.UserInfo["id"],
+          })
+          .match({
+            id: image.id,
+          });
+      });
+
+      const imagesarr = images.map((image) => {
+        return image.id;
+      });
+
+      await supabaseClient
+        .from("artworks")
+        .update({
+          id: data[0].id,
+          caption: caption,
+          href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${imagesarr[0]}/public`,
+          age_limit: agelimit,
+          title: title,
+          tags: tagsarr,
           user_id: ctx.UserInfo["id"],
-        }).match({
-          id: image.id
+          images: imagesarr,
         })
-      })
-
-      const imagesarr = images.map((image) => {return image.id})
-
-      await supabaseClient.from("artworks").update({
-        id: data[0].id,
-        caption: caption,
-        href: `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/image-${imagesarr[0]}/public`,
-        age_limit: agelimit,
-        title: title,
-        tags: tagsarr,
-        user_id: ctx.UserInfo["id"],
-        images: imagesarr
-      }).match({
-        id: data[0].id,
-      })
+        .match({
+          id: data[0].id,
+        });
 
       router.push(`/artworks/${data[0].id}`);
-    }catch(e){
-      alert("アップロード中にエラーが発生しました。再試行してください。")
+    } catch (e) {
+      alert("アップロード中にエラーが発生しました。再試行してください。");
       setisSending(false);
     }
   };
 
   const handledelete = async (e) => {
-    const check = confirm(`一度消した画像は復元することはできません。\n本当に削除しますか？`)
+    const check = confirm(
+      `一度消した画像は復元することはできません。\n本当に削除しますか？`
+    );
     if (check) {
-      setisSending(true)
-      setisdeleting(true)
+      setisSending(true);
+      setisdeleting(true);
 
-      
       images.map(async (image) => {
         await axios.post(
           "/api/r2/delete",
-          JSON.stringify({ 
-            "token": `${supabaseClient?.auth?.session()?.access_token}`,
-            "image_id": `${image.id}`
-          }), 
+          JSON.stringify({
+            token: `${supabaseClient?.auth?.session()?.access_token}`,
+            artwork_id: `${image.id}`,
+          }),
           {
             headers: {
               "Content-Type": "application/json",
-            }
+            },
           }
         );
 
-        await supabaseClient.from("images").delete().match({id: image.id});
-        await supabaseClient.from("artworks").delete().match({id: data[0].id});
-      })
+        await supabaseClient.from("images").delete().match({ id: image.id });
+        await supabaseClient
+          .from("artworks")
+          .delete()
+          .match({ id: data[0].id });
+      });
 
-      router.push("/")
+      router.push("/");
     }
-  }
+  };
 
-  const handleDelete = i => {
+  const handleDelete = (i) => {
     setTags(tags.filter((tag, index) => index !== i));
   };
 
-  const handleAddition = tag => {
-    if (tag["name"]!==undefined) if (!tag["name"].startsWith("#")) tag["name"] = "#" + tag["name"]
+  const handleAddition = (tag) => {
+    if (tag["name"] !== undefined)
+      if (!tag["name"].startsWith("#")) tag["name"] = "#" + tag["name"];
     setTags([...tags, tag]);
   };
 
@@ -348,22 +431,28 @@ const Edit = (props) => {
     setTags(newTags);
   };
 
-  const handleTagClick = index => {
-    handleDelete(index)
+  const handleTagClick = (index) => {
+    handleDelete(index);
   };
 
-  const handleInputChange = async tag => {
-    if (tag !== ""){
-      const result = await fetch(`/api/tags/suggest/?word=${tag}`)
-      setSuggestions(await result.json())
+  const handleInputChange = async (tag) => {
+    if (tag !== "") {
+      const result = await fetch(`/api/tags/suggest/?word=${tag}`);
+      setSuggestions(await result.json());
     }
   };
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setimages((image) => {
-      var index = image.indexOf(image.filter(image => image.id === event.active?.id)[0])
-      setimageurl(URL.createObjectURL(new Blob([image[index]?.image], { type: "image/png" })))
-      URL.revokeObjectURL(imageurl)
+      var index = image.indexOf(
+        image.filter((image) => image.id === event.active?.id)[0]
+      );
+      setimageurl(
+        URL.createObjectURL(
+          new Blob([image[index]?.image], { type: "image/png" })
+        )
+      );
+      URL.revokeObjectURL(imageurl);
       setselectedindex(index);
       return image;
     });
@@ -373,12 +462,16 @@ const Edit = (props) => {
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-        setimages((image) => {
-          const oldIndex = image.indexOf(image.filter(image => image.id === active.id)[0]);
-          const newIndex = image.indexOf(image.filter(image => image.id === over?.id)[0]);
-          setselectedindex(newIndex);
-          return arrayMove(image, oldIndex, newIndex);
-        });
+      setimages((image) => {
+        const oldIndex = image.indexOf(
+          image.filter((image) => image.id === active.id)[0]
+        );
+        const newIndex = image.indexOf(
+          image.filter((image) => image.id === over?.id)[0]
+        );
+        setselectedindex(newIndex);
+        return arrayMove(image, oldIndex, newIndex);
+      });
     }
   }, []);
 
@@ -397,9 +490,13 @@ const Edit = (props) => {
               <Tab.Group
                 selectedIndex={selectedindex}
                 onChange={(index) => {
-                  setselectedindex(index)
-                  setimageurl(URL.createObjectURL(new Blob([images[index].image], { type: "image/png" })))
-                  URL.revokeObjectURL(imageurl)
+                  setselectedindex(index);
+                  setimageurl(
+                    URL.createObjectURL(
+                      new Blob([images[index].image], { type: "image/png" })
+                    )
+                  );
+                  URL.revokeObjectURL(imageurl);
                 }}
               >
                 <div className="grid md:grid-cols-2 gap-x-8">
@@ -413,7 +510,8 @@ const Edit = (props) => {
                       {!isSelected ? (
                         <label
                           className={`flex flex-col justify-center items-center w-full h-64 bg-gray-50 dark:bg-slate-800 dark:border-slate-600 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 ${
-                            isdropping && "border-4 border-sky-500 bg-sky-100 dark:bg-slate-700"
+                            isdropping &&
+                            "border-4 border-sky-500 bg-sky-100 dark:bg-slate-700"
                           }`}
                         >
                           <div className="flex flex-col justify-center items-center pt-5 pb-6">
@@ -460,18 +558,26 @@ const Edit = (props) => {
                             className="absolute z-10 text-sky-400 w-8 h-8 top-2 right-2 bg-gray-50 dark:bg-slate-800 dark:border-slate-600  rounded-full hover:text-sky-500"
                             onClick={() => {
                               setimages(
-                                images.filter((config, index) => (index !== selectedindex))
-                              )
-                              const localimages = images.filter((image, index) => (index !== selectedindex))
-                              setimages(
-                                localimages
-                              )
-                              if(localimages.length !== 0){
-                                setimageurl(URL.createObjectURL(new Blob([localimages[0].image], { type: "image/png" })))
-                                URL.revokeObjectURL(imageurl)
-                                setselectedindex(0)
-                              }else{
-                                setisSelected(false)
+                                images.filter(
+                                  (config, index) => index !== selectedindex
+                                )
+                              );
+                              const localimages = images.filter(
+                                (image, index) => index !== selectedindex
+                              );
+                              setimages(localimages);
+                              if (localimages.length !== 0) {
+                                setimageurl(
+                                  URL.createObjectURL(
+                                    new Blob([localimages[0].image], {
+                                      type: "image/png",
+                                    })
+                                  )
+                                );
+                                URL.revokeObjectURL(imageurl);
+                                setselectedindex(0);
+                              } else {
+                                setisSelected(false);
                               }
                             }}
                           ></XCircleIcon>
@@ -485,243 +591,337 @@ const Edit = (props) => {
                       )}
                     </div>
                     <DndContext
-                          sensors={sensors}
-                          collisionDetection={closestCenter}
-                          onDragEnd={handleDragEnd}
-                          onDragStart={handleDragStart}
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleDragEnd}
+                      onDragStart={handleDragStart}
                     >
-                        <Tab.List as="div" className="m-4 grid grid-cols-3 sm:grid-cols-5 gap-4">
-                          <SortableContext items={images} strategy={rectSortingStrategy}>
-                            {images.map(function (image, idx) {
-                              var deleteimage = (e) => {
-                                e.preventDefault()
-                                const localimages = images.filter((config, index) => (index !== idx))
-                                setimages(localimages)
-                                if(localimages.length !== 0){
-                                  setimageurl(URL.createObjectURL(new Blob([localimages[0].image], { type: "image/png" })))
-                                  URL.revokeObjectURL(imageurl)
-                                  setselectedindex(0)
-                                }else{
-                                  setisSelected(false)
-                                }
-                              }
-                              return (
-                                <Tab as={Fragment} key={image?.id}>
-                                  <div
-                                    className={
-                                      `rounded-lg cursor-pointer`
-                                    }
-                                  >
-                                    <Preview image={image?.image} id={image?.id} selected={idx === selectedindex} deleteimage={deleteimage} />
-                                  </div>
-                                </Tab>
+                      <Tab.List
+                        as="div"
+                        className="m-4 grid grid-cols-3 sm:grid-cols-5 gap-4"
+                      >
+                        <SortableContext
+                          items={images}
+                          strategy={rectSortingStrategy}
+                        >
+                          {images.map(function (image, idx) {
+                            var deleteimage = (e) => {
+                              e.preventDefault();
+                              const localimages = images.filter(
+                                (config, index) => index !== idx
                               );
-                            })}
-                          </SortableContext>
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept="image/png, image/jpeg, image/webp"
-                            multiple
-                            onChange={(e) => {
-                              handleupload(e)
+                              setimages(localimages);
+                              if (localimages.length !== 0) {
+                                setimageurl(
+                                  URL.createObjectURL(
+                                    new Blob([localimages[0].image], {
+                                      type: "image/png",
+                                    })
+                                  )
+                                );
+                                URL.revokeObjectURL(imageurl);
+                                setselectedindex(0);
+                              } else {
+                                setisSelected(false);
+                              }
+                            };
+                            return (
+                              <Tab as={Fragment} key={image?.id}>
+                                <div className={`rounded-lg cursor-pointer`}>
+                                  <Preview
+                                    image={image?.image}
+                                    id={image?.id}
+                                    selected={idx === selectedindex}
+                                    deleteimage={deleteimage}
+                                  />
+                                </div>
+                              </Tab>
+                            );
+                          })}
+                        </SortableContext>
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/png, image/jpeg, image/webp"
+                          multiple
+                          onChange={(e) => {
+                            handleupload(e);
+                          }}
+                          id="hiddeninput"
+                        />
+                        {isSelected && (
+                          <button
+                            type="button"
+                            className="bg-gray-100 dark:bg-slate-700 rounded-lg flex items-center justify-center "
+                            onClick={() => {
+                              document.getElementById("hiddeninput")?.click();
                             }}
-                            id="hiddeninput"
-                          />                        
-                          {isSelected &&
-                            <button
-                              type="button"
-                              className="bg-gray-100 dark:bg-slate-700 rounded-lg flex items-center justify-center "
-                              onClick={() => {
-                                document.getElementById("hiddeninput")?.click()
-                              }}
-                            >
-                              <PlusIcon className="w-full h-full p-4 text-gray-500 dark:text-slate-900" />
-                            </button>
-                          }
-                        </Tab.List>
+                          >
+                            <PlusIcon className="w-full h-full p-4 text-gray-500 dark:text-slate-900" />
+                          </button>
+                        )}
+                      </Tab.List>
                     </DndContext>
                   </div>
                   <Tab.Panels as="div" className="pt-4">
                     <div className="max-w-2xl p-6 space-y-4 md:space-y-6 sm:h-[80vh] pb-64 overflow-scroll rounded bg-gray-50 border dark:border-none dark:bg-slate-800">
-                        <p className="dark:text-white font-semibold">作品の情報</p>
-                        <InputForm caption={"タイトル"} state={title} setState={settitle} required/>
-                        <TextAreaForm caption={"説明"} state={caption} setState={setcaption} required/>
-                        <TagsInput caption={"タグ"} state={tags} setState={setTags}  />
-                        <div>
-                          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            年齢制限
-                          </label>
-                          <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
-                            <li className="bg-gray-50 w-full border-b rounded-l-lg dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
-                              <div className="pl-3">
-                                <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900cursor-pointer dark:border-slate-600 dark:bg-slate-800 dark:text-white">
-                                  <input
-                                    id="horizontal-list-radio-license"
-                                    type="radio"
-                                    className="outline-none rounded mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                                    name="bordered-radio"
-                                    onClick={() => {
-                                      setagelimit("all");
-                                    }}
-                                    onChange={() => {;}}
-                                    checked={agelimit === "all"}
-                                    required
-                                  ></input>
-                                  全年齢
-                                </label>
-                              </div>
-                            </li>
-                            <li className="bg-gray-50 w-full border-b dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
-                              <div className="pl-3">
-                                <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
-                                  <input
-                                    id="horizontal-list-radio-id"
-                                    type="radio"
-                                    className="outline-none mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                                    name="bordered-radio"
-                                    onClick={() => {
-                                      setagelimit("r18");
-                                    }}
-                                    onChange={() => {;}}
-                                    checked={agelimit === "r18"}
-                                    required
-                                  ></input>
-                                  R18
-                                </label>
-                              </div>
-                            </li>
-                            <li className="bg-gray-50 w-full border-b rounded-r-lg  dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
-                              <div className="pl-3">
-                                <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
-                                  <input
-                                    id="horizontal-list-radio-millitary"
-                                    type="radio"
-                                    className="outline-none mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                                    name="bordered-radio"
-                                    onClick={() => {
-                                      setagelimit("r18g");
-                                    }}
-                                    onChange={() => {;}}
-                                    checked={agelimit === "r18g"}
-                                    required
-                                  ></input>
-                                  R18-G
-                                </label>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        {images.map(function (image, i) {
-                          var setlocalprompt = (prompt) => {
-                            var localobj = Object.assign(images[i])
-                            localobj["prompt"] = prompt
-                            setimages(
-                              images.map((config, index) => (index === i ? localobj : config))
+                      <p className="dark:text-white font-semibold">
+                        作品の情報
+                      </p>
+                      <InputForm
+                        caption={"タイトル"}
+                        state={title}
+                        setState={settitle}
+                        required
+                      />
+                      <TextAreaForm
+                        caption={"説明"}
+                        state={caption}
+                        setState={setcaption}
+                        required
+                      />
+                      <TagsInput
+                        caption={"タグ"}
+                        state={tags}
+                        setState={setTags}
+                      />
+                      <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                          年齢制限
+                        </label>
+                        <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
+                          <li className="bg-gray-50 w-full border-b rounded-l-lg dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
+                            <div className="pl-3">
+                              <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900cursor-pointer dark:border-slate-600 dark:bg-slate-800 dark:text-white">
+                                <input
+                                  id="horizontal-list-radio-license"
+                                  type="radio"
+                                  className="outline-none rounded mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                  name="bordered-radio"
+                                  onClick={() => {
+                                    setagelimit("all");
+                                  }}
+                                  onChange={() => {}}
+                                  checked={agelimit === "all"}
+                                  required
+                                ></input>
+                                全年齢
+                              </label>
+                            </div>
+                          </li>
+                          <li className="bg-gray-50 w-full border-b dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
+                            <div className="pl-3">
+                              <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
+                                <input
+                                  id="horizontal-list-radio-id"
+                                  type="radio"
+                                  className="outline-none mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                  name="bordered-radio"
+                                  onClick={() => {
+                                    setagelimit("r18");
+                                  }}
+                                  onChange={() => {}}
+                                  checked={agelimit === "r18"}
+                                  required
+                                ></input>
+                                R18
+                              </label>
+                            </div>
+                          </li>
+                          <li className="bg-gray-50 w-full border-b rounded-r-lg  dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
+                            <div className="pl-3">
+                              <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
+                                <input
+                                  id="horizontal-list-radio-millitary"
+                                  type="radio"
+                                  className="outline-none mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                  name="bordered-radio"
+                                  onClick={() => {
+                                    setagelimit("r18g");
+                                  }}
+                                  onChange={() => {}}
+                                  checked={agelimit === "r18g"}
+                                  required
+                                ></input>
+                                R18-G
+                              </label>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      {images.map(function (image, i) {
+                        var setlocalprompt = (prompt) => {
+                          var localobj = Object.assign(images[i]);
+                          localobj["prompt"] = prompt;
+                          setimages(
+                            images.map((config, index) =>
+                              index === i ? localobj : config
                             )
-                          }
-                          var setlocalnprompt = (nprompt) => {
-                            var localobj = Object.assign(images[i])
-                            localobj["nprompt"] = nprompt
-                            setimages(
-                              images.map((config, index) => (index === i ? localobj : config))
-                            )
-                          }
-                          var setlocalsteps = (steps) => {
-                            var localobj = Object.assign(images[i])
-                            localobj["steps"] = steps
-                            setimages(
-                              images.map((config, index) => (index === i ? localobj : config))
-                            )
-                          }
-                          var setlocalsampler = (sampler) => {
-                            var localobj = Object.assign(images[i])
-                            localobj["sampler"] = sampler
-                            setimages(
-                              images.map((config, index) => (index === i ? localobj : config))
-                            )
-                          }
-                          var setlocalselectedModel = (selectedModel) => {
-                            var localobj = Object.assign(images[i])
-                            localobj["selectedModel"] = selectedModel
-                            setimages(
-                              images.map((config, index) => (index === i ? localobj : config))
-                            )
-                          }
-
-                          var batchprompt = (prompt) => {
-                            setimages(
-                              images.map((config, index) => {
-                                var localobj = Object.assign(config)
-                                localobj["prompt"] = prompt
-                                return (localobj)
-                              }) 
-                            )
-                          }
-                          var batchnprompt = (nprompt) => {
-                            setimages(
-                              images.map((config, index) => {
-                                var localobj = Object.assign(config)
-                                localobj["nprompt"] = nprompt
-                                return (localobj)
-                              }) 
-                            )
-                          }
-                          var batchsteps = (steps) => {
-                            setimages(
-                              images.map((config, index) => {
-                                var localobj = Object.assign(config)
-                                localobj["steps"] = steps
-                                return (localobj)
-                              }) 
-                            )
-                          }
-                          var batchsampler = (sampler) => {
-                            setimages(
-                              images.map((config, index) => {
-                                var localobj = Object.assign(config)
-                                localobj["sampler"] = sampler
-                                return (localobj)
-                              }) 
-                            )
-                          }
-                          var batchmodel = (model) => {
-                            setimages(
-                              images.map((config, index) => {
-                                var localobj = Object.assign(config)
-                                localobj["selectedModel"] = model
-                                return (localobj)
-                              }) 
-                            )
-                          }
-                          return (
-                            <Tab.Panel className="space-y-4" key={i}>
-                              <p className="dark:text-white font-semibold">画像ごとの情報（{i + 1} / {images.length}）</p>
-                              <TextAreaForm caption={"プロンプト"} state={images[i]?.prompt} setState={setlocalprompt} batch={batchprompt} />
-                              <TextAreaForm caption={"ネガティブプロンプト"} state={images[i]?.nprompt} setState={setlocalnprompt} batch={batchnprompt} />
-                              <InputForm caption={"ステップ数"} state={images[i]?.steps} setState={setlocalsteps} batch={batchsteps} />
-                              <InputForm caption={"サンプラー"} state={images[i]?.sampler} setState={setlocalsampler} batch={batchsampler} />
-                              <SelectMenu caption={"使用したモデル"} state={images[i]?.selectedModel} setState={setlocalselectedModel} object={models} batch={batchmodel} />
-                            </Tab.Panel>
                           );
-                        })}
-                        {inputEl?.current?.files?.length === 0 &&
+                        };
+                        var setlocalnprompt = (nprompt) => {
+                          var localobj = Object.assign(images[i]);
+                          localobj["nprompt"] = nprompt;
+                          setimages(
+                            images.map((config, index) =>
+                              index === i ? localobj : config
+                            )
+                          );
+                        };
+                        var setlocalsteps = (steps) => {
+                          var localobj = Object.assign(images[i]);
+                          localobj["steps"] = steps;
+                          setimages(
+                            images.map((config, index) =>
+                              index === i ? localobj : config
+                            )
+                          );
+                        };
+                        var setlocalsampler = (sampler) => {
+                          var localobj = Object.assign(images[i]);
+                          localobj["sampler"] = sampler;
+                          setimages(
+                            images.map((config, index) =>
+                              index === i ? localobj : config
+                            )
+                          );
+                        };
+                        var setlocalselectedModel = (selectedModel) => {
+                          var localobj = Object.assign(images[i]);
+                          localobj["selectedModel"] = selectedModel;
+                          setimages(
+                            images.map((config, index) =>
+                              index === i ? localobj : config
+                            )
+                          );
+                        };
+
+                        var batchprompt = (prompt) => {
+                          setimages(
+                            images.map((config, index) => {
+                              var localobj = Object.assign(config);
+                              localobj["prompt"] = prompt;
+                              return localobj;
+                            })
+                          );
+                        };
+                        var batchnprompt = (nprompt) => {
+                          setimages(
+                            images.map((config, index) => {
+                              var localobj = Object.assign(config);
+                              localobj["nprompt"] = nprompt;
+                              return localobj;
+                            })
+                          );
+                        };
+                        var batchsteps = (steps) => {
+                          setimages(
+                            images.map((config, index) => {
+                              var localobj = Object.assign(config);
+                              localobj["steps"] = steps;
+                              return localobj;
+                            })
+                          );
+                        };
+                        var batchsampler = (sampler) => {
+                          setimages(
+                            images.map((config, index) => {
+                              var localobj = Object.assign(config);
+                              localobj["sampler"] = sampler;
+                              return localobj;
+                            })
+                          );
+                        };
+                        var batchmodel = (model) => {
+                          setimages(
+                            images.map((config, index) => {
+                              var localobj = Object.assign(config);
+                              localobj["selectedModel"] = model;
+                              return localobj;
+                            })
+                          );
+                        };
+                        return (
+                          <Tab.Panel className="space-y-4" key={i}>
+                            <p className="dark:text-white font-semibold">
+                              画像ごとの情報（{i + 1} / {images.length}）
+                            </p>
+                            <TextAreaForm
+                              caption={"プロンプト"}
+                              state={images[i]?.prompt}
+                              setState={setlocalprompt}
+                              batch={batchprompt}
+                            />
+                            <TextAreaForm
+                              caption={"ネガティブプロンプト"}
+                              state={images[i]?.nprompt}
+                              setState={setlocalnprompt}
+                              batch={batchnprompt}
+                            />
+                            <InputForm
+                              caption={"ステップ数"}
+                              state={images[i]?.steps}
+                              setState={setlocalsteps}
+                              batch={batchsteps}
+                            />
+                            <InputForm
+                              caption={"サンプラー"}
+                              state={images[i]?.sampler}
+                              setState={setlocalsampler}
+                              batch={batchsampler}
+                            />
+                            <SelectMenu
+                              caption={"使用したモデル"}
+                              state={images[i]?.selectedModel}
+                              setState={setlocalselectedModel}
+                              object={models}
+                              batch={batchmodel}
+                            />
+                          </Tab.Panel>
+                        );
+                      })}
+                      {inputEl?.current?.files?.length === 0 && (
                         <>
-                          <TextAreaForm caption={"プロンプト"} state={prompt} setState={setprompt}/>
-                          <TextAreaForm caption={"ネガティブプロンプト"} state={nprompt} setState={setnprompt} />
-                          <InputForm caption={"ステップ数"} state={step} setState={setstep} />
-                          <InputForm caption={"サンプラー"} state={sampler} setState={setsampler} />
-                          <SelectMenu caption={"使用したモデル"} state={selectedModel} setState={setSelectedModel} object={models} />
+                          <TextAreaForm
+                            caption={"プロンプト"}
+                            state={prompt}
+                            setState={setprompt}
+                          />
+                          <TextAreaForm
+                            caption={"ネガティブプロンプト"}
+                            state={nprompt}
+                            setState={setnprompt}
+                          />
+                          <InputForm
+                            caption={"ステップ数"}
+                            state={step}
+                            setState={setstep}
+                          />
+                          <InputForm
+                            caption={"サンプラー"}
+                            state={sampler}
+                            setState={setsampler}
+                          />
+                          <SelectMenu
+                            caption={"使用したモデル"}
+                            state={selectedModel}
+                            setState={setSelectedModel}
+                            object={models}
+                          />
                         </>
-                        }
+                      )}
                     </div>
                     <p className="my-4 dark:text-slate-300">
                       <Link href="/terms/tos">
-                        <a className="text-sky-600 dark:text-sky-500">利用規約</a>
+                        <a className="text-sky-600 dark:text-sky-500">
+                          利用規約
+                        </a>
                       </Link>
                       や
                       <Link href="/terms/guideline">
-                        <a className="text-sky-600 dark:text-sky-500">ガイドライン</a>
+                        <a className="text-sky-600 dark:text-sky-500">
+                          ガイドライン
+                        </a>
                       </Link>
                       に違反する作品は削除の対象となります。
                     </p>
@@ -734,12 +934,28 @@ const Edit = (props) => {
                       }`}
                       disabled={isSending}
                     >
-                      {isSending &&
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      }
+                      {isSending && (
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      )}
                       保存する
                     </button>
                     <button
@@ -749,15 +965,33 @@ const Edit = (props) => {
                           ? "bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300"
                           : "bg-red-300"
                       }`}
-                      onClick={(e) => {handledelete(e)}}
+                      onClick={(e) => {
+                        handledelete(e);
+                      }}
                       disabled={isSending}
                     >
-                      {isdeleting &&
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      }
+                      {isdeleting && (
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      )}
                       削除する
                     </button>
                   </Tab.Panels>
@@ -767,10 +1001,9 @@ const Edit = (props) => {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
-  
-}
+};
 
 export default Edit;

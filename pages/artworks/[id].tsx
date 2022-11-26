@@ -11,7 +11,11 @@ import {
   EllipsisHorizontalIcon,
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolidIcon, EyeIcon, ClipboardIcon } from "@heroicons/react/24/solid";
+import {
+  HeartIcon as HeartSolidIcon,
+  EyeIcon,
+  ClipboardIcon,
+} from "@heroicons/react/24/solid";
 import ImageModal from "../../components/modal/imagemodel";
 import Modal from "../../components/modal/modal";
 import ShareModal from "../../components/modal/sharemodal";
@@ -23,100 +27,119 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { userInfoContext } from "../../context/userInfoContext";
 import Link from "next/link";
-import Head from 'next/head'
+import Head from "next/head";
 import axios from "axios";
-import PopOver from "../../components/popover"
+import PopOver from "../../components/popover";
 import { text2Link } from "../../components/common/text2link";
 import OtherImages from "../../components/common/OtherImages";
 import FollowBtn from "../../components/common/follow";
-import '@splidejs/react-splide/css/skyblue';
-import { Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
+import "@splidejs/react-splide/css/skyblue";
+import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 
 export const getServerSideProps = async (context) => {
-  const { id } = context.query
-  const res = await fetch(process.env.NODE_ENV === "development" ? `https://preview.aipic-dev.tk/api/artworks/${id}` : `https://aipic.vercel.app/api/artworks/${id}`)
-  const data = await res.json()
+  const { id } = context.query;
+  const res = await fetch(
+    process.env.NODE_ENV === "development"
+      ? `https://preview.aipic-dev.tk/api/artworks/${id}`
+      : `https://aipic.vercel.app/api/artworks/${id}`
+  );
+  const data = await res.json();
 
-  return { props: {
-    data: data,
-    host: context.req.headers.host || null
-  }}
-}
+  return {
+    props: {
+      data: data,
+      host: context.req.headers.host || null,
+    },
+  };
+};
 
-const Meta = ({data}) => {
+const Meta = ({ data }) => {
   return (
     <Head>
       <meta charSet="utf-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-      <title>{data[0].title} - {data[0].author.name}の作品 - Aipic</title>
+      <title>
+        {data[0].title} - {data[0].author.name}の作品 - Aipic
+      </title>
       <meta name="description" content={data[0].caption} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@fkunn1326" />
       <meta name="twitter:title" content={data[0].title} />
       <meta name="twitter:description" content={data[0].caption} />
-      <meta property="og:site_name" content="AIPIC"  />
+      <meta property="og:site_name" content="AIPIC" />
       <meta property="og:type" content="article" />
       <meta property="og:title" content={`${data[0].author.name}`} />
       <meta property="og:description" content={data[0].caption} />
-      <meta property="og:url" content={`https://aipic.vercel.app/artworks/${data[0].id}`}/>
-      <link rel="alternate" type="application/json+oembed" href={`https://www.aipic.app/api/oembed/${data[0].id}`} />
-      {data[0].age_limit === "all" && <meta name="twitter:image" content={data[0].href} />}
-      {data[0].age_limit === "all" && <meta property="og:image" content={data[0].href} />}
+      <meta
+        property="og:url"
+        content={`https://aipic.vercel.app/artworks/${data[0].id}`}
+      />
+      <link
+        rel="alternate"
+        type="application/json+oembed"
+        href={`https://www.aipic.app/api/oembed/${data[0].id}`}
+      />
+      {data[0].age_limit === "all" && (
+        <meta name="twitter:image" content={data[0].href} />
+      )}
+      {data[0].age_limit === "all" && (
+        <meta property="og:image" content={data[0].href} />
+      )}
       <meta name="robots" content="index,follow" />
     </Head>
-  )
-}
+  );
+};
 
-const LikeBtn = ({data}) => {
-  const [isliked, setisliked] = useState(false)
-  const [isfocus, setisfocus] = useState(true)
-  const [image, setimage] = useState<any>({})
+const LikeBtn = ({ data }) => {
+  const [isliked, setisliked] = useState(false);
+  const [isfocus, setisfocus] = useState(true);
+  const [image, setimage] = useState<any>({});
   const ctx = useContext(userInfoContext);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
-    setimage(data)
-  },[])
+    setimage(data);
+  }, []);
 
   const handlelike = async (e) => {
     if (ctx.UserInfo.id !== undefined) {
       if (isliked) {
         await supabaseClient.from("likes").delete().match({
-          image_id: data.id,
+          artwork_id: data.id,
           user_id: ctx.UserInfo.id,
         });
         setisliked(false);
         await axios.post(
           "/api/likes",
-          JSON.stringify({ 
-            "token": `${supabaseClient?.auth?.session()?.access_token}`,
-            "image_id": `${data.id}`,
-            "type": "delete"
-          }), 
+          JSON.stringify({
+            token: `${supabaseClient?.auth?.session()?.access_token}`,
+            artwork_id: `${data.id}`,
+            type: "delete",
+          }),
           {
             headers: {
               "Content-Type": "application/json",
-            }
+            },
           }
         );
       } else {
         await supabaseClient.from("likes").insert({
-          image_id: data.id,
+          artwork_id: data.id,
           user_id: ctx.UserInfo.id,
         });
         setisliked(true);
         await axios.post(
           "/api/likes",
-          JSON.stringify({ 
-            "token": `${supabaseClient?.auth?.session()?.access_token}`,
-            "image_id": `${data.id}`,
-            "type": "add"
-          }), 
+          JSON.stringify({
+            token: `${supabaseClient?.auth?.session()?.access_token}`,
+            artwork_id: `${data.id}`,
+            type: "add",
+          }),
           {
             headers: {
               "Content-Type": "application/json",
-            }
+            },
           }
         );
       }
@@ -124,35 +147,32 @@ const LikeBtn = ({data}) => {
   };
 
   return (
-    <button
-    className="w-8 h-8"
-    onClick={(e) => handlelike(e)}
-    >
+    <button className="w-8 h-8" onClick={(e) => handlelike(e)}>
       {isliked ? (
-        <HeartSolidIcon className="w-8 h-8 text-pink-500"/>
+        <HeartSolidIcon className="w-8 h-8 text-pink-500" />
       ) : (
-        <HeartIcon className="w-8 h-8 text-black dark:text-white"/>
+        <HeartIcon className="w-8 h-8 text-black dark:text-white" />
       )}
     </button>
-  )  
-}
+  );
+};
 
-const Images = ({data, host, children}) => {
+const Images = ({ data, host, children }) => {
   const ctx = useContext(userInfoContext);
 
   const [isImageOpen, setisImageOpen] = useState(false);
   const [isPromptOpen, setisPromptOpen] = useState(false);
   const [isShareOpen, setisShareOpen] = useState(false);
-  const [splideindex, setsplideindex] = useState(0)
+  const [splideindex, setsplideindex] = useState(0);
 
   const [limittype, setlimittype] = useState("");
 
   const router = useRouter();
   const pid = router.query.id;
 
-  const uri = `https://${host}/artworks/${pid}`
+  const uri = `https://${host}/artworks/${pid}`;
 
-  const splideref = useRef<any>(null)
+  const splideref = useRef<any>(null);
 
   const settings = {
     dots: true,
@@ -178,33 +198,41 @@ const Images = ({data, host, children}) => {
   }, [data, image, ctx]);
 
   useEffect(() => {
-    if (localStorage.getItem("history") === null){
-      localStorage.setItem("history", JSON.stringify([data[0]]))
-    }else{
-      var localhistory = JSON.parse(localStorage.getItem("history") as string)
-      var samehistory = localhistory.find(item => item?.id === data[0]?.id)
-      if (samehistory === undefined){
-        localhistory.push(data[0])
-        localStorage.setItem("history", JSON.stringify(localhistory))
+    if (localStorage.getItem("history") === null) {
+      localStorage.setItem("history", JSON.stringify([data[0]]));
+    } else {
+      var localhistory = JSON.parse(localStorage.getItem("history") as string);
+      var samehistory = localhistory.find((item) => item?.id === data[0]?.id);
+      if (samehistory === undefined) {
+        localhistory.push(data[0]);
+        localStorage.setItem("history", JSON.stringify(localhistory));
       }
     }
-    (async() => {
-      try{
+    (async () => {
+      try {
         await axios.post(
           "/api/views",
-          JSON.stringify({ 
-            "token": `${supabaseClient?.auth?.session()?.access_token}`,
-            "image_id": `${data[0].id}`
-          }), 
+          JSON.stringify({
+            token: `${supabaseClient?.auth?.session()?.access_token}`,
+            artwork_id: `${data[0].id}`,
+          }),
           {
             headers: {
               "Content-Type": "application/json",
-            }
+            },
           }
         );
-      }catch(e){;}
+      } catch (e) {}
     })();
   }, []);
+
+  useEffect(() => {
+    splideref.current?.splide.on('move', function () {
+      setsplideindex(
+        splideref.current?.splide.index
+      );
+    });
+  })
 
   const handlecopy = (text, id) => {
     const pre = document.createElement("pre");
@@ -215,21 +243,27 @@ const Images = ({data, host, children}) => {
     document.getSelection()!.selectAllChildren(pre);
     const result = document.execCommand("copy");
     document.body.removeChild(pre);
-    (async() => {
+    (async () => {
       await axios.post(
         "/api/copies",
-        JSON.stringify({ 
-          "token": `${supabaseClient?.auth?.session()?.access_token}`,
-          "image_id": `${id}`
-        }), 
+        JSON.stringify({
+          token: `${supabaseClient?.auth?.session()?.access_token}`,
+          artwork_id: `${id}`,
+        }),
         {
           headers: {
             "Content-Type": "application/json",
-          }
+          },
         }
       );
-    })()
+    })();
     return result;
+  };
+
+  const gethref = (str: string) => {
+    if (str.endsWith("/public")) {
+      return str.replace("/public", "/w=512");
+    } else return str;
   };
 
   if (!data) return <div className="text-white">Loading...</div>;
@@ -253,48 +287,66 @@ const Images = ({data, host, children}) => {
                           className={`relative h-full w-full box-content ${
                             limittype !== "ok" && "bg-neutral-400"
                           }`}
-                          style={{letterSpacing: 0, wordSpacing: 0, fontSize: 0}}
+                          style={{
+                            letterSpacing: 0,
+                            wordSpacing: 0,
+                            fontSize: 0,
+                          }}
                         >
                           {limittype !== "unauth" && (
-                          <Splide role="group" aria-label="Images" className="h-[70vh] group" tag="div" hasTrack={ false } options={{ gap: 2 }} ref={splideref}>
-                            <div>
-                              <SplideTrack>
-                                {image.image_contents.map((img, idx) => (
-                                  <SplideSlide className="relative w-full h-[70vh]" key={img?.id}>
-                                    <Image
-                                      alt={img.title}
-                                      src={img.href}
-                                      layout="fill"
-                                      objectFit="contain"
-                                      className={`rounded-t-3xl w-full h-full min-h-[70vh] z-10 ${
-                                        limittype === "ok" && "cursor-zoom-in"
-                                      } ${
-                                        limittype === "unsafe" &&
-                                        "blur-xl opacity-60 pointer-events-none"
-                                      }`}
-                                      onClick={() => {
-                                        if (limittype === "ok") setisImageOpen(true);
-                                      }}
-                                    />
-                                  </SplideSlide>
-                                ))}
-                              </SplideTrack>
-                              <div className="transition-opacity ease-in-out delay-150 splide__arrows text-sm opacity-0 group-hover:opacity-100" onClick={() => {setsplideindex(splideref.current?.splide.index)}} />
-                            </div>
-                          </Splide>
+                            <Splide
+                              role="group"
+                              aria-label="Images"
+                              className="h-[70vh] group"
+                              tag="div"
+                              hasTrack={false}
+                              options={{ gap: 2 }}
+                              ref={splideref}
+                            >
+                              <div>
+                                <SplideTrack>
+                                  {image.image_contents.map((img, idx) => (
+                                    <SplideSlide
+                                      className="relative w-full h-[70vh]"
+                                      key={img?.id}
+                                    >
+                                      <img
+                                        alt={img?.title}
+                                        src={gethref(img?.href)}
+                                        className={`rounded-t-3xl w-full h-full min-h-[70vh] z-10 object-contain ${
+                                          limittype === "ok" && "cursor-zoom-in"
+                                        } ${
+                                          limittype === "unsafe" &&
+                                          "blur-xl opacity-60 pointer-events-none"
+                                        }`}
+                                        onClick={() => {
+                                          if (limittype === "ok")
+                                            setisImageOpen(true);
+                                        }}
+                                      />
+                                    </SplideSlide>
+                                  ))}
+                                </SplideTrack>
+                                <div
+                                  className={`transition-opacity ease-in-out delay-150 splide__arrows text-sm opacity-0 ${
+                                    image?.images?.length > 1
+                                      ? "group-hover:opacity-75"
+                                      : ""
+                                  }`}
+                                />
+                              </div>
+                            </Splide>
                           )}
                           <ImageModal
                             isOpen={isImageOpen}
                             onClose={() => setisImageOpen(false)}
                           >
                             <div className="relative w-full h-full">
-                              <Image
-                                src={image.image_contents[splideindex]?.href}
-                                layout="fill"
-                                objectFit="contain"
-                                className="rounded-lg w-full h-full min-h-[70vh]"
+                              <img
+                                src={gethref(image.image_contents[splideindex]?.href)}
+                                className="rounded-lg w-full h-full min-h-[70vh] object-contain"
                                 onClick={() => {
-                                  setisImageOpen(false)
+                                  setisImageOpen(false);
                                 }}
                               />
                             </div>
@@ -325,7 +377,7 @@ const Images = ({data, host, children}) => {
                               </Link>
                             </div>
                           )}
-                       </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -343,42 +395,81 @@ const Images = ({data, host, children}) => {
                           onClose={() => setisPromptOpen(false)}
                         >
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl">
-                            <p className="text-gray-600 dark:text-slate-300 text-sm">使用モデル</p>
+                            <p className="text-gray-600 dark:text-slate-300 text-sm">
+                              使用モデル
+                            </p>
                             <p className="mt-2 font-semibold text-2xl text-black dark:text-white">
                               {image.image_contents[splideindex]?.model}
                             </p>
                           </div>
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl mt-4">
                             <div className="flex justify-between">
-                              <p className="text-gray-600 dark:text-slate-300 text-sm">プロンプト</p>
+                              <p className="text-gray-600 dark:text-slate-300 text-sm">
+                                プロンプト
+                              </p>
                               <button className="border dark:border-slate-400 rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                 <ClipboardDocumentIcon
                                   className="w-5 h-5 text-gray-600 dark:text-slate-400 m-2 break-all"
                                   onClick={() => {
-                                    handlecopy(image.image_contents[splideindex]?.prompt, image.id);
+                                    handlecopy(
+                                      image.image_contents[splideindex]?.prompt,
+                                      image.id
+                                    );
                                   }}
                                 />
                               </button>
                             </div>
-                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.image_contents[splideindex]?.prompt?.split(",").map(i => i.trim()).map((str, idx) => (
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white" key={idx}>{str} </a>
-                          ))}</p>
+                            <p
+                              className="font-semibold"
+                              style={{ overflowWrap: "anywhere" }}
+                            >
+                              {image.image_contents[splideindex]?.prompt
+                                ?.split(",")
+                                .map((i) => i.trim())
+                                .map((str, idx) => (
+                                  <a
+                                    className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white"
+                                    key={idx}
+                                  >
+                                    {str}{" "}
+                                  </a>
+                                ))}
+                            </p>
                           </div>
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl mt-4">
                             <div className="flex justify-between">
-                              <p className="text-gray-600 dark:text-slate-300 text-sm">ネガティブプロンプト</p>
+                              <p className="text-gray-600 dark:text-slate-300 text-sm">
+                                ネガティブプロンプト
+                              </p>
                               <button className="border dark:border-slate-400 rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                 <ClipboardDocumentIcon
                                   className="w-5 h-5 text-gray-600 dark:text-slate-400 m-2 break-all"
                                   onClick={() => {
-                                    handlecopy(image.image_contents[splideindex]?.nprompt, image.id);
+                                    handlecopy(
+                                      image.image_contents[splideindex]
+                                        ?.nprompt,
+                                      image.id
+                                    );
                                   }}
                                 />
                               </button>
                             </div>
-                            <p className="font-semibold" style={{"overflowWrap": "anywhere"}}>{image.image_contents[splideindex]?.nprompt?.split(",").map(i => i.trim()).map((str, idx) => (
-                              <a className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white" key={idx}>{str}</a>
-                          ))}</p>
+                            <p
+                              className="font-semibold"
+                              style={{ overflowWrap: "anywhere" }}
+                            >
+                              {image.image_contents[splideindex]?.nprompt
+                                ?.split(",")
+                                .map((i) => i.trim())
+                                .map((str, idx) => (
+                                  <a
+                                    className="transition-color duration-200 ease-in-out hover:bg-sky-100 dark:hover:bg-slate-500 rounded-sm px-1 dark:text-white"
+                                    key={idx}
+                                  >
+                                    {str}
+                                  </a>
+                                ))}
+                            </p>
                           </div>
                         </Modal>
                         <LikeBtn data={image}></LikeBtn>
@@ -465,46 +556,68 @@ const Images = ({data, host, children}) => {
                               <p className="mx-4">{uri}</p>
                             </div>
                             <button className="absolute right-8 top-2 border rounded-lg bg-slate-50 dark:bg-slate-500 dark:border-slate-400 hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
-                                  <ClipboardDocumentIcon
-                                    className="w-5 h-5 text-gray-600 dark:text-slate-300 m-2 "
-                                    onClick={() => {
-                                      handlecopy(uri, image.id);
-                                    }}
-                                  />
+                              <ClipboardDocumentIcon
+                                className="w-5 h-5 text-gray-600 dark:text-slate-300 m-2 "
+                                onClick={() => {
+                                  handlecopy(uri, image.id);
+                                }}
+                              />
                             </button>
                           </div>
                         </ShareModal>
-                          <PopOver id={image.id} type={image.user_id === ctx.UserInfo.id} />
+                        <PopOver
+                          id={image.id}
+                          type={image.user_id === ctx.UserInfo.id}
+                        />
                       </div>
                     </div>
                   </div>
                   <div className="flex ml-8 lg:mx-24 lg:ml-12 justify-center">
                     <div className="flex flex-col w-[85vh] 2xl:w-[45vw]">
-                      <h1 className="text-xl lg:text-2xl font-bold mt-18 text-black dark:text-white" style={{"overflowWrap": "anywhere"}}>{image.title}</h1>
+                      <h1
+                        className="text-xl lg:text-2xl font-bold mt-18 text-black dark:text-white"
+                        style={{ overflowWrap: "anywhere" }}
+                      >
+                        {image.title}
+                      </h1>
                       <div
                         className="mt-5 text-sm lg:text-base text-black dark:text-slate-400"
                         dangerouslySetInnerHTML={{
-                          __html: text2Link(image.caption)
+                          __html: text2Link(image.caption),
                         }}
                       />
                       <div className="flex flex-row flex-wrap mt-5 text-sky-600 font-semibold text-sm lg:text-base">
-                        {image.tags !== null && image.tags.map((tag, idx) => (
-                          <Link href={`/search/${tag}`} key={idx} style={{"overflowWrap": "anywhere"}}>
-                            <a className="mr-2">#{tag}</a>
-                          </Link>
-                        ))}
+                        {image.tags !== null &&
+                          image.tags.map((tag, idx) => (
+                            <Link
+                              href={`/search/${tag}`}
+                              key={idx}
+                              style={{ overflowWrap: "anywhere" }}
+                            >
+                              <a className="mr-2">#{tag}</a>
+                            </Link>
+                          ))}
                       </div>
                       <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
                         <div className="flex flex-row items-center ">
-                          <HeartSolidIcon className="w-4 h-4 mr-1" title="いいね"/>
-                          {image.likes === null ? 0 : image.likes?.length }
+                          <HeartSolidIcon
+                            className="w-4 h-4 mr-1"
+                            title="いいね"
+                          />
+                          {image.likes === null ? 0 : image.likes?.length}
                         </div>
-                        <div className="flex flex-row items-center" title="閲覧数">
-                          <EyeIcon className="w-4 h-4 mr-1"/>
+                        <div
+                          className="flex flex-row items-center"
+                          title="閲覧数"
+                        >
+                          <EyeIcon className="w-4 h-4 mr-1" />
                           {image.views}
                         </div>
                         <div className="flex flex-row items-center">
-                          <ClipboardIcon className="w-4 h-4 mr-1" title="コピー数"/>
+                          <ClipboardIcon
+                            className="w-4 h-4 mr-1"
+                            title="コピー数"
+                          />
                           {image.copies}
                         </div>
                       </div>
@@ -531,18 +644,21 @@ const Images = ({data, host, children}) => {
                               </a>
                             </Link>
                           </span>
-                          {image.user_id === ctx.UserInfo.id ?
-                          <Link href={`/edit/${image.id}`}>
-                            <a
-                              type="submit"
-                              className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-2 text-center`}
-                            >
-                              編集する
-                            </a>
-                          </Link>
-                          :
-                          <FollowBtn following_uid={ctx.UserInfo.id} followed_uid={image.user_id} />
-                          }
+                          {image.user_id === ctx.UserInfo.id ? (
+                            <Link href={`/edit/${image.id}`}>
+                              <a
+                                type="submit"
+                                className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-2 text-center`}
+                              >
+                                編集する
+                              </a>
+                            </Link>
+                          ) : (
+                            <FollowBtn
+                              following_uid={ctx.UserInfo.id}
+                              followed_uid={image.user_id}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -554,12 +670,12 @@ const Images = ({data, host, children}) => {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
 
-export default function App({data, host, children}) {
+export default function App({ data, host, children }) {
   return (
     <Images data={data} host={host}>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">

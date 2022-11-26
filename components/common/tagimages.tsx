@@ -1,32 +1,30 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import { userInfoContext } from "../../context/userInfoContext";
-import useSWR from 'swr'
-import BlurImage from "./BlurImage"
-import SkeletonImage from "./SkeltonImage"
+import useSWR from "swr";
+import BlurImage from "./BlurImage";
+import SkeletonImage from "./SkeltonImage";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function TagImages({ count, tag }) {
   var ctx = useContext(userInfoContext);
-  var access_limit = ""
-  const [images, setimages] = useState<any[]>([])
-  
+  var access_limit = "";
+  const [images, setimages] = useState<any[]>([]);
+
   if (ctx.UserInfo !== null) {
-    access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
+    access_limit =
+      "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString();
   }
 
-  const { data, error } = useSWR(
-    `../api/tags/${tag}` + access_limit,
-     fetcher,
-  );
+  const { data, error } = useSWR(`../api/tags/${tag}` + access_limit, fetcher);
 
   useEffect(() => {
-    if (data !== undefined){
-      var images = data.slice(0, data.length);
-      setimages(images.slice(0, count))
+    if (data !== undefined) {
+      var images = data?.slice(0, data.length);
+      setimages(images?.slice(0, count));
     }
-  },[data])
+  }, [data]);
 
   if (!data)
     return (
@@ -40,7 +38,7 @@ export default function TagImages({ count, tag }) {
         </div>
       </div>
     );
-  
+
   return (
     <div>
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">

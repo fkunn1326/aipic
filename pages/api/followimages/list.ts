@@ -8,11 +8,13 @@ const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
   const r18g =
     query.r18g === undefined ? false : JSON.parse(query.r18g.toLowerCase());
   const filter = `("all","${r18 && "r18"}","${r18g && "r18g"}")`;
-  const follows = query.follows
+  const follows = query.follows;
 
   const { data, error } = await supabaseClient
     .from("artworks")
-    .select(`*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`)
+    .select(
+      `*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`
+    )
     .order("created_at", { ascending: false })
     .filter("age_limit", "in", filter)
     .filter("user_id", "in", follows)

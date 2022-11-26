@@ -11,18 +11,22 @@ const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let sqlquery = supabaseClient
     .from("images")
-    .select(`*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`, { count: "exact" })
+    .select(
+      `*, author: user_id(name, avatar_url, uid), likes: likes(id, user_id)`,
+      { count: "exact" }
+    )
     .order("created_at", { ascending: false })
     .filter("age_limit", "in", filter);
 
-  if (query.page !== undefined) (sqlquery = sqlquery.range((query.page - 1)*20, query.page*20-1))
+  if (query.page !== undefined)
+    sqlquery = sqlquery.range((query.page - 1) * 20, query.page * 20 - 1);
 
-  const { data, error, count } = await sqlquery
+  const { data, error, count } = await sqlquery;
 
   const response = {
     body: data,
-    count: count
-  }
+    count: count,
+  };
 
   if (error) return res.status(401).json({ error: error.message });
   return res.status(200).json(response);

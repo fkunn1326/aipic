@@ -6,7 +6,11 @@ import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { HeartIcon as HeartSolidIcon, EyeIcon, ClipboardIcon } from "@heroicons/react/24/solid";
+import {
+  HeartIcon as HeartSolidIcon,
+  EyeIcon,
+  ClipboardIcon,
+} from "@heroicons/react/24/solid";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -15,16 +19,19 @@ function cn(...classes: string[]) {
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
-  const [name, setname] = useState<string>("")
-  const [intro, setintro] = useState<string>("")
+  const [name, setname] = useState<string>("");
+  const [intro, setintro] = useState<string>("");
   const [header, setheader] = useState<Blob>();
   const [avatar, setavatar] = useState<Blob>();
 
   const router = useRouter();
   const ctx = useContext(userInfoContext);
-  
+
   const { data, error } = useSWR(
-    `../api/users/${ctx.UserInfo.uid}?${new URLSearchParams({"r18":"true","r18g":"true"}).toString()}`,
+    `../api/users/${ctx.UserInfo.uid}?${new URLSearchParams({
+      r18: "true",
+      r18g: "true",
+    }).toString()}`,
     fetcher
   );
 
@@ -39,10 +46,10 @@ export default function App() {
             })}
           </div>
         </div>
-        <Footer/>
+        <Footer />
       </div>
     );
-    
+
   var images = data[0].images.slice(0, data[0].images.length);
 
   return (
@@ -56,11 +63,11 @@ export default function App() {
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
           {images.reverse().map((image) => (
-            <BlurImage key={image.id} image={image} data={data[0]}/>
+            <BlurImage key={image.id} image={image} data={data[0]} />
           ))}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
@@ -113,19 +120,19 @@ function BlurImage({ image, data }) {
         {image.title}
       </p>
       <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
-            <div className="flex flex-row items-center">
-                <HeartSolidIcon className="w-4 h-4 mr-1" />
-                {image.likes.length}
-            </div>
-            <div className="flex flex-row items-center">
-                <EyeIcon className="w-4 h-4 mr-1"/>
-                {image.views}
-            </div>
-            <div className="flex flex-row items-center">
-                <ClipboardIcon className="w-4 h-4 mr-1"/>
-                {image.copies}
-            </div>
+        <div className="flex flex-row items-center">
+          <HeartSolidIcon className="w-4 h-4 mr-1" />
+          {image.likes.length}
         </div>
+        <div className="flex flex-row items-center">
+          <EyeIcon className="w-4 h-4 mr-1" />
+          {image.views}
+        </div>
+        <div className="flex flex-row items-center">
+          <ClipboardIcon className="w-4 h-4 mr-1" />
+          {image.copies}
+        </div>
+      </div>
     </div>
   );
 }

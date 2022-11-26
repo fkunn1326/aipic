@@ -4,21 +4,22 @@ import Header from "../components/header/header";
 import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
-import BlurImage from "../components/common/BlurImage"
-import SkeletonImage from "../components/common/SkeltonImage"
+import BlurImage from "../components/common/BlurImage";
+import SkeletonImage from "../components/common/SkeltonImage";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
   var ctx = useContext(userInfoContext);
-  var access_limit = ""
+  var access_limit = "";
   if (ctx.UserInfo !== null) {
-    access_limit = "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString()
+    access_limit =
+      "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString();
   }
 
   const { data, error } = useSWR(
     "../api/userlikes/" + ctx.UserInfo.id,
-     fetcher
+    fetcher
   );
 
   if (!data || data.__proto__.map === undefined)
@@ -32,17 +33,17 @@ export default function App() {
             })}
           </div>
         </div>
-        <Footer/>
+        <Footer />
       </div>
     );
 
-    var images: any[] = [];
+  var images: any[] = [];
 
-    data.map((i) => {
-        images.push(i["artworks"])
-    })
+  data.map((i) => {
+    images.push(i["artworks"]);
+  });
 
-    return (
+  return (
     <div className="dark:bg-slate-900">
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
@@ -57,7 +58,7 @@ export default function App() {
           ))}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
