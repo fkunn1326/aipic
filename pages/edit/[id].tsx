@@ -389,7 +389,7 @@ const Edit = (props) => {
           id: data[0].id,
         });
 
-      // router.push(`/artworks/${data[0].id}`);
+      router.push(`/artworks/${data[0].id}`);
     } catch (e) {
       alert("アップロード中にエラーが発生しました。再試行してください。");
       setisSending(false);
@@ -404,12 +404,12 @@ const Edit = (props) => {
       setisSending(true);
       setisdeleting(true);
 
-      images.map(async (image) => {
+      defaultimages.map(async (image) => {
         await axios.post(
           "/api/r2/delete",
           JSON.stringify({
             token: `${supabaseClient?.auth?.session()?.access_token}`,
-            artwork_id: `${image.id}`,
+            image_id: `${image.id}`,
           }),
           {
             headers: {
@@ -419,11 +419,12 @@ const Edit = (props) => {
         );
 
         await supabaseClient.from("images").delete().match({ id: image.id });
-        await supabaseClient
-          .from("artworks")
-          .delete()
-          .match({ id: data[0].id });
       });
+
+      await supabaseClient
+        .from("artworks")
+        .delete()
+        .match({ id: data[0].id });
 
       router.push("/");
     }
