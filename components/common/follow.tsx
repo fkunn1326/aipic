@@ -34,20 +34,23 @@ export default function FollowBtn({ following_uid, followed_uid }) {
   };
 
   useEffect(() => {
-    (async () => {
-      const { data, error } = await supabaseClient
-        .from("follows")
-        .select("*")
-        .match({
-          following_uid: following_uid,
-          followed_uid: followed_uid,
-        });
-      if (data !== null && data?.length !== 0) {
-        setisfollowed(true);
-      }
-    })();
+    if (following_uid !== undefined){
+      (async () => {
+        const { data, error } = await supabaseClient
+          .from("follows")
+          .select("*")
+          .match({
+            following_uid: following_uid,
+            followed_uid: followed_uid,
+          });
+        console.log(data,error)
+        if (data !== null && data?.length !== 0) {
+          setisfollowed(true);
+        }
+      })();
+    }
     router.events.on("routeChangeComplete", handleComplete);
-  }, [ischanged]);
+  }, [ischanged, following_uid]);
 
   return (
     <div>
