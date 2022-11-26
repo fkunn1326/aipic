@@ -50,7 +50,7 @@ export default function App() {
       </div>
     );
 
-  var images = data[0].images.slice(0, data[0].images.length);
+  var images = data[0].artworks?.slice(0, data[0].artworks?.length);
 
   return (
     <div className="bg-white dark:bg-slate-900">
