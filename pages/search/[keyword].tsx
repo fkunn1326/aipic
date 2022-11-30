@@ -1,30 +1,36 @@
-import Image from "next/image";
-import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer";
-import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
 import BlurImage from "../../components/common/BlurImage";
 import SkeletonImage from "../../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import axios from "axios";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function App() {
-  const ctx = useContext(userInfoContext);
+export const getServerSideProps  = async ({ req, res, locale, query: { page, keyword } }) => {
+  const search = await axios.get(`https://preview.aipic-dev.tk/api/search/?keyword=${keyword}&page=${page ? page : 1}`, {
+    withCredentials: true,
+    headers: {
+        Cookie: req?.headers?.cookie
+    }
+  })
+
+  return {
+    props: {
+      search: search.data,
+    },
+  }
+};
+
+export default function App({ search }) {
   const router = useRouter();
   const page =
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
   const { keyword } = router.query;
-  var access_limit = "";
-
-  if (ctx.UserInfo !== null) {
-    access_limit =
-      "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString();
-  }
 
   useEffect(() => {
     var el = document.getElementById("searchbox") as HTMLInputElement;
@@ -32,10 +38,10 @@ export default function App() {
   }, [router.isReady]);
 
   const { data, error } = useSWR(
-    "../api/search" + access_limit + "&keyword=" + keyword + "&page=" + page,
+    "../api/search" + "?keyword=" + keyword + "&page=" + page,
     fetcher,
     {
-      fallbackData: [],
+      fallbackData: search,
     }
   );
 

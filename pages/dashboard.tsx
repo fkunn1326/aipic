@@ -11,6 +11,9 @@ import {
   EyeIcon,
   ClipboardIcon,
 } from "@heroicons/react/24/solid";
+import SkeletonImage from "../components/common/SkeltonImage"
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import axios from "axios";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -18,24 +21,65 @@ function cn(...classes: string[]) {
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function App() {
-  const [name, setname] = useState<string>("");
-  const [intro, setintro] = useState<string>("");
-  const [header, setheader] = useState<Blob>();
-  const [avatar, setavatar] = useState<Blob>();
+export const getServerSideProps = async ({ req, res, query: { page } } ) => {
+  const supabase = createServerSupabaseClient({req ,res})
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
+  if (!session)
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  
+  const { data } = await supabase.from('profiles').select('*').eq("id", session.user.id).single();
+
+  const artworks = await axios.get(`https://preview.aipic-dev.tk/api/users/${data.uid}?page=${page ? page : 1}`, {
+    withCredentials: true,
+    headers: {
+        Cookie: req?.headers?.cookie
+    }
+  })
+
+  return {
+    props: {
+      user: data,
+      artworks: artworks.data
+    },
+  }
+}
+
+export default function App({ user , artworks}) {
   const router = useRouter();
   const ctx = useContext(userInfoContext);
+  const page =
+    router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
-  const { data, error } = useSWR(
-    `../api/users/${ctx.UserInfo.uid}?${new URLSearchParams({
-      r18: "true",
-      r18g: "true",
-    }).toString()}`,
-    fetcher
-  );
+  const getpagenation = () => {
+    var startPage = page - 2;
+    var endPage = page + 2;
+    var arr: any[] = [];
 
-  if (!data || data[0] === undefined)
+    if (startPage <= 0) {
+      endPage -= startPage - 1;
+      startPage = 1;
+    }
+
+    if (endPage > totalPage) endPage = totalPage;
+
+    if (startPage > 1) arr.push("...");
+    for (var i = startPage; i <= endPage; i++) arr.push(i);
+    if (endPage < totalPage) arr.push("...");
+    if (endPage < totalPage) arr.push(totalPage);
+    if (startPage > 1 && endPage < totalPage) arr.splice(0, 1);
+
+    return arr;
+  };
+
+  if (!artworks)
     return (
       <div className="bg-white dark:bg-slate-900">
         <Header></Header>
@@ -49,8 +93,8 @@ export default function App() {
         <Footer />
       </div>
     );
-
-  var images = data[0].artworks?.slice(0, data[0].artworks?.length);
+  
+  const totalPage = Math.ceil(artworks.count / 20);
 
   return (
     <div className="bg-white dark:bg-slate-900">
@@ -60,12 +104,31 @@ export default function App() {
           投稿した作品
         </div>
       </div>
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 mb-12">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {images.reverse().map((image) => (
-            <BlurImage key={image.id} image={image} data={data[0]} />
+          {artworks.body?.map((image) => (
+            <BlurImage key={image.id} image={image} data={artworks[0]} />
           ))}
         </div>
+      </div>
+      <div className="flex justify-center gap-x-4 text-lg">
+        {getpagenation().map((count, idx) => (
+          <Link
+            href={`${
+              count !== "..." ? `/new?page=${count}` : `/new?page=${page}`
+            }`}
+            key={idx}
+          >
+            <button
+              key={idx}
+              className={`w-10 h-10 border dark:text-white rounded-lg  ${
+                page === count && "bg-sky-500 border-none text-white"
+              }`}
+            >
+              {count}
+            </button>
+          </Link>
+        ))}
       </div>
       <Footer />
     </div>
@@ -90,9 +153,6 @@ function BlurImage({ image, data }) {
                 isLoading
                   ? "scale-110 blur-2xl grayscale"
                   : "scale-100 blur-0 grayscale-0"
-                // image.age_limit !== 'all'
-                //   ? 'blur-md'
-                //   : ''
               )}
               onLoadingComplete={() => {
                 setLoading(false);
@@ -132,19 +192,6 @@ function BlurImage({ image, data }) {
           <ClipboardIcon className="w-4 h-4 mr-1" />
           {image.copies}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function SkeletonImage() {
-  return (
-    <div className="group">
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 animate-pulse"></div>
-      <div className="mt-2 rounded-full bg-gray-200 h-3 w-32"></div>
-      <div className="mt-1 w-full flex items-center">
-        <div className="h-5 w-5 rounded-full bg-gray-200"></div>
-        <div className="ml-2 rounded-full bg-gray-200 h-3 w-16"></div>
       </div>
     </div>
   );

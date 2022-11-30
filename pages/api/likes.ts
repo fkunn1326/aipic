@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import jwt from "jsonwebtoken";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
@@ -12,9 +10,8 @@ const Views = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
-  const { token, artwork_id, type } = req.body;
+  const { artwork_id, type } = req.body;
   try {
-    var decoded = jwt.decode(token);
     var { data, error }: any = await supabaseAdmin
       .from("artworks")
       .select("daily_point")

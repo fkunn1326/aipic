@@ -1,4 +1,4 @@
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../utils/supabaseClient";
 import { useRouter } from "next/router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 
@@ -43,7 +43,6 @@ export default function FollowBtn({ following_uid, followed_uid }) {
             following_uid: following_uid,
             followed_uid: followed_uid,
           });
-        console.log(data,error)
         if (data !== null && data?.length !== 0) {
           setisfollowed(true);
         }
@@ -60,7 +59,7 @@ export default function FollowBtn({ following_uid, followed_uid }) {
             handlefollow();
           }}
           className={`
-                    w-full rounded-full font-semibold text-sm my-5 px-5 py-2 text-center 
+                    w-full rounded-full font-semibold text-sm my-5 px-5 py-2 text-center transition-colors duration-100	ease-linear	
                     ${
                       isfollowed
                         ? "text-gray-800 bg-gray-200"

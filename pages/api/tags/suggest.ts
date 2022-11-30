@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../../utils/supabaseClient";
 
 const getTagSuggest = async (req: NextApiRequest, res: NextApiResponse) => {
   const query: any = req.query;

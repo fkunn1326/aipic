@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../../utils/supabaseClient";
 
 const getImage = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;

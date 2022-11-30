@@ -1,32 +1,33 @@
 import Link from "next/link";
 import Image from "next/image";
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { HeartIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { userInfoContext } from "../../context/userInfoContext";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../utils/supabaseClient";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function BlurImage(props) {
-  var image = props.image;
-  const rank = props.rank === undefined ? undefined : props.rank;
+export default function BlurImage({ image, rank=undefined, preview=false }) {
   const ctx = useContext(userInfoContext);
 
   const [isLoading, setLoading] = useState(true);
   const [isliked, setisliked] = useState(false);
 
+  const ref = useRef<null | HTMLImageElement>(null)
+
   const gethref = (str: string) => {
-    if (str.endsWith("/public")) {
-      return str.replace("/public", "/w=256");
+    if (str?.endsWith("/public")) {
+      return str?.replace("/public", "/w=256");
     } else return str;
   };
 
   const handlelike = async (e) => {
-    if (ctx.UserInfo.id !== undefined) {
+    if (ctx.UserInfo?.id !== undefined) {
       if (isliked) {
         await supabaseClient.from("likes").delete().match({
           artwork_id: image.id,
@@ -36,7 +37,7 @@ export default function BlurImage(props) {
         await axios.post(
           "/api/likes",
           JSON.stringify({
-            token: `${supabaseClient?.auth?.session()?.access_token}`,
+            token: `${supabaseClient?.auth?.getSession()}`,
             artwork_id: `${image.id}`,
             type: "delete",
           }),
@@ -55,7 +56,7 @@ export default function BlurImage(props) {
         await axios.post(
           "/api/likes",
           JSON.stringify({
-            token: `${supabaseClient?.auth?.session()?.access_token}`,
+            token: `${supabaseClient?.auth?.getSession()}`,
             artwork_id: `${image.id}`,
             type: "add",
           }),
@@ -69,20 +70,29 @@ export default function BlurImage(props) {
     }
   };
 
+  const router = useRouter()
+
   useEffect(() => {
-    if (image !== undefined) {
-      image?.likes?.map((like) => {
-        if (like.user_id === ctx.UserInfo.id) setisliked(true);
-      });
+    if (ctx.UserInfo){
+      if (image !== undefined) {
+        image?.likes?.map((like) => {
+          if (like.user_id === ctx.UserInfo?.id) {
+            setisliked(true);
+          }
+        });
+      }
     }
-  }, [image, ctx]);
+    if (typeof window !== undefined){
+      setLoading(false)
+    }
+  }, [image, ctx, ref.current, router.isReady]);
 
   return (
     <div className="group">
       <div className="relative">
-        <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-600">
+        <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-600">
           <Link href={`/artworks/${image.id}`}>
-            <a>
+            <a className="transition-transform duration-500 ease-out hover:scale-[1.1]">
               <img
                 alt={image.title}
                 src={gethref(image?.href)}
@@ -91,9 +101,6 @@ export default function BlurImage(props) {
                   isLoading
                     ? "scale-110 blur-2xl grayscale"
                     : "scale-100 blur-0 grayscale-0"
-                  // image.age_limit !== 'all'
-                  //   ? 'blur-md'
-                  //   : ''
                 )}
                 onLoad={() => {
                   setLoading(false);
@@ -134,33 +141,39 @@ export default function BlurImage(props) {
             {rank}
           </div>
         )}
-        <button
-          className="absolute bottom-1 right-1 text-sm font-semibold px-2 rounded-md"
-          onClick={(e) => handlelike(e)}
-        >
-          {isliked ? (
-            <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
-          ) : (
-            <HeartIcon className="w-8 h-8 fill-white"></HeartIcon>
-          )}
-        </button>
+        {!preview &&
+          <button
+            className="absolute bottom-1 right-1 text-sm font-semibold px-2 rounded-md"
+            onClick={(e) => handlelike(e)}
+          >
+            {isliked ? (
+              <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
+            ) : (
+              <HeartIcon className="w-8 h-8 fill-white"></HeartIcon>
+            )}
+          </button>
+        }
       </div>
-      <p className="mt-2 text-base font-semibold text-gray-900 dark:text-slate-50 text-ellipsis whitespace-nowrap overflow-hidden">
-        {image.title}
-      </p>
-      <Link href={`/users/${image.author.uid}`}>
-        <a className="mt-1 w-full flex items-center">
-          <Image
-            src={image.author.avatar_url}
-            width={20}
-            height={20}
-            className="rounded-full"
-          ></Image>
-          <h3 className="ml-2 text-base text-gray-700 dark:text-slate-300">
-            {image.author.name}
-          </h3>
-        </a>
-      </Link>
+      {!preview &&
+        <div>
+          <p className="mt-2 text-base font-semibold text-gray-900 dark:text-slate-50 text-ellipsis whitespace-nowrap overflow-hidden">
+            {image.title}
+          </p>
+          <Link href={`/users/${image.author.uid}`}>
+            <a className="mt-1 w-full flex items-center">
+              <Image
+                src={image.author.avatar_url}
+                width={20}
+                height={20}
+                className="rounded-full"
+              ></Image>
+              <h3 className="ml-2 text-base text-gray-700 dark:text-slate-300">
+                {image.author.name}
+              </h3>
+            </a>
+          </Link>
+        </div>
+      }
     </div>
   );
 }

@@ -8,19 +8,16 @@ import React, {
 import { useContext } from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
-import { Listbox, Transition } from "@headlessui/react";
 import {
-  CheckIcon,
-  ChevronUpDownIcon,
   PlusIcon,
   XCircleIcon,
 } from "@heroicons/react/20/solid";
-import { getChunks } from "png-chunks";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import { userInfoContext } from "../context/userInfoContext";
 import { useRouter } from "next/router";
-import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { supabaseClient } from "../utils/supabaseClient";
 import InputForm from "../components/form/InputForm";
 import TextAreaForm from "../components/form/TextAreaForm";
 import TagsInput from "../components/form/TagsInput";
@@ -35,7 +32,6 @@ import {
   closestCenter,
   MouseSensor,
   TouchSensor,
-  DragOverlay,
   useSensor,
   useSensors,
   DragStartEvent,
@@ -47,7 +43,24 @@ import {
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 
-export const getServerSideProps = withPageAuth({ redirectTo: "/" });
+export const getServerSideProps = async (req, res) => {
+  const supabase = createServerSupabaseClient(req)
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session)
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+
+  return {
+    props: {},
+  }
+}
 
 const models = [
   { id: 1, name: "Stable Diffusion", unavailable: false },
@@ -194,7 +207,8 @@ const Upload = (props) => {
   const handlesubmit = async (e) => {
     e.preventDefault();
 
-    // setisSending(true);
+    setisSending(true);
+    
     try {
       var tagsarr: string[] = [];
       tags.map((tag) => {

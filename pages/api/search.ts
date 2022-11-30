@@ -1,24 +1,33 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 const search = async (req: NextApiRequest, res: NextApiResponse) => {
-  const query: any = req.query;
-  const r18 =
-    query.r18 === undefined ? false : JSON.parse(query.r18.toLowerCase());
-  const r18g =
-    query.r18g === undefined ? false : JSON.parse(query.r18g.toLowerCase());
-  const keyword = query.keyword;
-  const filter = `("all","${r18 && "r18"}","${r18g && "r18g"}")`;
+  const supabaseClient = createServerSupabaseClient({ req, res });
 
-  let sqlquery = supabaseClient
+  const { keyword, page } = req.query;
+
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
+
+  var query = supabaseClient
     .rpc("search_artworks", { keyword }, { count: "exact" })
     .order("created_at", { ascending: false })
-    .filter("age_limit", "in", filter);
 
-  if (query.page !== undefined)
-    sqlquery = sqlquery.range((query.page - 1) * 20, query.page * 20 - 1);
+  if (!session) {
+    query = query.filter("age_limit", "in", `("all")`)
+  }else{
+    const { data } = await supabaseClient.from('profiles').select('*').eq("id", session.user.id).single();
+    query = query.filter("age_limit", "in",  `("all","${data.access_limit.r18 && "r18"}","${data.access_limit.r18g && "r18g"}")`)
+  }
 
-  const { data, error, count } = await sqlquery;
+  if (page !== undefined) {
+    const pageint = parseInt(page as string);
+    query = query.range((pageint - 1) * 20, pageint * 20 - 1);
+  }
+
+
+  const { data, error, count } = await query;
 
   const response = {
     body: data,

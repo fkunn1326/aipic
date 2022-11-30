@@ -9,7 +9,7 @@ import {
   ClockIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../utils/supabaseClient";
 import Router, { useRouter } from "next/router";
 import React from "react";
 import Link from "next/link";
@@ -45,114 +45,54 @@ export default function Dropdawn(props) {
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-slate-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={classNames(
-                    active
-                      ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200"
-                      : "dark:text-slate-200 text-gray-700",
-                    "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
-                  )}
-                >
+              <Link href={`/users/${props.id}`}>
+                <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <UserCircleIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
-                  <a
-                    className={classNames("block text-sm cursor-pointer")}
-                    onClick={() => {
-                      router.push(`/users/${props.id}`);
-                    }}
-                  >
+                  <p className="block text-sm cursor-pointer">
                     マイページ
-                  </a>
-                </div>
-              )}
+                  </p>
+                </a>
+              </Link>
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={classNames(
-                    active
-                      ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200"
-                      : "dark:text-slate-200 text-gray-700",
-                    "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
-                  )}
-                >
+              <Link href="/dashboard">
+                <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <ListBulletIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
-                  <a
-                    className={classNames("block text-sm cursor-pointer")}
-                    onClick={() => {
-                      router.push("/dashboard");
-                    }}
-                  >
+                  <p className="block text-sm cursor-pointer">
                     ダッシュボード
-                  </a>
-                </div>
-              )}
+                  </p>
+                </a>
+              </Link>
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={classNames(
-                    active
-                      ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200"
-                      : "dark:text-slate-200 text-gray-700",
-                    "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
-                  )}
-                >
+              <Link href="/likes">
+                <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <HeartIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
-                  <a
-                    className={classNames("block text-sm cursor-pointer")}
-                    onClick={() => {
-                      router.push("/likes");
-                    }}
-                  >
+                  <p className="block text-sm cursor-pointer">
                     いいね一覧
-                  </a>
-                </div>
-              )}
+                  </p>
+                </a>
+              </Link>
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={classNames(
-                    active
-                      ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200"
-                      : "dark:text-slate-200 text-gray-700",
-                    "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
-                  )}
-                >
+              <Link href="/settings">
+                <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <Cog6ToothIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
-                  <a
-                    className={classNames("block text-sm cursor-pointer")}
-                    onClick={() => {
-                      router.push("/settings");
-                    }}
-                  >
-                    アカウントの設定
-                  </a>
-                </div>
-              )}
+                  <p className="block text-sm cursor-pointer">
+                    設定
+                  </p>
+                </a>
+              </Link>
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={classNames(
-                    active
-                      ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-slate-200"
-                      : "dark:text-slate-200 text-gray-700",
-                    "text-sm cursor-pointer flex flex-row px-4 py-2 items-center"
-                  )}
-                >
+              <Link href="/history">
+                <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <ClockIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
-                  <a
-                    className={classNames("block text-sm cursor-pointer")}
-                    onClick={() => {
-                      router.push("/history");
-                    }}
-                  >
+                  <p className="block text-sm cursor-pointer">
                     閲覧履歴
-                  </a>
-                </div>
-              )}
+                  </p>
+                </a>
+              </Link>
             </Menu.Item>
             <form method="" action="">
               <Menu.Item>

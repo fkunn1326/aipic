@@ -2,9 +2,7 @@ import { useRouter } from "next/router";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import useSWR from "swr";
-import Image from "next/image";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../utils/supabaseClient";
 import {
   HeartIcon,
   ArrowUpOnSquareIcon,
@@ -30,25 +28,52 @@ import Link from "next/link";
 import Head from "next/head";
 import axios from "axios";
 import PopOver from "../../components/popover";
-import { text2Link } from "../../components/common/text2link";
 import OtherImages from "../../components/common/OtherImages";
 import FollowBtn from "../../components/common/follow";
 import "@splidejs/react-splide/css/skyblue";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
+import BlurImage from "../../components/common/BlurImage";
 
-export const getServerSideProps = async (context) => {
-  const { id } = context.query;
-  const res = await fetch(
-    process.env.NODE_ENV === "development"
-      ? `https://preview.aipic-dev.tk/api/artworks/${id}`
-      : `https://aipic.vercel.app/api/artworks/${id}`
-  );
-  const data = await res.json();
+export const getServerSideProps = async ({ req, res, query: { id } }) => {  
+  const artwork = await axios.get(`https://preview.aipic-dev.tk/api/artworks/${id}`, {
+    withCredentials: true,
+    headers: {
+        Cookie: req?.headers?.cookie
+    }
+  })
+
+  const otherworks = await axios.get(`https://preview.aipic-dev.tk/api/users/list5?id=${artwork?.data[0]?.author?.id}`, {
+    withCredentials: true,
+    headers: {
+        Cookie: req?.headers?.cookie
+    }
+  })
+
+  var profile : any = null
+
+  try{
+    profile = await axios.get(`https://preview.aipic-dev.tk/api/auth/account`, {
+      withCredentials: true,
+      headers: {
+          Cookie: req?.headers?.cookie
+      }
+    })
+  }catch(e){
+    return {
+      props: {
+        data: artwork.data,
+        otherdata: otherworks.data,
+        host: req.headers.host || null,
+      },
+    };
+  }
 
   return {
     props: {
-      data: data,
-      host: context.req.headers.host || null,
+      data: artwork.data,
+      profile: profile?.data,
+      otherdata: otherworks.data,
+      host: req.headers.host || null,
     },
   };
 };
@@ -67,8 +92,9 @@ const Meta = ({ data }) => {
       <meta name="twitter:site" content="@fkunn1326" />
       <meta name="twitter:title" content={data[0].title} />
       <meta name="twitter:description" content={data[0].caption} />
+      <meta name="note:card" content="summary_large_image"/>
       <meta property="og:site_name" content="AIPIC" />
-      <meta property="og:type" content="article" />
+      <meta property="og:type" content="website" />
       <meta property="og:title" content={`${data[0].author.name}`} />
       <meta property="og:description" content={data[0].caption} />
       <meta
@@ -80,6 +106,7 @@ const Meta = ({ data }) => {
         type="application/json+oembed"
         href={`https://www.aipic.app/api/oembed/${data[0].id}`}
       />
+      <link rel="canonical" href="https://www.aipic.app" />
       {data[0].age_limit === "all" && (
         <meta name="twitter:image" content={data[0].href} />
       )}
@@ -93,17 +120,10 @@ const Meta = ({ data }) => {
 
 const LikeBtn = ({ data }) => {
   const [isliked, setisliked] = useState(false);
-  const [isfocus, setisfocus] = useState(true);
-  const [image, setimage] = useState<any>({});
   const ctx = useContext(userInfoContext);
-  const router = useRouter();
-
-  useEffect(() => {
-    setimage(data);
-  }, []);
 
   const handlelike = async (e) => {
-    if (ctx.UserInfo.id !== undefined) {
+    if (ctx.UserInfo?.id !== undefined) {
       if (isliked) {
         await supabaseClient.from("likes").delete().match({
           artwork_id: data.id,
@@ -113,7 +133,6 @@ const LikeBtn = ({ data }) => {
         await axios.post(
           "/api/likes",
           JSON.stringify({
-            token: `${supabaseClient?.auth?.session()?.access_token}`,
             artwork_id: `${data.id}`,
             type: "delete",
           }),
@@ -124,7 +143,7 @@ const LikeBtn = ({ data }) => {
           }
         );
       } else {
-        await supabaseClient.from("likes").insert({
+        await supabaseClient.from("likes").upsert({
           artwork_id: data.id,
           user_id: ctx.UserInfo.id,
         });
@@ -132,7 +151,6 @@ const LikeBtn = ({ data }) => {
         await axios.post(
           "/api/likes",
           JSON.stringify({
-            token: `${supabaseClient?.auth?.session()?.access_token}`,
             artwork_id: `${data.id}`,
             type: "add",
           }),
@@ -157,9 +175,7 @@ const LikeBtn = ({ data }) => {
   );
 };
 
-const Images = ({ data, host, children }) => {
-  const ctx = useContext(userInfoContext);
-
+const Images = ({ data, host, profile, otherdata, children }) => {
   const [isImageOpen, setisImageOpen] = useState(false);
   const [isPromptOpen, setisPromptOpen] = useState(false);
   const [isShareOpen, setisShareOpen] = useState(false);
@@ -174,19 +190,13 @@ const Images = ({ data, host, children }) => {
 
   const splideref = useRef<any>(null);
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-  };
-
   useEffect(() => {
     if (data !== undefined) {
       if (image !== undefined) {
-        if (ctx.UserInfo.id === undefined) {
+        if (profile?.id === undefined) {
           setlimittype("unauth");
         } else {
-          if (!ctx.UserInfo.access_limit[image.age_limit]) {
+          if (!profile?.access_limit[image.age_limit]) {
             setlimittype("unsafe");
           } else {
             setlimittype("ok");
@@ -195,7 +205,7 @@ const Images = ({ data, host, children }) => {
         if (image.age_limit === "all") setlimittype("ok");
       }
     }
-  }, [data, image, ctx]);
+  }, [data, image]);
 
   useEffect(() => {
     if (localStorage.getItem("history") === null) {
@@ -213,7 +223,6 @@ const Images = ({ data, host, children }) => {
         await axios.post(
           "/api/views",
           JSON.stringify({
-            token: `${supabaseClient?.auth?.session()?.access_token}`,
             artwork_id: `${data[0].id}`,
           }),
           {
@@ -247,7 +256,6 @@ const Images = ({ data, host, children }) => {
       await axios.post(
         "/api/copies",
         JSON.stringify({
-          token: `${supabaseClient?.auth?.session()?.access_token}`,
           artwork_id: `${id}`,
         }),
         {
@@ -277,11 +285,11 @@ const Images = ({ data, host, children }) => {
       <div className="overflow-x-hidden lg:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
         <div className="glow lg:mx-4 my-auto px-0 lg:my-auto lg:py-4 mb:my-auto mb:py-7">
           <div className="flex-nowrap flex-col">
-            <main className="lg:pt-16 mb-16 flex-col lg:flex-row flex-nowrap items-start flex basis-auto">
+            <main className="lg:pt-16 md:mb-16 flex-col lg:flex-row flex-nowrap items-start flex basis-auto">
               <div className="lg:mr-8 flex-col flex w-full basis-3/4 lg:border dark:border-slate-500 rounded-3xl">
                 <div className="h-max w-full lg:py-12">
                   <div className="flex mb-8 relative h-[70vh] items-center w-full">
-                    <div className="flex flex-col absolute inset-0 items-center justify-center">
+                    <div className="flex flex-col absolute inset-0 items-center justify-center mt-6 md:mt-0">
                       <div className="flex relative flex-col-reverse z-auto h-full w-full">
                         <div
                           className={`relative h-full w-full box-content ${
@@ -567,7 +575,7 @@ const Images = ({ data, host, children }) => {
                         </ShareModal>
                         <PopOver
                           id={image.id}
-                          type={image.user_id === ctx.UserInfo.id}
+                          type={image.user_id === profile?.id}
                         />
                       </div>
                     </div>
@@ -582,10 +590,17 @@ const Images = ({ data, host, children }) => {
                       </h1>
                       <div
                         className="mt-5 text-sm lg:text-base text-black dark:text-slate-400"
-                        dangerouslySetInnerHTML={{
-                          __html: text2Link(image.caption),
-                        }}
-                      />
+                      >
+                        {image?.caption?.split(/(https?:\/\/[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+)/).map((v, i) =>
+                          i & 1 ? (
+                            <a className="text-sky-500 dark:text-sky-600" key={i} href={v} target="_blank" rel="noopener noreferrer">
+                              {v}
+                            </a>
+                          ) : (
+                            v
+                          )
+                        )}
+                      </div>
                       <div className="flex flex-row flex-wrap mt-5 text-sky-600 font-semibold text-sm lg:text-base">
                         {image.tags !== null &&
                           image.tags.map((tag, idx) => (
@@ -621,14 +636,36 @@ const Images = ({ data, host, children }) => {
                           {image.copies}
                         </div>
                       </div>
+                      <div className="mt-12 gap-x-5 hidden lg:flex flex-row flex-nowrap items-center">
+                        <Link href={`/users/${image.author.uid}`}>
+                          <a className="flex flex-row flex-nowrap items-center">
+                            <img
+                              src={image.author.avatar_url}
+                              className="h-9 w-9 rounded-full"
+                            ></img>
+                            <p className="ml-2 font-semibold dark:text-white">
+                              {image.author.name}
+                            </p>
+                          </a>
+                        </Link>
+                        <FollowBtn
+                          following_uid={profile?.id}
+                          followed_uid={image.user_id}
+                        />
+                      </div>
+                      <div className="mt-6 grid-cols-5 gap-3 hidden lg:grid">
+                        {otherdata?.map((artwork, idx) => (
+                          <BlurImage image={artwork} key={artwork.id} preview />
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="t-[96px] w-full basis-1/4">
                 <div className="flex shrink basis-full sticky min-w-[370px] max-h-[450px]">
-                  <div className="flex flex-col flex-nowrap w-full ml-5 lg:ml-0">
-                    <div className="mb-8 px-0 py-6">
+                  <div className="flex flex-col flex-nowrap w-full mx-5 lg:ml-0">
+                    <div className="md:mb-8 px-0 py-6">
                       <div className="mb-4 flex-col flex-nowrap">
                         <div className="flex mb-8 flex-col flex-nowrap">
                           <span className="mb-2">
@@ -643,22 +680,36 @@ const Images = ({ data, host, children }) => {
                                 </p>
                               </a>
                             </Link>
+                            <p className="mt-4 mr-2 break-words text-sm dark:text-white">
+                              {image.author?.introduce}
+                            </p>
+                            {image.user_id === profile?.id ? (
+                              <Link href={`/edit/${image.id}`}>
+                                <a
+                                  type="submit"
+                                  className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-2 text-center`}
+                                >
+                                  編集する
+                                </a>
+                              </Link>
+                            ) : (
+                              <FollowBtn
+                                following_uid={profile?.id}
+                                followed_uid={image.user_id}
+                              />
+                            )}
+                            <div className="mt-6 flex justify-between text-sm text-gray-600">
+                              <p>その他の作品</p>
+                              <Link href={`/users/${image.author?.uid}`}>
+                                <a className="text-sky-500 dark:text-sky-600">もっと見る</a>
+                              </Link>
+                            </div>
+                            <div className="mt-3 grid grid-cols-3 gap-3">
+                              {otherdata?.slice(0,3).map((artwork, idx) => (
+                                <BlurImage image={artwork} key={artwork.id} preview />
+                              ))}
+                            </div>
                           </span>
-                          {image.user_id === ctx.UserInfo.id ? (
-                            <Link href={`/edit/${image.id}`}>
-                              <a
-                                type="submit"
-                                className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-2 text-center`}
-                              >
-                                編集する
-                              </a>
-                            </Link>
-                          ) : (
-                            <FollowBtn
-                              following_uid={ctx.UserInfo.id}
-                              followed_uid={image.user_id}
-                            />
-                          )}
                         </div>
                       </div>
                     </div>
@@ -675,9 +726,9 @@ const Images = ({ data, host, children }) => {
   );
 };
 
-export default function App({ data, host, children }) {
+export default function App({ data, host, otherdata, profile=false, children }) {
   return (
-    <Images data={data} host={host}>
+    <Images data={data} host={host} profile={profile} otherdata={otherdata}>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="text-xl font-semibold dark:text-white">
           その他の作品
