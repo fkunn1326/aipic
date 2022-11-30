@@ -42,7 +42,7 @@ const Signup = () => {
       {
         provider: "google",
         options: {
-          redirectTo: process.env.NODE_ENV === "development" ? "https://preview.aipic-dev.tk/auth" : "httpd://www.aipic.app/auth"
+          redirectTo: process.env.NODE_ENV === "development" ? "https://www.aipic.app/auth" : "https://www.aipic.app/auth"
         }
       }
     );

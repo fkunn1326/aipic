@@ -37,7 +37,7 @@ export const getServerSideProps = async ({ req, res, query: { page } } ) => {
   
   const { data } = await supabase.from('profiles').select('*').eq("id", session.user.id).single();
 
-  const artworks = await axios.get(`https://preview.aipic-dev.tk/api/users/${data.uid}?page=${page ? page : 1}`, {
+  const artworks = await axios.get(`https://www.aipic.app/api/users/${data.uid}?page=${page ? page : 1}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie

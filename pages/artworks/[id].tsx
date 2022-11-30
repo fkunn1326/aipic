@@ -35,14 +35,14 @@ import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import BlurImage from "../../components/common/BlurImage";
 
 export const getServerSideProps = async ({ req, res, query: { id } }) => {  
-  const artwork = await axios.get(`https://preview.aipic-dev.tk/api/artworks/${id}`, {
+  const artwork = await axios.get(`https://www.aipic.app/api/artworks/${id}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const otherworks = await axios.get(`https://preview.aipic-dev.tk/api/users/list5?id=${artwork?.data[0]?.author?.id}`, {
+  const otherworks = await axios.get(`https://www.aipic.app/api/users/list5?id=${artwork?.data[0]?.author?.id}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
@@ -52,7 +52,7 @@ export const getServerSideProps = async ({ req, res, query: { id } }) => {
   var profile : any = null
 
   try{
-    profile = await axios.get(`https://preview.aipic-dev.tk/api/auth/account`, {
+    profile = await axios.get(`https://www.aipic.app/api/auth/account`, {
       withCredentials: true,
       headers: {
           Cookie: req?.headers?.cookie
