@@ -9,7 +9,7 @@ import axios from "axios";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export const getServerSideProps  = async ({ req, res, locale }) => {
-  const account = await axios.get("https://preview.aipic-dev.tk/api/auth/account", {
+  const account = await axios.get("https://www.aipic.app/api/auth/account", {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
