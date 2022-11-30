@@ -128,7 +128,7 @@ const Header = () => {
               </div>
             </div>
           )}
-          <div className={`flex-1 h-14 transition-all delay-150 duration-300 ease-out ${ctx.UserInfo ? "opacity-100 hidden md:block" : "opacity-0 hidden" }`}>
+          <div className={`flex-1 md:h-14 transition-all delay-150 duration-300 ease-out ${ctx.UserInfo ? "opacity-100" : "opacity-0 hidden" }`}>
             <div className="md:hidden">
               <div
                 onClick={() => {
