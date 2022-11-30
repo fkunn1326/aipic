@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../utils/supabaseClient";
 import { SiteName } from "../components/core/const";
 import { useRouter } from "next/router";
 
@@ -18,29 +18,34 @@ const Signin = () => {
       ? window.location.origin
       : "";
 
-  const handleEmailChange = (e) =>
+  const handleEmailChange = (e) => {
+    var el = document.getElementById("email_peer2") as HTMLElement;
+    el.classList.add("hidden");
     setForms({ ...forms, email: e.target.value });
-  const handlePasswordChange = (e) =>
+  }
+  const handlePasswordChange = (e) => {
+    var el = document.getElementById("email_peer2") as HTMLElement;
+    el.classList.add("hidden");
     setForms({ ...forms, password: e.target.value });
-  const clickForms = (e) => {
-    supabaseClient.auth.signIn(forms).then((result) => {
-      if (result?.error) {
-        document.getElementById("email_peer2")?.classList.remove("hidden");
-      } else {
-        document.getElementById("email_peer2")?.classList.add("hidden");
-        router.push("/");
-      }
-    });
+  }
+  const clickForms = async (e) => {
     e.preventDefault();
+    const { data, error } = await supabaseClient.auth.signInWithPassword(forms)
+    if (!data.user || !data.session){
+      var el = document.getElementById("email_peer2") as HTMLElement;
+      el.classList.remove("hidden");
+    }else{
+      router.push("/")
+    }
   };
 
   const clickGoogle = async (e) => {
-    const { user, error } = await supabaseClient.auth.signIn(
+    const { data, error } = await supabaseClient.auth.signInWithOAuth(
       {
         provider: "google",
-      },
-      {
-        redirectTo: `${origin}/auth`,
+        options: {
+          redirectTo: process.env.NODE_ENV === "development" ? "https://preview.aipic-dev.tk/auth" : "httpd://www.aipic.app/auth"
+        }
       }
     );
   };

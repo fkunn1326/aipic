@@ -14,9 +14,7 @@ export default function Tag() {
   const router = useRouter();
   const { tag }: any = router.query;
   const { data, error } = useSWR(
-    `../api/tags/${tag}?` +
-      new URLSearchParams(ctx.UserInfo.access_limit).toString(),
-    fetcher
+    `../api/tags/${tag}?`, fetcher
   );
 
   if (!data)

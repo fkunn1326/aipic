@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { supabaseClient, withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { supabaseClient } from "../utils/supabaseClient";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
-import { useUser } from "@supabase/auth-helpers-react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -12,13 +12,33 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const getServerSideProps = withPageAuth({ redirectTo: "/" });
+export const getServerSideProps = async (req, res) => {
+  const supabase = createServerSupabaseClient(req)
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session)
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  }
+}
 
 const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g;
 
-const Settings = () => {
+const Settings = ({initialSession, user}) => {
   const ctx = useContext(userInfoContext);
-  const { user, error } = useUser();
+  
   const [states, setstates] = useState({
     userid: "",
     email: "",
@@ -109,15 +129,7 @@ const Settings = () => {
     if (check) {
       supabaseClient.auth.signOut();
       await axios.post(
-        "/api/account/delete",
-        JSON.stringify({
-          token: `${supabaseClient?.auth?.session()?.access_token}`,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        "/api/account/delete"
       );
     }
     router.push("/");
@@ -127,17 +139,12 @@ const Settings = () => {
 
   useEffect(() => {
     if (!isdataloaded.current) {
-      if (
-        user !== null &&
-        ctx !== false &&
-        ctx["UserInfo"]["access_limit"] !== undefined &&
-        ctx["UserInfo"]["uid"] !== undefined
-      ) {
+      if (user && ctx.UserInfo) {
         setstates({
           ...states,
-          userid: ctx["UserInfo"]["uid"],
-          email: user!["email"]!,
-          access_limit: ctx["UserInfo"]["access_limit"],
+          userid: ctx.UserInfo?.uid,
+          email: user?.email!,
+          access_limit: ctx.UserInfo?.access_limit,
         });
         isdataloaded.current = true;
       }
@@ -221,7 +228,7 @@ const Settings = () => {
             <div className="mt-6">
               <div className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
                 ニックネームやアバターは、
-                <Link href={`/users/${ctx.UserInfo.uid}`}>
+                <Link href={`/users/${ctx.UserInfo?.uid}`}>
                   <a className="text-sky-600">プロフィールページ</a>
                 </Link>
                 で編集してください。

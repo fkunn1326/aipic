@@ -1,30 +1,17 @@
-import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
 import BlurImage from "./BlurImage";
 import SkeletonImage from "./SkeltonImage";
+import axios from "axios";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function TagImages({ count, tag }) {
-  var ctx = useContext(userInfoContext);
-  var access_limit = "";
-  const [images, setimages] = useState<any[]>([]);
-
-  if (ctx.UserInfo !== null) {
-    access_limit =
-      "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString();
-  }
-
-  const { data, error } = useSWR(`../api/tags/${tag}` + access_limit, fetcher);
-
-  useEffect(() => {
-    if (data !== undefined) {
-      var images = data?.slice(0, data.length);
-      setimages(images?.slice(0, count));
-    }
-  }, [data]);
+  const { data, error } = useSWR(`../api/tags/${tag}`, fetcher,
+  {
+    fallbackData: [],
+  });
 
   if (!data)
     return (
@@ -43,7 +30,7 @@ export default function TagImages({ count, tag }) {
     <div>
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {images.map((image) => (
+          {data?.slice(0, data.length).slice(0, count).map((image) => (
             <BlurImage key={image.id} image={image} />
           ))}
         </div>

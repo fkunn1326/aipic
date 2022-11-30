@@ -7,7 +7,7 @@ import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());

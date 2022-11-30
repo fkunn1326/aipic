@@ -7,7 +7,7 @@ import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -19,15 +19,8 @@ export default function App() {
   const page =
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
-  var access_limit = "";
-
-  if (ctx.UserInfo !== null) {
-    access_limit =
-      "?" + new URLSearchParams(ctx.UserInfo.access_limit).toString();
-  }
-
   const { data, error } = useSWR(
-    "../api/artworks/list" + access_limit + "&page=" + page,
+    "../api/artworks/list" + "?page=" + page,
     fetcher
   );
 

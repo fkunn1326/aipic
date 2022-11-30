@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../../components/header/header";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../utils/supabaseClient";
 import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
 import Link from "next/link";

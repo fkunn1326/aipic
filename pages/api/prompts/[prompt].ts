@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../../utils/supabaseClient";
 
 const getNPrompt = async (req: NextApiRequest, res: NextApiResponse) => {
   var { prompt } = req.query;

@@ -91,12 +91,15 @@ const Header = () => {
               type="search"
               id="searchbox"
               placeholder="作品を検索する"
-              className="pl-10 pr-3 w-full py-2 text-sm text-black-700 placeholder-gray-500 rounded-md border border-gray-300 shadow-sm focus:border-white focus:outline-none dark:bg-black-900 dark:text-white dark:placeholder-gray-400 block focus:ring-2 focus:ring-sky-500 dark:focus:ring-4 dark:bg-slate-700 dark:outline-none dark:border-none"
+              className="transition-all duration-300 ease-out pl-10 pr-3 w-full py-3 text-sm text-black-700 placeholder-gray-500 rounded-xl border border-gray-300 shadow-sm focus:border-white focus:outline-none dark:bg-black-900 dark:text-white dark:placeholder-gray-400 block focus:ring-2 focus:ring-sky-500 dark:focus:ring-4 dark:bg-slate-700 dark:outline-none dark:border-none"
             ></input>
-            <MagnifyingGlassIcon className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none w-8 h-full text-gray-400 stroke-4 dark:text-slate-300" />
+            <MagnifyingGlassIcon className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none w-8 h-full text-gray-400 stroke-[4] dark:text-slate-300" />
           </form>
-          {ctx.UserInfo === false || ctx.UserInfo === null ? (
-            <div className="flex-1">
+          {ctx.UserInfo === null && (
+            <div className="flex-1 h-14"></div>
+          )} 
+          {ctx.UserInfo === false && (
+            <div className="flex-1 h-14">
               <div className="hidden md:flex justify-end items-center">
                 <Link href="/signin">
                   <a className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-300">
@@ -124,35 +127,34 @@ const Header = () => {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="flex-1">
-              <div className="md:hidden">
-                <div
-                  onClick={() => {
-                    setShowSidebar(false);
-                  }}
-                >
-                  <Sidebar
-                    isOpen={showSidebar}
-                    avatar={ctx.UserInfo["avatar_url"]}
-                    name={ctx.UserInfo.name}
-                    id={ctx.UserInfo.uid}
-                  />
-                </div>
-              </div>
-              <div className="hidden md:flex justify-end items-center">
-                <Link href="/upload">
-                  <a className="mr-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent bg-sky-500 px-6 py-2 text-base font-bold text-white shadow-sm hover:bg-sky-600">
-                    作品を投稿
-                  </a>
-                </Link>
-                <Dropdown
-                  avatar={ctx.UserInfo["avatar_url"]}
-                  id={ctx.UserInfo.uid}
-                ></Dropdown>
+          )}
+          <div className={`flex-1 h-14 transition-all delay-150 duration-300 ease-out ${ctx.UserInfo ? "opacity-100 hidden md:block" : "opacity-0 hidden" }`}>
+            <div className="md:hidden">
+              <div
+                onClick={() => {
+                  setShowSidebar(false);
+                }}
+              >
+                <Sidebar
+                  isOpen={showSidebar}
+                  avatar={ctx.UserInfo?.avatar_url}
+                  name={ctx.UserInfo?.name}
+                  id={ctx.UserInfo?.uid}
+                />
               </div>
             </div>
-          )}
+            <div className="hidden md:flex justify-end items-center">
+              <Link href="/upload">
+                <a className="mr-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent bg-sky-500 px-6 py-2 text-base font-bold text-white shadow-sm hover:bg-sky-600">
+                  作品を投稿
+                </a>
+              </Link>
+              <Dropdown
+                avatar={ctx.UserInfo?.avatar_url}
+                id={ctx.UserInfo?.uid}
+              ></Dropdown>
+            </div>
+          </div>
         </div>
       </div>
     </div>
