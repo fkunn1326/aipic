@@ -44,7 +44,7 @@ const Signin = () => {
       {
         provider: "google",
         options: {
-          redirectTo: process.env.NODE_ENV === "development" ? "https://preview.aipic-dev.tk/auth" : "https://www.aipic.app/auth"
+          redirectTo: `${process.env.BASE_URL}/auth`
         }
       }
     );

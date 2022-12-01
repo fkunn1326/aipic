@@ -8,6 +8,8 @@ import {
   ArrowUpOnSquareIcon,
   EllipsisHorizontalIcon,
   ClipboardDocumentIcon,
+  FaceSmileIcon,
+  PlusIcon
 } from "@heroicons/react/24/outline";
 import {
   HeartIcon as HeartSolidIcon,
@@ -33,16 +35,38 @@ import FollowBtn from "../../components/common/follow";
 import "@splidejs/react-splide/css/skyblue";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import BlurImage from "../../components/common/BlurImage";
+import data from '@emoji-mart/data/sets/14/twitter.json'
+import { v4 as uuidv4 } from "uuid";
+import { Transition } from '@headlessui/react'
+
+
+const EmojiPicker = (props: any) => {
+  const ref = useRef<any>();
+  const showEmojis = useRef(true);
+
+  useEffect(() => {
+    if (showEmojis.current) {
+      showEmojis.current = false;
+      import("emoji-mart").then((EmojiMart) => {
+        new EmojiMart.Picker({ ...props, data, ref });
+      });
+    }
+  }, [props]);
+
+  return <div ref={ref} className={`transition-all duration-300 ease-in-out absolute bottom-12 ${props.place ? props.place : "right"}-0 z-50`} ></div>;
+};
 
 export const getServerSideProps = async ({ req, res, query: { id } }) => {  
-  const artwork = await axios.get(`https://www.aipic.app/api/artworks/${id}`, {
+  const artwork = await axios.get(`${process.env.BASE_URL}/api/artworks/${id}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const otherworks = await axios.get(`https://www.aipic.app/api/users/list5?id=${artwork?.data[0]?.author?.id}`, {
+
+
+  const otherworks = await axios.get(`${process.env.BASE_URL}/api/users/list5?id=${artwork?.data[0]?.author?.id}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
@@ -52,7 +76,7 @@ export const getServerSideProps = async ({ req, res, query: { id } }) => {
   var profile : any = null
 
   try{
-    profile = await axios.get(`https://www.aipic.app/api/auth/account`, {
+    profile = await axios.get(`${process.env.BASE_URL}/api/auth/account`, {
       withCredentials: true,
       headers: {
           Cookie: req?.headers?.cookie
@@ -118,16 +142,27 @@ const Meta = ({ data }) => {
   );
 };
 
-const LikeBtn = ({ data }) => {
+const LikeBtn = ({ data, profile }) => {
   const [isliked, setisliked] = useState(false);
-  const ctx = useContext(userInfoContext);
+
+  useEffect(() => {
+    if (profile?.id){
+      if (data !== undefined) {
+        data?.likes?.map((like) => {
+          if (like.user_id === profile?.id) {
+            setisliked(true);
+          }
+        });
+      }
+    }
+  }, [data, profile]);
 
   const handlelike = async (e) => {
-    if (ctx.UserInfo?.id !== undefined) {
+    if (profile?.id !== undefined) {
       if (isliked) {
         await supabaseClient.from("likes").delete().match({
           artwork_id: data.id,
-          user_id: ctx.UserInfo.id,
+          user_id: profile.id,
         });
         setisliked(false);
         await axios.post(
@@ -145,7 +180,7 @@ const LikeBtn = ({ data }) => {
       } else {
         await supabaseClient.from("likes").upsert({
           artwork_id: data.id,
-          user_id: ctx.UserInfo.id,
+          user_id: profile.id,
         });
         setisliked(true);
         await axios.post(
@@ -179,7 +214,17 @@ const Images = ({ data, host, profile, otherdata, children }) => {
   const [isImageOpen, setisImageOpen] = useState(false);
   const [isPromptOpen, setisPromptOpen] = useState(false);
   const [isShareOpen, setisShareOpen] = useState(false);
+  const [isEmojiOpen, setisEmojiOpen] = useState(false);
+  const [isAddEmojiOpen, setisAddEmojiOpen] = useState(false);
   const [splideindex, setsplideindex] = useState(0);
+
+  const [emojilist, setemojilist] = useState<any[]>(data[0]?.emojis ? data[0]?.emojis : [])
+
+  const emojis = {}
+
+  emojilist.map((emoji) => {
+    emojis[emoji.emoji_id] === undefined ? emojis[emoji.emoji_id] = [emoji.user_id] : emojis[emoji.emoji_id].push(emoji.user_id)
+  })
 
   const [limittype, setlimittype] = useState("");
 
@@ -268,6 +313,54 @@ const Images = ({ data, host, profile, otherdata, children }) => {
     return result;
   };
 
+  const handleemojiselect = async (e) => {
+    if (profile?.id !== undefined) {
+      if(!emojis[e.shortcodes]?.includes(profile.id) || emojis[e.shortcodes] === undefined){
+        const localemoji =  Object.assign( [], emojilist);
+        localemoji.push({
+          "id": uuidv4(),
+          "user_id": profile?.id,
+          "artwork_id": image?.id,
+          "emoji_id": e.shortcodes
+        })
+        setemojilist(localemoji)
+        await supabaseClient.from("emojis").upsert({
+          "user_id": profile?.id,
+          "artwork_id": image?.id,
+          "emoji_id": e.shortcodes
+        })
+      }
+    }
+  }
+
+  const handleemojiclick = async (name) => {
+    if (profile?.id !== undefined) {
+      var localemoji: any[] = Object.assign( [], emojilist);
+      if(emojis[name].includes(profile?.id)){
+        localemoji = localemoji.filter(emoji => !(emoji.user_id === profile?.id && emoji.emoji_id === name));
+        setemojilist(localemoji)
+        await supabaseClient.from("emojis").delete().match({
+          "user_id": profile?.id,
+          "artwork_id": image?.id,
+          "emoji_id": name
+        })
+      }else{
+        localemoji.push({
+          "id": uuidv4(),
+          "user_id": profile?.id,
+          "artwork_id": image?.id,
+          "emoji_id": name
+        })
+        setemojilist(localemoji)
+        await supabaseClient.from("emojis").upsert({
+          "user_id": profile?.id,
+          "artwork_id": image?.id,
+          "emoji_id": name
+        })
+      }
+    }
+  }
+
   const gethref = (str: string) => {
     if (str.endsWith("/public")) {
       return str.replace("/public", "/w=512");
@@ -282,6 +375,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
     <div className="bg-white dark:bg-slate-900">
       <Meta data={data} />
       <Header />
+      <div className="hidden"><EmojiPicker/></div>
       <div className="overflow-x-hidden lg:px-12 grow w-full max-w-full min-h-0 min-w-0 shrink-0 flex-col basis-auto flex items-stretch">
         <div className="glow lg:mx-4 my-auto px-0 lg:my-auto lg:py-4 mb:my-auto mb:py-7">
           <div className="flex-nowrap flex-col">
@@ -360,7 +454,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                             </div>
                           </ImageModal>
                           {limittype === "unsafe" && (
-                            <div className="flex flex-col gap-8 justify-center items-center absolute inset-0 m-auto z-50 pointer-events-auto">
+                            <div className="flex flex-col gap-8 justify-center items-center absolute inset-0 m-autopointer-events-auto">
                               <p className="text-xl text-white font-semibold">
                                 {image.age_limit.toUpperCase()}
                                 作品は、非表示に設定されています。
@@ -480,13 +574,45 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                             </p>
                           </div>
                         </Modal>
-                        <LikeBtn data={image}></LikeBtn>
+                        <LikeBtn data={image} profile={profile}></LikeBtn>
+                        <button
+                          className="w-8 h-8 relative z-10"
+                          title="絵文字"
+                        >
+                          <FaceSmileIcon
+                            className={
+                              `w-8 h-8 transition-colors duration-100 ease-in-out
+                                ${isEmojiOpen ? "text-sky-500" : "text-black dark:text-white"}
+                              `}
+                            onClick={(e) => setTimeout(() => {
+                              setisEmojiOpen(!isEmojiOpen)}, 0)
+                            }
+                          />
+                          <Transition
+                            show={isEmojiOpen}
+                            enter="transition-opacity duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="transition-opacity duration-300"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <EmojiPicker 
+                              data={data}
+                              onClickOutside={() => setisEmojiOpen(false)}
+                              onEmojiSelect={(e) => {handleemojiselect(e)}}
+                              locale="ja"
+                              place="drop-shadow-lg top-12 right-[-100px] md:right"
+                              set="twitter"
+                            />
+                          </Transition>
+                        </button>              
                         <button
                           className="w-8 h-8"
                           onClick={() => setisShareOpen(true)}
                           title="共有する"
                         >
-                          <ArrowUpOnSquareIcon className="w-8 h-8 text-black dark:text-white"></ArrowUpOnSquareIcon>
+                          <ArrowUpOnSquareIcon className="w-8 h-8 text-black dark:text-white"/>
                         </button>
                         <ShareModal
                           isOpen={isShareOpen}
@@ -601,9 +727,9 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                           )
                         )}
                       </div>
-                      <div className="flex flex-row flex-wrap mt-5 text-sky-600 font-semibold text-sm lg:text-base">
-                        {image.tags !== null &&
-                          image.tags.map((tag, idx) => (
+                      {image.tags !== null &&
+                        <div className="flex flex-row flex-wrap mt-5 text-sky-600 font-semibold text-sm lg:text-base">
+                          {image.tags.map((tag, idx) => (
                             <Link
                               href={`/search/${tag}`}
                               key={idx}
@@ -612,6 +738,54 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                               <a className="mr-2">#{tag}</a>
                             </Link>
                           ))}
+                        </div>
+                      }
+                      <div className="flex flex-row flex-wrap mt-5 gap-2">
+                        {emojis !== null &&
+                          Object.keys(emojis).map(name => {
+                            return (
+                              <button
+                                key={name}
+                                className={`rounded-full flex items-center gap-1 px-2 text-lg select-none [&>em-emoji>span]:flex [&>em-emoji>span]:items-center ${emojis[name].includes(profile?.id) ? "bg-sky-100 border-[1.5px] border-sky-500" : "bg-gray-100"}`}
+                                onClick={() => {handleemojiclick(name)}}
+                              >
+                                {/* @ts-ignore */}
+                                <em-emoji shortcodes={name} set="twitter" />
+                                <p className="text-sm">{emojis[name]?.length}</p>
+                              </button>
+                            )
+                          })
+                        }
+                        <button
+                          className={`relative rounded-full flex items-center justify-center w-8 h-8 font-semibold select-none bg-gray-100 ${isEmojiOpen ? "" : "z-10"}`}
+                          onClick={() => setTimeout(() => {
+                            setisAddEmojiOpen(!isAddEmojiOpen)}, 0)
+                          }
+                        >
+                          {/* @ts-ignore */}
+                          <p
+                            className="text-lg text-gray-700 m-3"
+                          >+</p>
+                          <Transition
+                            show={isAddEmojiOpen}
+                            enter="transition-opacity duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="transition-opacity duration-300"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <EmojiPicker 
+                              data={data}
+                              onClickOutside={() => setisAddEmojiOpen(false)}
+                              onEmojiSelect={(e) => {handleemojiselect(e)}}
+                              locale="ja"
+                              place="drop-shadow-lg top-12 left-0 md:right"
+                              set="twitter"
+                              autoFocus
+                            />
+                          </Transition>
+                        </button>
                       </div>
                       <div className="flex flex-row gap-x-4 items-center mt-4 text-sm text-gray-500 w-max">
                         <div className="flex flex-row items-center ">

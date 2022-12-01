@@ -399,7 +399,7 @@ export default function App() {
         {getpagenation().map((count, idx) => (
           <Link
             href={`${
-              count !== "..." ? `/new?page=${count}` : `/new?page=${page}`
+              count !== "..." ? `/users/${data.user?.uid}/?page=${count}` : `/users/${data.user?.uid}/?page=${page}`
             }`}
             key={idx}
           >

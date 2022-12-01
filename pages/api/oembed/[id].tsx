@@ -8,6 +8,7 @@ const getImage = async (req: NextApiRequest, res: NextApiResponse) => {
     .select(`*, author: user_id(name, avatar_url, uid))`)
     .eq("id", id);
   if (error) return res.status(401).json({ error: error.message });
+  /* @ts-ignore */
   return res.status(200).json({
     version: "1.0",
     type: "rich",
