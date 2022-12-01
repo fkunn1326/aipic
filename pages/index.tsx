@@ -66,21 +66,21 @@ const Meta = () => {
 };
 
 export const getServerSideProps  = async ({ req, res, locale }) => {
-  const follows = await axios.get("https://www.aipic.app/api/followimages/list", {
+  const follows = await axios.get(`${process.env.BASE_URL}/api/followimages/list`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const artworks = await axios.get("https://www.aipic.app/api/artworks/list10", {
+  const artworks = await axios.get(`${process.env.BASE_URL}/api/artworks/list10`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const tags = await axios.get("https://www.aipic.app/api/tags/list", {
+  const tags = await axios.get(`${process.env.BASE_URL}/api/tags/list`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie

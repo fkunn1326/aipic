@@ -26,7 +26,7 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
       },
     }
 
-  const likes = await axios.get(`https://www.aipic.app/api/userlikes?page=${page ? page : 1}`, {
+  const likes = await axios.get(`${process.env.BASE_URL}/api/userlikes?page=${page ? page : 1}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie

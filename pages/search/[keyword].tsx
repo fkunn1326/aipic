@@ -12,7 +12,7 @@ import axios from "axios";
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const getServerSideProps  = async ({ req, res, locale, query: { page, keyword } }) => {
-  const search = await axios.get(`https://www.aipic.app/api/search/?keyword=${keyword}&page=${page ? page : 1}`, {
+  const search = await axios.get(`${process.env.BASE_URL}/api/search/?keyword=${keyword}&page=${page ? page : 1}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
