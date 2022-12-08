@@ -7,6 +7,12 @@ import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { HiOutlineUserCircle, HiOutlineCog6Tooth } from "react-icons/hi2"
+import SettingModal from "../components/modal/settingmodal"
+import toast, { Toaster } from 'react-hot-toast';
+import ReactCrop, { makeAspectCrop, centerCrop, PixelCrop } from 'react-image-crop'
+import { useDebounceEffect } from '../utils/useDebounceEffect'
+import { canvasPreview } from '../utils/canvasPreview'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -36,7 +42,7 @@ export const getServerSideProps = async (req, res) => {
 
 const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g;
 
-const Settings = ({initialSession, user}) => {
+const Settings = ({ initialSession, user }) => {
   const ctx = useContext(userInfoContext);
   
   const [states, setstates] = useState({
@@ -47,314 +53,385 @@ const Settings = ({initialSession, user}) => {
       r18: false,
       r18g: false,
     },
+    name: "",
+    introduce: "",
+    avatar_url: "",
+    header_url: ""
   });
   const [ischanged, setischanged] = useState(false);
   const [idstate, setidstate] = useState(0);
   const [invalid, setinvalid] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isAvatarOpen, setisAvatarOpen] = useState(false);
+  const [isHeaderOpen, setisHeaderOpen] = useState(false);
+  const [selected, setSelected] = useState("")
+  const [selectedtitle, setSelectedTitle] = useState("")
+  const [multi, setMulti] = useState(false)
+  const [avatarSrc, setAvatarSrc] = useState("")
+  const [headerSrc, setHeaderSrc] = useState("")
+
+  const inputRef = useRef<HTMLInputElement>(null)
+  const inputHRef = useRef<HTMLInputElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const completedRef = useRef<any>(null)
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setisAvatarOpen(false);
+    setisHeaderOpen(false);
+  }
 
   const router = useRouter();
 
-  const handleedit = (key, value) => {
-    setstates({ ...states, [key]: states[value] });
+  const handleedit = async (key: string, value: string) => {
+    const localObj = Object.assign(states)
+    localObj[key] = value
+    setstates(localObj)
+    const obj = {"id": user?.id};
+    obj[key] = value;
+    const { data, error } =  await supabaseClient.from("profiles").update(obj)
   };
 
-  const handleidchange = (e) => {
-    var peer1 = document.getElementById("id_peer1") as HTMLElement;
-    var peer2 = document.getElementById("id_peer2") as HTMLElement;
-    var peer3 = document.getElementById("id_peer3") as HTMLElement;
-    setstates({ ...states, userid: e.target.value });
-    setischanged(true);
-    (async () => {
-      var { data } = (await supabaseClient
-        .from("profiles")
-        .select("id, uid")) as any;
-      data = data.find((profile) => profile.uid === e.target.value);
-      peer1.classList.add("hidden");
-      peer2.classList.add("hidden");
-      peer3.classList.add("hidden");
-      setinvalid(false);
-      if (e.target.value !== "") {
-        if (data === undefined) {
-          if (idregex.test(e.target.value)) {
-            peer3.classList.remove("hidden");
-            setinvalid(true);
-          }
-        } else {
-          if (data["id"] === user!["id"]) {
-          } else {
-            peer1.classList.remove("hidden");
-            setinvalid(true);
-          }
-        }
-      } else {
-        peer2.classList.remove("hidden");
-        setinvalid(true);
-      }
-    })();
-  };
-
-  const handleaccesschange = (obj) => {
-    setischanged(true);
-    setstates({ ...states, access_limit: obj });
-  };
-
-  const handlecancel = (e) => {
-    setstates({
-      ...states,
-      userid: ctx["UserInfo"]["uid"],
-      email: user!["email"]!,
-      access_limit: ctx["UserInfo"]["access_limit"],
-    });
-    setischanged(false);
-  };
-
-  const handleconfirm = async (e) => {
-    if (!invalid) {
-      if (states["userid"] !== undefined) {
-        if (!idregex.test(states["userid"])) {
-          var new_obj = Object.assign(ctx["UserInfo"]);
-          new_obj["uid"] = states["userid"];
-          new_obj["access_limit"] = states["access_limit"];
-          await supabaseClient.from("profiles").upsert(new_obj).select();
-          setischanged(false);
-        }
-      }
-    }
-  };
-
-  const handledelete = async (e) => {
-    const check = confirm(
-      `本当にアカウントを削除しますか？\nアカウントを削除すると関連付けられているデータがすべて削除されます。`
-    );
-    if (check) {
-      supabaseClient.auth.signOut();
-      await axios.post(
-        "/api/account/delete"
-      );
-    }
-    router.push("/");
-  };
-
-  const isdataloaded = useRef(false);
 
   useEffect(() => {
-    if (!isdataloaded.current) {
-      if (user && ctx.UserInfo) {
-        setstates({
-          ...states,
-          userid: ctx.UserInfo?.uid,
-          email: user?.email!,
-          access_limit: ctx.UserInfo?.access_limit,
-        });
-        isdataloaded.current = true;
-      }
+    if (user && ctx.UserInfo) {
+      setstates({
+        ...states,
+        userid: ctx.UserInfo?.uid,
+        email: user?.email!,
+        access_limit: ctx.UserInfo?.access_limit,
+        name: ctx.UserInfo?.name,
+        introduce: ctx.UserInfo?.introduce,
+        avatar_url: ctx.UserInfo?.avatar_url,
+        header_url: ctx.UserInfo?.header_url,
+      });
     }
   }, [user, ctx]);
+
+  const Modal = ({ isOpen, onClose }) => {
+    const [value, setValue] = useState(states[selected])
+
+    function calcTextAreaHeight(value){
+      let rowsNum = value.split('\n').length;
+      return rowsNum
+    }
+
+    return (
+      <SettingModal isOpen={isOpen} onClose={() => onClose()}>
+        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
+        {multi ? 
+          <textarea
+            value={value}
+            rows={calcTextAreaHeight(value)} 
+            onChange={(e) => {setValue(e.target.value)}}
+            className="mt-4 transition-all duration-200 ease-out w-full p-2 text-sm text-black-700 placeholder-gray-500 rounded-lg border border-gray-300 shadow-sm focus:border-white focus:outline-none dark:bg-black-900 dark:text-white dark:placeholder-gray-400 block focus:ring-2 focus:ring-sky-500 dark:focus:ring-4 dark:bg-slate-700 dark:outline-none dark:border-none"
+          />
+          :
+          <input
+            value={value}
+            onChange={(e) => {setValue(e.target.value)}}
+            className="mt-4 transition-all duration-200 ease-out w-full p-2 text-sm text-black-700 placeholder-gray-500 rounded-lg border border-gray-300 shadow-sm focus:border-white focus:outline-none dark:bg-black-900 dark:text-white dark:placeholder-gray-400 block focus:ring-2 focus:ring-sky-500 dark:focus:ring-4 dark:bg-slate-700 dark:outline-none dark:border-none"
+          />  
+        }
+
+        <div className="flex justify-end">
+          <div className="flex flex-row mt-4 gap-x-3">
+            <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
+              setIsOpen(false)
+            }}>キャンセル</button>
+            <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
+              handleedit(selected, value)
+              setIsOpen(false)
+            }}>変更する</button>
+          </div>
+        </div>
+      </SettingModal>
+    )
+  }
+
+  const AvatarModal = ({ isOpen, onClose, src }) => {
+    return (
+      <SettingModal isOpen={isOpen} onClose={() => onClose()}>
+        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
+        <AvatarCrop src={src} />
+        <canvas
+            ref={canvasRef}
+            className="hidden"
+        />
+        <p className="text-sm font-medium text-gray-500">※ 反映には少し時間がかかります。</p>
+        <div className="flex justify-end">
+          <div className="flex flex-row mt-4 gap-x-3">
+            <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
+              setisAvatarOpen(false)
+            }}>キャンセル</button>
+            <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
+              //@ts-ignore
+              canvasPreview(imgRef.current, canvasRef.current, completedRef.current, 1, 0)
+              canvasRef.current?.toBlob(async function(blob) {
+                const responseUploadURL = await axios.post("/api/r2/upload");
+                const url = JSON.parse(JSON.stringify(responseUploadURL.data));
+                var formdata = new FormData();
+                formdata.append("file", blob as Blob);
+                formdata.append("id", `avatar-${user?.id}`);
+                await axios.post(url.uploadURL, formdata, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                });
+                handleedit(selected, `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/avatar-${user?.id}/public`)
+              })
+              setisAvatarOpen(false)
+            }}>変更する</button>
+          </div>
+        </div>
+      </SettingModal>
+    )
+  }
+
+  const AvatarCrop = ({ src }) => {
+    const [crop, setCrop] = useState<any>({
+      unit: '%',
+      x: 0,
+      y: 0,
+      width: 75,
+      height: 75
+    })
+    const [completedCrop, setCompletedCrop] = useState<any>()
+
+    function onImageLoad(e) {
+      const { naturalWidth: width, naturalHeight: height } = e.currentTarget;
+    
+      const crop = centerCrop(
+        makeAspectCrop(
+          {
+            unit: '%',
+            width: 90,
+          },
+          1,
+          width,
+          height
+        ),
+        width,
+        height
+      )
+      setCrop(crop)
+    }
+    return (
+      <ReactCrop
+        crop={crop}
+        onChange={(c) => {
+          setCrop(c)
+        }}
+        onComplete={(c) => {
+          setCompletedCrop(c)
+          completedRef.current = c
+        }}
+        aspect={1}
+        minHeight={1}
+        minWidth={1}
+        className="rounded mt-4"
+        circularCrop
+        ruleOfThirds
+      >
+        <img src={src} onLoad={onImageLoad} ref={imgRef}  />
+      </ReactCrop>
+    )
+  }
+
+  const HeaderModal = ({ isOpen, onClose, src }) => {
+    return (
+      <SettingModal isOpen={isOpen} onClose={() => onClose()}>
+        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
+        <HeaderCrop src={src} />
+        <canvas
+            ref={canvasRef}
+            className="hidden"
+        />
+        <p className="text-sm font-medium text-gray-500">※ 反映には少し時間がかかります。</p>
+        <div className="flex justify-end">
+          <div className="flex flex-row mt-4 gap-x-3">
+            <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
+              setisHeaderOpen(false)
+            }}>キャンセル</button>
+            <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
+              //@ts-ignore
+              canvasPreview(imgRef.current, canvasRef.current, completedRef.current, 1, 0)
+              canvasRef.current?.toBlob(async function(blob) {
+                const responseUploadURL = await axios.post("/api/r2/upload");
+                const url = JSON.parse(JSON.stringify(responseUploadURL.data));
+                var formdata = new FormData();
+                formdata.append("file", blob as Blob);
+                formdata.append("id", `header-${user?.id}`);
+                await axios.post(url.uploadURL, formdata, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                });
+                handleedit(selected, `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/header-${user?.id}/public`)
+              })
+              setisHeaderOpen(false)
+            }}>変更する</button>
+          </div>
+        </div>
+      </SettingModal>
+    )
+  }
+
+  const HeaderCrop = ({ src }) => {
+    const [crop, setCrop] = useState<any>({
+      unit: '%',
+      x: 0,
+      y: 0,
+      width: 75,
+      height: 75
+    })
+
+    const [completedCrop, setCompletedCrop] = useState<any>()
+
+    function onImageLoad(e) {
+      const { naturalWidth: width, naturalHeight: height } = e.currentTarget;
+    
+      const crop = centerCrop(
+        makeAspectCrop(
+          {
+            unit: '%',
+            width: 90,
+          },
+          2/1,
+          width,
+          height
+        ),
+        width,
+        height
+      )
+      setCrop(crop)
+    }
+    return (
+      <ReactCrop
+        crop={crop}
+        onChange={(c) => {
+          setCrop(c)
+        }}
+        onComplete={(c) => {
+          setCompletedCrop(c)
+          completedRef.current = c
+        }}
+        aspect={2/1}
+        minHeight={1}
+        minWidth={1}
+        className="rounded mt-4"
+        ruleOfThirds
+      >
+        <img src={src} onLoad={onImageLoad} ref={imgRef}  />
+      </ReactCrop>
+    )
+  }
 
   return (
     <div className="dark:bg-slate-900">
       <Header></Header>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
       <div className="mx-auto px-6 sm:max-w-full sm:px-6 lg:max-w-7xl lg:px-7 w-full h-full">
-        <div className="p-4 w-full bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600 sm:p-8 my-8">
-          <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-            アカウント
-          </h5>
-          <p className="mb-5 text-gray-500 dark:text-slate-300 sm:text-base">
-            アカウントについての情報を確認したり、変更したりします。
-          </p>
-          <div>
-            <div className="mt-6">
-              <div className="block text-base font-medium text-gray-900 dark:text-white mb-2">
-                ユーザーID
-              </div>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-900 dark:text-white bg-gray-200 dark:bg-slate-600 rounded-l-md border border-r-0 border-gray-300 dark:border-none">
-                  @
-                </span>
-                <input
-                  className="bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-none text-gray-900 dark:text-white sm:text-sm rounded-r-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
-                  required
-                  value={states["userid"]}
-                  onChange={(e) => {
-                    handleidchange(e);
-                  }}
-                  spellCheck="false"
-                ></input>
-              </div>
-              <p id="id_peer1" className="mt-2 hidden text-red-500 text-sm">
-                このIDは既に使用されています。
-              </p>
-              <p id="id_peer2" className="mt-2 hidden text-red-500 text-sm">
-                空欄にすることはできません。
-              </p>
-              <p id="id_peer3" className="mt-2 hidden text-red-500 text-sm">
-                IDに空白や記号を含めることはできません。
-              </p>
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-5 lg:min-h-[40rem] my-8">
+          <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
+            <div className="space-y-1">
+              <Link href="/settings">
+                <a className="bg-gray-100 dark:bg-slate-800 group rounded-md px-3 py-2.5 flex items-center gap-x-2 text-sm font-medium text-sky-700 dark:text-sky-500">
+                  <HiOutlineUserCircle className="h-6 w-6 text-gray-400 stroke-2" />
+                  プロフィール
+                </a>
+              </Link>
+              <Link href="/settings/account">
+                <a className="group rounded-md px-3 py-2.5 flex items-center gap-x-2 text-sm dark:text-white">
+                  <HiOutlineCog6Tooth className="h-6 w-6 text-gray-400 stroke-2" />
+                  アカウント
+                </a>
+              </Link>
             </div>
-          </div>
-          <div className="mt-6">
-            <div className="mt-6">
-              <div className="grid items-center mb-2">
-                <div className="block text-base font-medium text-gray-900 dark:text-white">
-                  現在のメールアドレス
-                </div>
-                {user?.app_metadata.provider !== "google" ? (
-                  <div>
-                    <button className="ml-2 block text-sm font-medium text-sky-600">
-                      変更する
-                    </button>
-                    <button className="ml-2 block text-sm font-medium text-sky-600">
-                      パスワードを変更する
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="mt-2 block text-sm font-medium text-slate-500 dark:text-slate-400">
-                      ※このアカウントはGoogleアカウントに連携されているので、メールアドレスは変更できません。
-                    </p>
-                  </div>
-                )}
+          </aside>
+          <div className="lg:col-span-9 w-full h-fit shadow-md dark:bg-slate-800 rounded-lg border dark:border-slate-600 p-6 sm:p-12">
+            <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+              プロフィール
+            </h5>
+            <p className="mb-5 text-gray-500 dark:text-slate-300 sm:text-base">
+              他の人に表示される情報を確認したり、変更したりします。
+            </p>
+            <div className="divide-y divide-gray-200 dark:divide-slate-600 flex flex-col">
+              <div className="py-5 grid grid-cols-3">
+                <p className="font-medium dark:text-white">ニックネーム</p>
+                <p className="dark:text-slate-200">{states["name"]}</p>
+                <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
+                  setSelectedTitle("ニックネーム")
+                  setSelected("name")
+                  setMulti(false)
+                  setIsOpen(true)
+                }}>
+                  編集する
+                </button>
               </div>
-              <input
-                className="bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-none text-gray-900 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full sm:w-1/2 p-2.5"
-                required
-                value={states["email"]}
-                readOnly
-                spellCheck="false"
-              ></input>
-            </div>
-          </div>
-          <div>
-            <div className="mt-6">
-              <div className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                ニックネームやアバターは、
-                <Link href={`/users/${ctx.UserInfo?.uid}`}>
-                  <a className="text-sky-600">プロフィールページ</a>
-                </Link>
-                で編集してください。
+              <div className="py-5 grid grid-cols-3">
+                <p className="font-medium dark:text-white">自己紹介</p>
+                <pre className="font-sans whitespace-pre-wrap dark:text-slate-200">{states["introduce"]}</pre>
+                <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
+                  setSelectedTitle("自己紹介")
+                  setSelected("introduce")
+                  setMulti(true)
+                  setIsOpen(true)
+                }}>                  
+                  編集する
+                </button>
               </div>
-            </div>
-          </div>
-          <div className="mt-6">
-            <div className="block text-base font-medium text-gray-900 mb-3 dark:text-white">
-              閲覧制限
-            </div>
-            <div className="flex flex-col gap-y-1 sm:flex-row sm:items-center">
-              <p className="font-semibold block text-sm text-gray-900 dark:text-white">
-                閲覧制限作品(R-18)
-              </p>
-              <div className="sm:ml-4 flex items-center">
-                <label className="sm:ml-2 text-sm font-medium text-gray-900 dark:text-white">
-                  <input
-                    checked={states["access_limit"]["r18"]}
-                    type="radio"
-                    name="r18-radio"
-                    onChange={(e) => {
-                      var new_obj = Object.assign({}, states["access_limit"]);
-                      new_obj["r18"] = !new_obj["r18"];
-                      handleaccesschange(new_obj);
-                    }}
-                    className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                  ></input>
-                  表示する
-                </label>
+              <div className="py-5 grid grid-cols-3">
+                <p className="font-medium dark:text-white">アバター</p>
+                <img className="object-cover rounded-full w-12 h-12" src={states["avatar_url"]}>
+                </img>
+                <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
+                  inputRef.current?.click()
+                  setSelectedTitle("アバター画像")
+                  setSelected("avatar_url")
+                }}>
+                  編集する
+                </button>
+                <input type="file" className="hidden" accept="image/*" ref={inputRef} onChange={(e) => {
+                  var reader = new FileReader();
+                  reader.onload = function (e) {
+                    setAvatarSrc(e.target?.result as string)
+                    setisAvatarOpen(true)
+                  }
+                  if (e.target.files?.[0]) reader.readAsDataURL(e.target.files[0]);
+                }} />
               </div>
-              <div className="sm:ml-4 flex items-center">
-                <label className="sm:ml-2 text-sm font-medium text-gray-900 dark:text-white">
-                  <input
-                    checked={!states["access_limit"]["r18"]}
-                    type="radio"
-                    value=""
-                    name="r18-radio"
-                    onChange={(e) => {
-                      var new_obj = Object.assign({}, states["access_limit"]);
-                      new_obj["r18"] = !new_obj["r18"];
-                      handleaccesschange(new_obj);
-                    }}
-                    className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                  ></input>
-                  表示しない
-                </label>
-              </div>
-            </div>
-            <div className="mt-2 flex flex-col gap-y-1 sm:flex-row sm:items-center">
-              <p className="font-semibold block text-sm text-gray-900 dark:text-white">
-                グロテスクな作品（R-18G）
-              </p>
-              <div className="sm:ml-4 flex items-center">
-                <label className="sm:ml-2 text-sm font-medium text-gray-900 dark:text-white">
-                  <input
-                    checked={states["access_limit"]["r18g"]}
-                    type="radio"
-                    onChange={(e) => {
-                      var new_obj = Object.assign({}, states["access_limit"]);
-                      new_obj["r18g"] = !new_obj["r18g"];
-                      handleaccesschange(new_obj);
-                    }}
-                    name="r18g-radio"
-                    className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                  ></input>
-                  表示する
-                </label>
-              </div>
-              <div className="sm:ml-4 flex items-center">
-                <label className="text-sm font-medium text-gray-900 dark:text-white">
-                  <input
-                    checked={!states["access_limit"]["r18g"]}
-                    type="radio"
-                    onChange={(e) => {
-                      var new_obj = Object.assign({}, states["access_limit"]);
-                      new_obj["r18g"] = !new_obj["r18g"];
-                      handleaccesschange(new_obj);
-                    }}
-                    name="r18g-radio"
-                    id="r18g-ratio-d"
-                    className="mr-2 outline-none w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                  ></input>
-                  表示しない
-                </label>
+              <div className="py-5 grid grid-cols-3">
+                <p className="font-medium dark:text-white">ヘッダー</p>
+                <img className="object-cover w-40 h-20" src={states["header_url"]}>
+                </img>
+                <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
+                  inputHRef.current?.click()
+                  setSelectedTitle("ヘッダー画像")
+                  setSelected("header_url")
+                }}>
+                  編集する
+                </button>
+                <input type="file" className="hidden" accept="image/*" ref={inputHRef} onChange={(e) => {
+                  var reader = new FileReader();
+                  reader.onload = function (e) {
+                    setHeaderSrc(e.target?.result as string)
+                    setisHeaderOpen(true)
+                  }
+                  
+                  if (e.target.files?.[0]) reader.readAsDataURL(e.target.files[0]);
+                }} />
               </div>
             </div>
           </div>
-          <div className="flex items-center mt-4">
-            <button
-              type="button"
-              disabled={!ischanged}
-              onClick={(e) => {
-                handleconfirm(e);
-              }}
-              className="font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center text-white bg-sky-500 disabled:bg-sky-300 disabled:cursor-no-drop"
-            >
-              変更を保存する
-            </button>
-            <button
-              type="button"
-              disabled={!ischanged}
-              onClick={(e) => handlecancel(e)}
-              className="ml-2 font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center border border-sky-500 text-sky-500 hover:text-white hover:bg-sky-500 disabled:text-sky-300 disabled:bg-white disabled:cursor-no-drop"
-            >
-              キャンセル
-            </button>
-          </div>
-          <div className="mt-12">
-            <div className="mt-6">
-              <div className="block text-base font-medium text-gray-900 dark:text-white mb-3">
-                アカウントの削除
-              </div>
-              <p className="text-gray-900 dark:text-slate-300 sm:text-sm rounded-lg font-semibold block w-full">
-                アカウントを削除すると、二度と復元ができなくなります。
-              </p>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handledelete(e);
-                }}
-                className="text-red-600 font-medium mt-2 rounded-lg text-sm px-3 py-1.5 text-center border border-red-600 hover:text-white hover:bg-red-500"
-              >
-                アカウントを削除する
-              </button>
-            </div>
-          </div>
+          <Modal isOpen={isOpen} onClose={handleClose} />
+          <AvatarModal isOpen={isAvatarOpen} onClose={handleClose} src={avatarSrc} />
+          <HeaderModal isOpen={isHeaderOpen} onClose={handleClose} src={headerSrc} />
         </div>
       </div>
       <Footer />

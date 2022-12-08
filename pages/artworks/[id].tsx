@@ -363,7 +363,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
 
   const gethref = (str: string) => {
     if (str.endsWith("/public")) {
-      return str.replace("/public", "/w=512");
+      return str.replace("/public", "/h=512");
     } else return str;
   };
 

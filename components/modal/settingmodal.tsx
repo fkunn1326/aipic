@@ -26,7 +26,7 @@ const SettingModal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-200 bg-opacity-50 backdrop-blur-sm" />
+            <Dialog.Overlay className="fixed inset-0 bg-gray-400 bg-opacity-50" />
           </Transition.Child>
 
           <span
@@ -44,7 +44,7 @@ const SettingModal = ({ isOpen, children, onClose }: Props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full sm:w-[650px] p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white dark:bg-slate-900 shadow-xl rounded-xl">
+            <div className="inline-block w-full p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-slate-900 dark:text-white shadow-xl rounded-xl max-w-md">
               {children}
             </div>
           </Transition.Child>

@@ -228,145 +228,14 @@ export default function App() {
             <div className="hidden sm:flex flex-col mb-1 ml-5 font-semibold text-lg dark:text-white">
               <h1>{data.user?.name}</h1>
             </div>
-            {data.user?.id === ctx.UserInfo?.id ? (
-              <div className="mb-2 sm:mb-1 ml-5 font-semibold text-base rounded-full border-2 border-slate-200 px-4 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 dark:bg-slate-600 dark:border-none">
-                <button
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                  className="hidden sm:flex dark:text-white"
-                >
-                  プロフィールを編集
-                </button>
-                <PencilSquareIcon
-                  className="w-4 h-4 text-gray-400 sm:hidden"
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                />
-                <SettingModal isOpen={isOpen} onClose={() => handlecancel()}>
-                  <div className="flex flex-col justify-center gap-y-8">
-                    <h1 className="ml-2 text-base font-semibold dark:text-white">
-                      プロフィールを編集
-                    </h1>
-                    <div className="relative w-full h-36 sm:h-64">
-                      <button
-                        className="group relative w-full h-full flex items-center text-center justify-center"
-                        onClick={(e) => {
-                          handleheaderclick(e);
-                        }}
-                      >
-                        <Image
-                          src={headerurl}
-                          layout="fill"
-                          objectFit="cover"
-                          className="w-full h-full rounded-xl"
-                        />
-                        <input
-                          type="file"
-                          id="header"
-                          className="hidden"
-                          onChange={(e) => {
-                            handleheaderchange(e);
-                          }}
-                        />
-                        <div className="transition-opacity ease-in duration-75 absolute w-full h-full bg-slate-600 opacity-0 rounded-xl z-10 group-hover:opacity-75"></div>
-                        <p className="transition-opacity ease-in duration-75 absolute z-20 text-sm text-white font-semibold opacity-0 group-hover:opacity-100">
-                          ヘッダーを変更
-                        </p>
-                      </button>
-                      <button
-                        className="group flex flex-row items-end absolute bottom-[-50px] left-8"
-                        onClick={(e) => {
-                          handleavatarclick(e);
-                        }}
-                      >
-                        <div className="relative w-20 h-20 sm:w-24 sm:h-24 border-[3.5px] border-white rounded-full flex items-center text-center justify-center">
-                          <Image
-                            src={avatarurl}
-                            layout="fill"
-                            objectFit="contain"
-                            className="rounded-full z-30"
-                          />
-                          <input
-                            type="file"
-                            id="avatar"
-                            className="hidden"
-                            onChange={(e) => {
-                              handleavatarchange(e);
-                            }}
-                          />
-                          <div className="transition-opacity ease-in duration-75 absolute w-full h-full bg-slate-600 opacity-0 rounded-full z-40 group-hover:opacity-75"></div>
-                          <p className="transition-opacity ease-in duration-75 absolute z-50 text-sm text-white font-semibold opacity-0 group-hover:opacity-100">
-                            アバターを
-                            <br />
-                            変更
-                          </p>
-                        </div>
-                      </button>
-                    </div>
-                    <div>
-                      <h2 className="mt-10 ml-2 font-semibold dark:text-slate-300">
-                        ニックネーム
-                      </h2>
-                      <input
-                        className="ml-1 mt-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-sky-600 focus:border-sky-600 block p-2.5 w-full dark:bg-slate-800 dark:border-none dark:text-white"
-                        onChange={(e) => {
-                          handlenamechange(e);
-                        }}
-                        value={name}
-                        required
-                        spellCheck="false"
-                      ></input>
-                    </div>
-                    <div>
-                      <h2 className="ml-2 font-semibold dark:text-slate-300">
-                        自己紹介
-                      </h2>
-                      <textarea
-                        className="ml-1 mt-3 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block h-32 w-full p-2.5 resize-none dark:bg-slate-800 dark:border-none dark:text-white"
-                        onChange={(e) => {
-                          handleintrochange(e);
-                        }}
-                        id="prompt"
-                        value={intro}
-                        required
-                        spellCheck="false"
-                      ></textarea>
-                    </div>
-                    <div>
-                      <div className="ml-2 flex items-center">
-                        <button
-                          type="button"
-                          disabled={!isEdited}
-                          onClick={(e) => {
-                            handleconfirm(e);
-                          }}
-                          className="font-medium rounded-lg text-sm px-3 py-1.5 text-center text-white bg-sky-500 disabled:bg-sky-300 disabled:cursor-no-drop"
-                        >
-                          変更を保存する
-                        </button>
-                        <button
-                          type="button"
-                          disabled={!isEdited}
-                          onClick={() => handlecancel()}
-                          className="ml-2 font-medium rounded-lg text-sm px-3 py-1.5 text-center border border-sky-500 text-sky-500 hover:text-white hover:bg-sky-500 disabled:text-sky-300 disabled:bg-white disabled:cursor-no-drop"
-                        >
-                          キャンセル
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </SettingModal>
-              </div>
-            ) : (
+            {data.user?.id !== ctx.UserInfo?.id &&
               <div className="grid sm:flex sm:flex-row mb-[-1.3rem] ml-5 text-sm text-gray-700">
                 <FollowBtn
                   following_uid={ctx.UserInfo?.id}
                   followed_uid={data.id}
                 />
               </div>
-            )}
+            }
           </div>
           <div className="flex sm:hidden flex-col mt-3 font-semibold text-lg ">
             <h1 className="line-clamp-1 dark:text-white">{data.user?.name}</h1>

@@ -22,7 +22,7 @@ export default function BlurImage({ image, rank=undefined, preview=false }) {
 
   const gethref = (str: string) => {
     if (str?.endsWith("/public")) {
-      return str?.replace("/public", "/w=256");
+      return str?.replace("/public", "/h=256");
     } else return str;
   };
 

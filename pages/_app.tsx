@@ -6,6 +6,7 @@ import Script from "next/script";
 import { appWithTranslation } from "next-i18next";
 import { GATracking } from "../components/GaTracking";
 import axios from "axios";
+import '../styles/crop.scss';
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export const getServerSideProps  = async ({ req, res, locale }) => {

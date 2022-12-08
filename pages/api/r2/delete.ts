@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import jwt from "jsonwebtoken";
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 
@@ -17,17 +18,21 @@ const Delete = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { token, image_id } = req.body;
+  const supabaseClient = createServerSupabaseClient({ req, res });
+  
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
+
+  const { image_id } = req.body;
 
   try {
-    var decoded = jwt.decode(token);
-
     var { data, error }: any = await supabaseAdmin
       .from("images")
       .select("id")
       .eq("id", image_id);
 
-    if (data[0].user_id === decoded.sub) {
+    if (data[0].user_id === session?.user.id) {
       try {
         var { data, error }: any = await axios.delete(
           `https://api.cloudflare.com/client/v4/accounts/${account_id}/images/v1/image-${image_id}`,
