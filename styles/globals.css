@@ -110,4 +110,8 @@
     opacity: 0.5;
     cursor: auto;
   }
+
+  .not-quote {
+    quotes: none;
+  }
 }

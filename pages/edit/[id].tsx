@@ -20,7 +20,6 @@ import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import { userInfoContext } from "../../context/userInfoContext";
 import { useRouter } from "next/router";
-import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import ReactTags from "react-tag-autocomplete";
 import axios from "axios";
 import useSWR from "swr";
@@ -48,8 +47,27 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import Preview from "../../components/form/Preview";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "../../utils/supabaseClient";
 
-export const getServerSideProps = withPageAuth({ redirectTo: "/" });
+export const getServerSideProps = async (req, res) => {
+  const supabase = createServerSupabaseClient(req)
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session)
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+
+  return {
+    props: {},
+  }
+}
 
 type tags = {
   name: string;
@@ -314,7 +332,6 @@ const Edit = (props) => {
           await axios.post(
             "/api/r2/delete",
             JSON.stringify({
-              token: `${supabaseClient?.auth?.session()?.access_token}`,
               image_id: `${image.id}`,
             }),
             {
@@ -407,7 +424,6 @@ const Edit = (props) => {
         await axios.post(
           "/api/r2/delete",
           JSON.stringify({
-            token: `${supabaseClient?.auth?.session()?.access_token}`,
             image_id: `${image.id}`,
           }),
           {

@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <div
-      className="relative bg-white dark:bg-slate-900 border-b dark:border-slate-700"
+      className="relative bg-white pb-2 dark:bg-slate-900 dark:border-slate-700"
       onLoad={() => setUpdate(update ? false : true)}
     >
       <div
