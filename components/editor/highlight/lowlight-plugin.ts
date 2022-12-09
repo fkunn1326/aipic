@@ -42,7 +42,6 @@ function getHighlightNodes(basestr) {
   function makeObj(obj) {
     if (tempobj.type === obj.type) {
       tempobj.values.push(obj.value)
-      console.log("既存", obj.value)
     }else{
       temparr.push({
         type: tempobj.type,
@@ -71,8 +70,6 @@ function getHighlightNodes(basestr) {
       }); 
     }
   })
-
-  console.log(temparr)
     
   /*
   第二段階: その他も処理

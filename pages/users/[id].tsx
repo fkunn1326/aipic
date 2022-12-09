@@ -1,19 +1,12 @@
 import Image from "next/image";
-import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
+import React, { useContext } from "react";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer";
 import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import SettingModal from "../../components/modal/settingmodal";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "../../utils/supabaseClient";
-import axios from "axios";
 import FollowBtn from "../../components/common/follow";
-import { text2Link } from "../../components/common/text2link";
 import BlurImage from "../../components/common/BlurImage";
 import SkeletonImage from "../../components/common/SkeltonImage";
 
@@ -24,15 +17,6 @@ function cn(...classes: string[]) {
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [name, setname] = useState<string>("");
-  const [intro, setintro] = useState<string>("");
-  const [isEdited, setIsEdited] = useState<boolean>(false);
-  const [headerurl, setheaderurl] = useState<string>("");
-  const [avatarurl, setavatarurl] = useState<string>("");
-  const [header, setheader] = useState<Blob>();
-  const [avatar, setavatar] = useState<Blob>();
-
   const router = useRouter();
   const ctx = useContext(userInfoContext);
 
@@ -63,114 +47,6 @@ export default function App() {
     if (startPage > 1 && endPage < totalPage) arr.splice(0, 1);
 
     return arr;
-  };
-
-  useEffect(() => {
-    if (data) {
-      setname(data.name);
-      setintro(data.introduce);
-      setavatarurl(data.avatar_url);
-      setheaderurl(data.header_url);
-    }
-  }, [data]);
-
-  const handlenamechange = (e) => {
-    setname(e.target.value);
-    setIsEdited(true);
-  };
-
-  const handleintrochange = (e) => {
-    setintro(e.target.value);
-    setIsEdited(true);
-  };
-
-  const handleheaderclick = (e) => {
-    var headerinput = document.getElementById("header") as HTMLInputElement;
-    headerinput.click();
-  };
-
-  const handleavatarclick = (e) => {
-    var avatarinput = document.getElementById("avatar") as HTMLInputElement;
-    avatarinput.click();
-  };
-
-  const handleavatarchange = (e) => {
-    var file = new Blob([e.target.files[0]], { type: e.target.files[0].type });
-    setavatar(file);
-    setavatarurl(URL.createObjectURL(file));
-    setIsEdited(true);
-  };
-
-  const handleheaderchange = (e) => {
-    var file = new Blob([e.target.files[0]], { type: e.target.files[0].type });
-    setheader(file);
-    setheaderurl(URL.createObjectURL(file));
-    setIsEdited(true);
-  };
-
-  const handlecancel = () => {
-    setname(data.name);
-    setintro(data.introduce);
-    setavatarurl(data.avatar_url);
-    setheaderurl(data.header_url);
-    setIsEdited(false);
-    setIsOpen(false);
-  };
-
-  const handleconfirm = async (e) => {
-    e.preventDefault();
-    setIsEdited(false);
-    if (avatar !== undefined) {
-      var formdata = new FormData();
-      formdata.append("name", data.id);
-      formdata.append("type", avatar.type);
-      formdata.append("file", avatar);
-      await axios.post("/api/r2/avatarupload", formdata, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      await supabaseClient
-        .from("profiles")
-        .update({
-          avatar_url: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/avatars/${data.id}.png`,
-        })
-        .match({
-          id: data.id,
-        });
-    }
-    if (header !== undefined) {
-      var formdata = new FormData();
-      formdata.append("name", data.id);
-      formdata.append("type", header.type);
-      formdata.append("file", header);
-      await axios.post("/api/r2/headerupload", formdata, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      await supabaseClient
-        .from("profiles")
-        .update({
-          header_url: `https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/headers/${data.id}.png`,
-        })
-        .match({
-          id: data.id,
-        });
-    }
-    await supabaseClient
-      .from("profiles")
-      .update({
-        name: name,
-        introduce: intro,
-      })
-      .match({
-        id: data.id,
-      });
-
-    setTimeout(() => {
-      setIsOpen(false);
-    }, 1000);
   };
 
   if (!data) {

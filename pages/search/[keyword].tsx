@@ -7,13 +7,12 @@ import SkeletonImage from "../../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import axios from "axios";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const getServerSideProps  = async ({ req, res, locale, query: { page, keyword } }) => {
-  const search = await axios.get(`${process.env.BASE_URL}/api/search/?keyword=${keyword}&page=${page ? page : 1}`, {
-    withCredentials: true,
+  const search = await fetch(`${process.env.BASE_URL}/api/search/?keyword=${keyword}&page=${page ? page : 1}`, {
+    credentials: 'include',
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -21,7 +20,7 @@ export const getServerSideProps  = async ({ req, res, locale, query: { page, key
 
   return {
     props: {
-      search: search.data,
+      search: await search.json(),
     },
   }
 };

@@ -8,23 +8,16 @@ import React, {
 import { useContext } from "react";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer";
-import { Listbox, Tab, Transition } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import {
-  CheckIcon,
-  ChevronUpDownIcon,
   PlusIcon,
   XCircleIcon,
 } from "@heroicons/react/20/solid";
-import { getChunks } from "png-chunks";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import { userInfoContext } from "../../context/userInfoContext";
 import { useRouter } from "next/router";
-import ReactTags from "react-tag-autocomplete";
-import axios from "axios";
 import useSWR from "swr";
-import { parseCookies } from "nookies";
-import { NextPageContext } from "next";
 import Link from "next/link";
 import InputForm from "../../components/form/InputForm";
 import SelectMenu from "../../components/form/SelectMenu";
@@ -329,34 +322,37 @@ const Edit = (props) => {
 
       if(images !== defaultimages) {
         defaultimages.map(async (image) => {
-          await axios.post(
-            "/api/r2/delete",
-            JSON.stringify({
-              image_id: `${image.id}`,
-            }),
-            {
+          await fetch(
+            "/api/r2/delete",{
               headers: {
                 "Content-Type": "application/json",
               },
+              body: JSON.stringify({
+                image_id: `${image.id}`,
+              }),
             }
           );
           await supabaseClient.from("images").delete().eq("id", image.id)
         });
         images.map(async (image) => {
-          const responseUploadURL = await axios.post("/api/r2/upload");
+          const responseUploadURL = await fetch("/api/r2/upload", { method: "post" });
   
-          const url = JSON.parse(JSON.stringify(responseUploadURL.data));
+          const url = await responseUploadURL.json();
   
           var formdata = new FormData();
   
           formdata.append("file", image.image);
           formdata.append("id", `image-${image.id}`);
-  
-          await axios.post(url.uploadURL, formdata, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
+
+          await fetch(
+            url.uploadURL, {
+              method: "post",
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              body: formdata,
+            }
+          );
   
           const { data, error } = await supabaseClient
             .from("images")
@@ -421,15 +417,14 @@ const Edit = (props) => {
       setisdeleting(true);
 
       defaultimages.map(async (image) => {
-        await axios.post(
-          "/api/r2/delete",
-          JSON.stringify({
-            image_id: `${image.id}`,
-          }),
-          {
+        await fetch(
+          "/api/r2/delete",{
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+              image_id: `${image.id}`,
+            }),
           }
         );
 
