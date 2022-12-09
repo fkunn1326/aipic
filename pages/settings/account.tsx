@@ -5,15 +5,10 @@ import { supabaseClient } from "../../utils/supabaseClient";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer";
 import { userInfoContext } from "../../context/userInfoContext";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { HiOutlineUserCircle, HiOutlineCog6Tooth } from "react-icons/hi2"
 import SettingModal from "../../components/modal/settingmodal";
 import toast, { Toaster } from 'react-hot-toast';
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export const getServerSideProps = async (req, res) => {
   const supabase = createServerSupabaseClient(req)
@@ -37,8 +32,6 @@ export const getServerSideProps = async (req, res) => {
   }
 }
 
-const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g;
-
 const Settings = ({initialSession, user}) => {
   const ctx = useContext(userInfoContext);
   
@@ -51,9 +44,6 @@ const Settings = ({initialSession, user}) => {
       r18g: false,
     },
   });
-  const [ischanged, setischanged] = useState(false);
-  const [idstate, setidstate] = useState(0);
-  const [invalid, setinvalid] = useState(false);
   const [selected, setSelected] = useState("")
   const [selectedtitle, setSelectedTitle] = useState("")
   const [multi, setMulti] = useState(false)
@@ -71,7 +61,6 @@ const Settings = ({initialSession, user}) => {
     obj[key] = value;
     const { data, error } = await supabaseClient.from("profiles").update(obj)
     if (error){
-      console.log(error)
       if (error.message.startsWith("duplicate key value violates unique constraint")){
         localObj[key] = ctx.UserInfo?.[selected]
         setstates(localObj)
@@ -89,70 +78,6 @@ const Settings = ({initialSession, user}) => {
     setIsOpen(false);
     setIsAcOpen(false);
   }
-
-  const handleidchange = (e) => {
-    var peer1 = document.getElementById("id_peer1") as HTMLElement;
-    var peer2 = document.getElementById("id_peer2") as HTMLElement;
-    var peer3 = document.getElementById("id_peer3") as HTMLElement;
-    setstates({ ...states, uid: e.target.value });
-    setischanged(true);
-    (async () => {
-      var { data } = (await supabaseClient
-        .from("profiles")
-        .select("id, uid")) as any;
-      data = data.find((profile) => profile.uid === e.target.value);
-      peer1.classList.add("hidden");
-      peer2.classList.add("hidden");
-      peer3.classList.add("hidden");
-      setinvalid(false);
-      if (e.target.value !== "") {
-        if (data === undefined) {
-          if (idregex.test(e.target.value)) {
-            peer3.classList.remove("hidden");
-            setinvalid(true);
-          }
-        } else {
-          if (data["id"] === user!["id"]) {
-          } else {
-            peer1.classList.remove("hidden");
-            setinvalid(true);
-          }
-        }
-      } else {
-        peer2.classList.remove("hidden");
-        setinvalid(true);
-      }
-    })();
-  };
-
-  const handleaccesschange = (obj) => {
-    setischanged(true);
-    setstates({ ...states, access_limit: obj });
-  };
-
-  const handlecancel = (e) => {
-    setstates({
-      ...states,
-      uid: ctx["UserInfo"]["uid"],
-      email: user!["email"]!,
-      access_limit: ctx["UserInfo"]["access_limit"],
-    });
-    setischanged(false);
-  };
-
-  const handleconfirm = async (e) => {
-    if (!invalid) {
-      if (states["userid"] !== undefined) {
-        if (!idregex.test(states["userid"])) {
-          var new_obj = Object.assign(ctx["UserInfo"]);
-          new_obj["uid"] = states["userid"];
-          new_obj["access_limit"] = states["access_limit"];
-          await supabaseClient.from("profiles").upsert(new_obj).select();
-          setischanged(false);
-        }
-      }
-    }
-  };
 
   const isdataloaded = useRef(false);
 
@@ -276,8 +201,11 @@ const Settings = ({initialSession, user}) => {
             }}>キャンセル</button>
             <button type="button" className="px-3 py-1.5 bg-red-500 shadow rounded-lg text-white text-sm font-medium"  onClick={async () => {
               supabaseClient.auth.signOut();
-              await axios.post(
-                "/api/account/delete"
+              await fetch(
+                "/api/account/delete",
+                {
+                  method: "post"
+                }
               );
               setIsDlOpen(false)
               router.push("/");

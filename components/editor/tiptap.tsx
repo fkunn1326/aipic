@@ -7,11 +7,12 @@ import Link from '@tiptap/extension-link'
 import Underline from '@tiptap/extension-underline'
 import { lowlight } from 'lowlight'
 import 'tippy.js/animations/shift-away-subtle.css';
-import { FaBold, FaItalic, FaStrikethrough, FaUnderline, FaQuoteLeft, FaCode, FaLink, FaImage } from "react-icons/fa"
+import { FaBold, FaItalic, FaStrikethrough, FaUnderline, FaQuoteLeft, FaCode, FaLink, FaImage, FaRulerVertical, FaGripHorizontal, FaRulerHorizontal } from "react-icons/fa"
 import { HiPlus } from "react-icons/hi2";
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import router from 'next/router'
+import { Icon } from '@iconify/react';
 
 const cn = (str: string) => {
     return str.split("\n").join(" ")
@@ -102,7 +103,7 @@ const Tiptap = () => {
           className={`h-full p-3.5 hover:bg-slate-50 stroke-2 ${editor.isActive('bold') ? 'text-sky-500' : ''}`}
 					title="太字"
         >
-          <FaBold className='w-4 h-4' />
+          <Icon icon="fa-solid:bold" className='w-4 h-4' />
         </button>
 				}
 				{editor.can().toggleItalic() &&
@@ -111,7 +112,7 @@ const Tiptap = () => {
           className={`h-full p-3.5 hover:bg-slate-50 stroke-2 ${editor.isActive('italic') ? 'text-sky-500' : ''}`}
 					title="斜体"
         >
-          <FaItalic className='w-4 h-4' />
+          <Icon icon="fa-solid:italic" className='w-4 h-4' />
         </button>
 				}
 				{editor.can().toggleStrike() &&
@@ -120,7 +121,7 @@ const Tiptap = () => {
           className={`h-full p-3.5 hover:bg-slate-50 stroke-2 ${editor.isActive('strike') ? 'text-sky-500' : ''}`}
 					title="取り消し線"
         >
-          <FaStrikethrough className='w-4 h-4' />
+          <Icon icon="fa-solid:strikethrough" className='w-4 h-4' />
         </button>
 				}
 				{editor.can().toggleUnderline() &&
@@ -129,7 +130,7 @@ const Tiptap = () => {
           className={`h-full p-3.5 hover:bg-slate-50 stroke-2 ${editor.isActive('underline') ? 'text-sky-500' : ''}`}
 					title="下線"
         >
-          <FaUnderline className='w-4 h-4' />
+          <Icon icon="fa-solid:underline" className='w-4 h-4' />
         </button>
 				}
 				{editor.can().toggleLink({ href: 'https://example.com', target: '_blank' }) &&
@@ -138,7 +139,7 @@ const Tiptap = () => {
           className={`h-full p-3.5 hover:bg-slate-50 stroke-2 ${editor.isActive('underline') ? 'text-sky-500' : ''}`}
 					title="リンク"
         >
-          <FaLink className='w-4 h-4' />
+          <Icon icon="fa-solid:link" className='w-4 h-4' />
         </button>
 				}
 				{editor.can().toggleBlockquote() &&
@@ -147,7 +148,7 @@ const Tiptap = () => {
           className={`h-full p-3.5 hover:bg-slate-50 stroke-2 ${editor.isActive('blockquote') ? 'text-sky-500' : ''}`}
 					title="引用"
         >
-          <FaQuoteLeft className='w-4 h-4' />
+          <Icon icon="fa-solid:quote-left" className='w-4 h-4' />
         </button>
 				}
 				{editor.can().toggleCodeBlock() &&
@@ -156,7 +157,7 @@ const Tiptap = () => {
           className={`h-full p-3.5 hover:bg-slate-50 stroke-2 ${editor.isActive('codeBlock') ? 'text-sky-500' : ''}`}
 					title="コード"
         >
-          <FaCode className='w-4 h-4' />
+          <Icon icon="fa-solid:code" className='w-4 h-4' />
         </button>
 				}
       </BubbleMenu>}
@@ -167,7 +168,6 @@ const Tiptap = () => {
           		<HiPlus className='w-6 h-6 drop-shadow-lg' />
 						</Menu.Button>
 					</div>
-
 					<Transition
 						as={Fragment}
 						enter="transition ease-out duration-200"
@@ -183,8 +183,40 @@ const Tiptap = () => {
 									<button
 										className="w-full flex flex-row bg-gray-10 text-gray-900 dark:bg-slate-900 dark:text-slate-200 hover:bg-gray-100 px-4 py-2 text-sm cursor-pointer"
 									>
-										<FaImage className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
+										<Icon icon="heroicons:photo" className="text-gray-400 w-5 h-5 [&>path]:stroke-[2.5] mr-2" />
 										画像
+									</button>
+								</Menu.Item>
+                <Menu.Item>
+									<button
+										className="w-full flex flex-row bg-gray-10 text-gray-900 dark:bg-slate-900 dark:text-slate-200 hover:bg-gray-100 px-4 py-2 text-sm cursor-pointer"
+									>
+										<Icon icon="heroicons:link" className="text-gray-400 w-5 h-5 [&>path]:stroke-[2.5] mr-2" />
+										埋め込み
+									</button>
+								</Menu.Item>
+                <Menu.Item>
+									<button
+										className="w-full flex flex-row bg-gray-10 text-gray-900 dark:bg-slate-900 dark:text-slate-200 hover:bg-gray-100 px-4 py-2 text-sm cursor-pointer"
+									>
+										<Icon icon="fa-solid:quote-left" className="text-gray-400 p-0.5 w-5 h-5 mr-2 stroke-2" />
+										引用
+									</button>
+								</Menu.Item>
+                <Menu.Item>
+									<button
+										className="w-full flex flex-row bg-gray-10 text-gray-900 dark:bg-slate-900 dark:text-slate-200 hover:bg-gray-100 px-4 py-2 text-sm cursor-pointer"
+									>
+										<Icon icon="heroicons:code-bracket-square" className="text-gray-400 w-5 h-5 [&>path]:stroke-[2.5] mr-2" />
+										コードブロック
+									</button>
+								</Menu.Item>
+                <Menu.Item>
+									<button
+										className="w-full flex flex-row bg-gray-10 text-gray-900 dark:bg-slate-900 dark:text-slate-200 hover:bg-gray-100 px-4 py-2 text-sm cursor-pointer"
+									>
+										<Icon icon="material-symbols:horizontal-rule-rounded" className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
+										区切り線
 									</button>
 								</Menu.Item>
 							</div>

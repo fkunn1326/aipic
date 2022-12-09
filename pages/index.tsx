@@ -17,6 +17,7 @@ import { useTranslation, Trans } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import axios from "axios";
 import Script from "next/script";
+import PromptRanking from "../components/common/PromptRanking";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -215,6 +216,16 @@ export default function App({ artworks, followdata, tags }, ...props) {
           </div>
         </div>
         <DailyRanking />
+      </div>
+      <div>
+        <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
+          <div className="mt-6 w-full flex flex-row justify-between">
+            <div className="text-xl font-semibold text-black dark:text-white">
+              {t('人気のプロンプト')}
+            </div>
+          </div>
+        </div>
+        <PromptRanking />
       </div>
       <button
         className="fixed right-8 bottom-8 md:right-12 md:bottom-12 transition-opacity duration-300 ease-out disabled:opacity-50"

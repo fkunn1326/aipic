@@ -12,7 +12,7 @@ function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function BlurImage({ image, rank=undefined, preview=false }) {
+export default function BlurImage({ image, rank=undefined, preview=false, pr=false }) {
   const ctx = useContext(userInfoContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -90,6 +90,27 @@ export default function BlurImage({ image, rank=undefined, preview=false }) {
   return (
     <div className="group">
       <div className="relative">
+        {pr ?
+        <div className="cursor-pointer aspect-w-1 aspect-h-[1.6] w-full overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-600">
+          <Link href={`/artworks/${image.id}`}>
+            <a className="transition-transform duration-500 ease-out hover:scale-[1.1]">
+              <img
+                alt={image.title}
+                src={gethref(image?.href)}
+                className={cn(
+                  "duration-700 ease-in-out w-full h-full object-cover",
+                  isLoading
+                    ? "scale-110 blur-2xl grayscale"
+                    : "scale-100 blur-0 grayscale-0"
+                )}
+                onLoad={() => {
+                  setLoading(false);
+                }}
+              />
+            </a>
+          </Link>
+        </div>
+        :
         <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-600">
           <Link href={`/artworks/${image.id}`}>
             <a className="transition-transform duration-500 ease-out hover:scale-[1.1]">
@@ -109,49 +130,52 @@ export default function BlurImage({ image, rank=undefined, preview=false }) {
             </a>
           </Link>
         </div>
-        {image.age_limit === "nsfw" && (
-          <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
-            NSFW
-          </p>
-        )}
-        {image.age_limit === "r18" && (
-          <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
-            R-18
-          </p>
-        )}
-        {image.age_limit === "r18g" && (
-          <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
-            R-18G
-          </p>
-        )}
-        {image.images?.length > 1 && rank === undefined && (
-          <p className="absolute top-2 right-2 text-sm flex flex-row justify-center items-center font-semibold bg-gray-600 opacity-80 text-white px-2 rounded-md">
-            <DocumentIcon className="w-3 h-3 mr-0.5 stroke-[2.5]" />
-            {image.images?.length}
-          </p>
-        )}
-        {rank !== undefined && (
-          <div
-            className={`absolute top-2 right-2 text-base flex items-center justify-center font-semibold ${
-              rank === 1 && "bg-yellow-500"
-            } ${rank === 2 && "bg-gray-400"} ${rank === 3 && "bg-orange-400"} ${
-              rank > 3 && "bg-gray-500"
-            } text-white w-10 h-10 rounded-full`}
-          >
-            {rank}
-          </div>
-        )}
+        }
         {!preview &&
-          <button
-            className="absolute bottom-1 right-1 text-sm font-semibold px-2 rounded-md"
-            onClick={(e) => handlelike(e)}
-          >
-            {isliked ? (
-              <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
-            ) : (
-              <HeartIcon className="w-8 h-8 fill-white"></HeartIcon>
+          <>
+            {image.age_limit === "nsfw" && (
+              <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
+                NSFW
+              </p>
             )}
-          </button>
+            {image.age_limit === "r18" && (
+              <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
+                R-18
+              </p>
+            )}
+            {image.age_limit === "r18g" && (
+              <p className="absolute top-2 left-2 text-sm font-semibold bg-red-500 text-white px-2 rounded-md">
+                R-18G
+              </p>
+            )}
+            {image.images?.length > 1 && rank === undefined && (
+              <p className="absolute top-2 right-2 text-sm flex flex-row justify-center items-center font-semibold bg-gray-600 opacity-80 text-white px-2 rounded-md">
+                <DocumentIcon className="w-3 h-3 mr-0.5 stroke-[2.5]" />
+                {image.images?.length}
+              </p>
+            )}
+            {rank !== undefined && (
+              <div
+                className={`absolute top-2 right-2 text-base flex items-center justify-center font-semibold ${
+                  rank === 1 && "bg-yellow-500"
+                } ${rank === 2 && "bg-gray-400"} ${rank === 3 && "bg-orange-400"} ${
+                  rank > 3 && "bg-gray-500"
+                } text-white w-10 h-10 rounded-full`}
+              >
+                {rank}
+              </div>
+            )}
+            <button
+              className="absolute bottom-1 right-1 text-sm font-semibold px-2 rounded-md"
+              onClick={(e) => handlelike(e)}
+            >
+              {isliked ? (
+                <HeartSolidIcon className="w-8 h-8 text-pink-500"></HeartSolidIcon>
+              ) : (
+                <HeartIcon className="w-8 h-8 fill-white"></HeartIcon>
+              )}
+            </button>
+          </>
         }
       </div>
       {!preview &&
