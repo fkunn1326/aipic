@@ -43,6 +43,7 @@ const Header = () => {
             <div className="flex justify-start items-center lg:flex-none">
               <div className="md:hidden mr-5 flex items-center">
                 <button
+                  aria-label="サイドバーボタン"
                   onClick={() => {
                     setShowSidebar(!showSidebar);
                   }}
@@ -58,6 +59,7 @@ const Header = () => {
             </div>
             <div className="md:hidden mr-5 flex items-center">
               <button
+                aria-label="検索ボタン"
                 onClick={() => {
                   setshowsearch(!showsearch);
                 }}

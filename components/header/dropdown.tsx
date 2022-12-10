@@ -107,6 +107,7 @@ export default function Dropdawn(props) {
                   >
                     <ArrowRightOnRectangleIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                     <button
+                      aria-label="サインアウトボタン"
                       type="button"
                       className={classNames("block text-sm cursor-pointer")}
                       onClick={() => {

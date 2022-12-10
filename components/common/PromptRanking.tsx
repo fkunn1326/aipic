@@ -40,7 +40,7 @@ export default function PromptRanking() {
           {images.map((image, idx) => (
             <div className="relative" key={image.id}>
             	<BlurImage image={image} pr preview />
-							<p className="absolute bottom-0 left-0 px-4 pb-3.5 pt-32 w-full rounded-b-xl text-white font-semibold bg-gradient-to-t from-transparent/[0.3] to-transparent">{image.prompt}</p>
+							<p className="absolute bottom-0 left-0 px-4 pb-3.5 pt-32 w-full rounded-b-xl text-white font-semibold bg-gradient-to-t from-transparent/[0.3] to-transparent pointer-events-none select-none">{image.prompt}</p>
             </div>
           ))}
         </div>
