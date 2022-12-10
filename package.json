@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "anlyze": "$Env:ANALYZE='true'; yarn build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.199.0",
@@ -92,6 +93,7 @@
   },
   "devDependencies": {
     "@builder.io/partytown": "^0.7.2",
+    "@next/bundle-analyzer": "^13.0.6",
     "@types/gtag.js": "^0.0.12",
     "@types/node": "18.8.3",
     "@types/react": "18.0.21",

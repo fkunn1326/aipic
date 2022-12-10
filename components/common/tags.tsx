@@ -13,7 +13,7 @@ function useHorizontalScroll() {
         e.preventDefault();
         el.scrollBy(e.deltaY, 0);
       };
-      el.addEventListener("wheel", onWheel);
+      el.addEventListener("wheel", onWheel,  {passive: true});
       return () => el.removeEventListener("wheel", onWheel);
     }
   }, []);
@@ -77,7 +77,7 @@ export default function TagsList({ tags }) {
               }-500 rounded saturate-[0.8] text-white font-semibold`}
               key={tag.id}
             >
-              <Link href={`/search/${tag.name}`}>
+              <Link href={`/search/${tag.name}`} prefetch={false}>
                 <a>#{tag.name}</a>
               </Link>
             </div>

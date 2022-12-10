@@ -228,6 +228,7 @@ export default function App({ artworks, followdata, tags }, ...props) {
         <PromptRanking />
       </div>
       <button
+        aria-label="上に戻るボタン"
         className="fixed right-8 bottom-8 md:right-12 md:bottom-12 transition-opacity duration-300 ease-out disabled:opacity-50"
         onClick={() => {
           window.scrollTo({ top: 0, behavior: "smooth" });

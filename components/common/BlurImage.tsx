@@ -17,12 +17,13 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
 
   const [isLoading, setLoading] = useState(true);
   const [isliked, setisliked] = useState(false);
+  const [isError, setisError] = useState(false)
 
   const ref = useRef<null | HTMLImageElement>(null)
 
-  const gethref = (str: string) => {
+  const gethref = (str: string, size=256) => {
     if (str?.endsWith("/public")) {
-      return str?.replace("/public", "/h=256");
+      return str?.replace("/public", `/h=${size}`);
     } else return str;
   };
 
@@ -92,19 +93,23 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
       <div className="relative">
         {pr ?
         <div className="cursor-pointer aspect-w-1 aspect-h-[1.6] w-full overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-600">
-          <Link href={`/artworks/${image.id}`}>
+          <Link href={`/search/${image.prompt}`} prefetch={false}>
             <a className="transition-transform duration-500 ease-out hover:scale-[1.1]">
               <img
                 alt={image.title}
-                src={gethref(image?.href)}
+                src={gethref(image?.href, 256)}
                 className={cn(
                   "duration-700 ease-in-out w-full h-full object-cover",
                   isLoading
                     ? "scale-110 blur-2xl grayscale"
                     : "scale-100 blur-0 grayscale-0"
                 )}
+                loading="lazy"
                 onLoad={() => {
                   setLoading(false);
+                }}
+                onError={() => {
+                  setisError(true)
                 }}
               />
             </a>
@@ -112,7 +117,7 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
         </div>
         :
         <div className="cursor-pointer aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-600">
-          <Link href={`/artworks/${image.id}`}>
+          <Link href={`/artworks/${image.id}`} prefetch={false}>
             <a className="transition-transform duration-500 ease-out hover:scale-[1.1]">
               <img
                 alt={image.title}
@@ -123,8 +128,12 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
                     ? "scale-110 blur-2xl grayscale"
                     : "scale-100 blur-0 grayscale-0"
                 )}
+                loading="lazy"
                 onLoad={() => {
                   setLoading(false);
+                }}
+                onError={() => {
+                  setisError(true)
                 }}
               />
             </a>
@@ -166,6 +175,7 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
               </div>
             )}
             <button
+              aria-label="いいねボタン"
               className="absolute bottom-1 right-1 text-sm font-semibold px-2 rounded-md"
               onClick={(e) => handlelike(e)}
             >
@@ -183,14 +193,16 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
           <p className="mt-2 text-base font-semibold text-gray-900 dark:text-slate-50 text-ellipsis whitespace-nowrap overflow-hidden">
             {image.title}
           </p>
-          <Link href={`/users/${image.author.uid}`}>
+          <Link href={`/users/${image.author.uid}`} prefetch={false}>
             <a className="mt-1 w-full flex items-center">
-              <Image
-                src={image.author.avatar_url}
+              <img
+                src={gethref(image.author.avatar_url, 40)}
+                alt={`${image.author.name}のプロフィールアイコン`}
                 width={20}
                 height={20}
+                sizes="20px"
                 className="rounded-full"
-              ></Image>
+              ></img>
               <h3 className="ml-2 text-base text-gray-700 dark:text-slate-300">
                 {image.author.name}
               </h3>
