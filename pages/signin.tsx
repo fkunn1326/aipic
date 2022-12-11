@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { supabaseClient } from "../utils/supabaseClient";
 import { SiteName } from "../components/core/const";
 import { useRouter } from "next/router";
+<<<<<<< HEAD
 import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ locale }) => {
@@ -13,6 +14,10 @@ export const getServerSideProps = async ({ locale }) => {
 }
 
 const Signin = (...props) => {
+=======
+
+const Signin = () => {
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
   const emailregex =
@@ -20,7 +25,11 @@ const Signin = (...props) => {
   const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
   const router = useRouter();
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const origin =
     typeof window !== "undefined" && window.location.origin
       ? window.location.origin
@@ -69,12 +78,12 @@ const Signin = (...props) => {
         <div className="w-full bg-white dark:bg-slate-800 dark:border-slate-600 rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
-              {t('SigninPage.Signin',"サインイン")}
+              サインイン
             </h1>
             <form className="space-y-2 md:space-y-6" onSubmit={clickForms}>
               <div>
                 <label className="block mb-3 text-sm font-medium text-gray-900 dark:text-slate-300">
-                  {t('SigninPage.Email',"メール")}
+                  メール
                   <input
                     type="email"
                     name="email"
@@ -103,13 +112,13 @@ const Signin = (...props) => {
                     id="email_peer"
                     className="mt-2 hidden text-pink-600 text-sm"
                   >
-                    {t('SigninPage.Email_Wraning1',"有効なメールアドレスを入力してください")}
+                    有効なメールアドレスを入力してください。
                   </p>
                 </label>
               </div>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">
-                  {t('SigninPage.Mail.Password',"パスワード")}
+                  パスワード
                   <input
                     type="password"
                     name="password"
@@ -125,7 +134,7 @@ const Signin = (...props) => {
                     id="email_peer2"
                     className="mt-2 hidden text-pink-600 text-sm"
                   >
-                    {t('SigninPage.Password.Wraning1',"アカウントが存在しないか、パスワードが間違っています。")}
+                    アカウントが存在しないか、パスワードが間違っています。
                   </p>
                 </label>
               </div>
@@ -133,10 +142,10 @@ const Signin = (...props) => {
                 type="submit"
                 className="w-full text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
-                {t('SigninPage.Signin',"サインイン")}
+                サインイン
               </button>
               <p className="text-sm text-gray-500 text-center dark:text-slate-300">
-                {t('SigninPage.Or',"または")}
+                または
               </p>
               <button
                 type="button"
@@ -178,13 +187,13 @@ const Signin = (...props) => {
                     </clipPath>
                   </defs>
                 </svg>
-                {t('SigninPage.WithGoogle',"Googleで続行")}
+                Googleで続行
               </button>
               <p className="text-sm text-gray-500 dark:text-slate-300">
-                {t('SigninPage.Note1',"アカウントがありませんか？")}
+                アカウントがありませんか？
                 <Link href="/signup">
                   <a className="font-medium text-sky-600 hover:underline">
-                    {t('SigninPage.Signup',"サインアップ")}
+                    サインアップ
                   </a>
                 </Link>
               </p>

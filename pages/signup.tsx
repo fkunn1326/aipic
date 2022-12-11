@@ -2,6 +2,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { supabaseClient } from "../utils/supabaseClient";
 import { SiteName } from "../components/core/const";
+<<<<<<< HEAD
 import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ locale }) => {
@@ -10,13 +11,19 @@ export const getServerSideProps = async ({ locale }) => {
     },
   }
 }
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
 
 const validate = () => {
   const regex = /^(?=.?[a-z])(?=.?\d)(?=.*?[!-/:-@[-`{-~])[!-~]{8,100}$/i;
   regex.test("");
 };
 
+<<<<<<< HEAD
 const Signup = (...props) => {
+=======
+const Signup = () => {
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
   const emailregex =
@@ -68,12 +75,12 @@ const Signup = (...props) => {
           {!ismailsent ? (
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
-                {t('SignupPage.Signup',"サインアップ")}
+                サインアップ
               </h1>
               <form className="space-y-2 md:space-y-6" onSubmit={clickForms}>
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">
-                    {t('SignupPage.Email',"メール")}
+                    メール
                     <input
                       type="email"
                       name="email"
@@ -102,19 +109,19 @@ const Signup = (...props) => {
                       id="email_peer"
                       className="mt-2 hidden text-pink-600 text-sm"
                     >
-                      {t('SignupPage.Email_Wraning1',"有効なメールアドレスを入力してください")}
+                      有効なメールアドレスを入力してください。
                     </p>
                     <p
                       id="email_peer2"
                       className="mt-2 hidden text-pink-600 text-sm"
                     >
-                      {t('SignupPage.Email_Wraning2',"メールアドレスは既に登録されています。")}
+                      メールアドレスは既に登録されています。
                     </p>
                   </label>
                 </div>
                 <div>
                   <label className="block mb-2 text-sm font-medium dark:text-slate-300 text-gray-900">
-                    {t('SignupPage.Password',"パスワード")}
+                    パスワード
                     <input
                       type="password"
                       name="password"
@@ -139,13 +146,14 @@ const Signup = (...props) => {
                       id="password1_peer"
                       className="mt-2 hidden text-pink-600 text-sm"
                     >
-                      {t('SignupPage.Password_Wraning1',"パスワードは、半角英字、数字、記号を組み合わせて 8文字以上で入力してください ")}
+                      パスワードは、半角英字、数字、記号を組み合わせて 8
+                      文字以上で入力してください
                     </p>
                   </label>
                 </div>
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">
-                    {t('SignupPage.PasswordforCheck',"パスワード（確認）")}
+                    パスワード（確認）
                     <input
                       type="password"
                       name="password"
@@ -169,7 +177,7 @@ const Signup = (...props) => {
                       id="password2_peer"
                       className="mt-2 hidden text-pink-600 text-sm"
                     >
-                      {t('SignupPage.PasswordforCheck_Wraning1',"上のパスワードと一致する必要があります。")}
+                      上のパスワードと一致する必要があります。
                     </p>
                   </label>
                 </div>
@@ -184,12 +192,17 @@ const Signup = (...props) => {
                           className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
                           required
                         ></input>
-                        <div
-                          className="ml-3 text-sm cursor-pointer dark:text-slate-300"
-                          dangerouslySetInnerHTML={{
-                            __html: t('SignupPage.AgreeTos', '<a href="/terms/tos" class="text-sm font-medium text-sky-600 hover:underline">利用規約</a>に同意します。')
-                          }}
-                        />
+                        <div className="ml-3 text-sm cursor-pointer dark:text-slate-300">
+                          <Link href="/terms/tos">
+                            <a
+                              href=""
+                              className="text-sm font-medium text-sky-600 hover:underline"
+                            >
+                              利用規約
+                            </a>
+                          </Link>
+                          に同意します。
+                        </div>
                       </label>
                     </div>
                   </div>
@@ -198,10 +211,10 @@ const Signup = (...props) => {
                   type="submit"
                   className="w-full text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
-                  {t('SignupPage.CreateAccount',"アカウントを作る")}
+                  アカウントを作る
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-slate-300 text-center">
-                  {t('SignupPage.Or',"または")}
+                  または
                 </p>
                 <button
                   type="button"
@@ -243,13 +256,13 @@ const Signup = (...props) => {
                       </clipPath>
                     </defs>
                   </svg>
-                  {t('SignUpPage.WithGoogle',"Googleで続行")}
+                  Googleで続行
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-slate-300">
-                  {t('SignUpPage.Note1',"すでにアカウントがありますか？")}
+                  すでにアカウントがありますか？
                   <Link href="/signin">
                     <a className="font-medium text-sky-600 hover:underline">
-                      {t('SignUpPage.Signin',"サインイン")}
+                      サインイン
                     </a>
                   </Link>
                 </p>
@@ -258,12 +271,12 @@ const Signup = (...props) => {
           ) : (
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-center font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
-                {t('SignUpPage.EmailSent.Title',"確認メールを送信しました")}
+                確認メールを送信しました
               </h1>
               <p className="text-center font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
-                {t('SignUpPage.EmailSent.Note1',"ご登録のメールアドレスにURLをお送りしました。")}
+                ご登録のメールアドレスにURLをお送りしました。
                 <br />
-                {t('SignUpPage.EmailSent.Note2',"記載してあるURLをクリックし、登録を完了してください。")}
+                記載してあるURLをクリックし、登録を完了してください。
               </p>
             </div>
           )}

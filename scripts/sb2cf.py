@@ -2,8 +2,6 @@ from supabase import create_client,Client
 import requests
 from dotenv import load_dotenv
 import os
-import asyncio
-from postgrest import AsyncPostgrestClient
 
 load_dotenv(r"env_path")
 
@@ -14,25 +12,36 @@ token: str = os.environ["CLOUDFLARE_IMAGES_API_TOKEN"]
 
 supabase: Client = create_client(url, key)
 
-async def main():
-    async with AsyncPostgrestClient("http://localhost:3000") as client:
-        r = await client.from_("countries").select("*").execute()
-        countries = r.data
+data = supabase.table("profiles").select("avatar_url").execute()
 
-asyncio.run(main())
+for k in data.data:
+    if k["avatar_url"].startswith(r"https://pub-25066e52684e449b90f5170d93e6c396.r2.dev/"):
+        # headers = {
+        #     f'Authorization': f'Bearer {token}',
+        # }
 
-async def search(keyword):
-    data = supabase.rpc("search_artworks", { "keyword": "R18" }).execute()
-    # print(data.data)
+        id = k["avatar_url"].split("/")[-1].split(".")[0]
 
-async def call_search():
-    print("1")
-    await search("aaa")
+        data = supabase.table("profiles").update({
+            "id": id,
+            "avatar_url": f"https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/avatar-{id}/public"
+        }).execute()
 
-async def call_search2():
-    print(2)
-    await search("ooo")
+        print(data)
 
-loop = asyncio.get_event_loop()
-loop.create_task(call_search())
-loop.run_until_complete(call_search2())
+        # files = {
+        #     'requireSignedURLs': (None, 'false'),
+        #     'url': (None, k["avatar_url"]),
+        #     'id': (None, f"avatar-{id}"),
+        # }
+
+        # response = requests.post(f'https://api.cloudflare.com/client/v4/accounts/{account_id}/images/v1', headers=headers, files=files)
+
+        # if response.status_code == 200:
+        #     print(response.json())
+        # else:
+        #     print(response.status_code)
+
+
+    # if response.status_code != requests.codes.ok:
+    #     print(k["href"])

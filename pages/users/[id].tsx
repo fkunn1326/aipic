@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import FollowBtn from "../../components/common/follow";
 import BlurImage from "../../components/common/BlurImage";
 import SkeletonImage from "../../components/common/SkeltonImage";
+<<<<<<< HEAD
 import Head from "next/head";
 import { t } from "../../utils/Translation"
 
@@ -31,6 +32,16 @@ export const getServerSideProps = async ({ req, res, locale, query: { id } }) =>
 };
 
 const App = ({ data }, ...props) => {
+=======
+
+function cn(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
+
+export default function App() {
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const router = useRouter();
   const ctx = useContext(userInfoContext);
 
@@ -38,7 +49,7 @@ const App = ({ data }, ...props) => {
   const page =
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
-  const { data: userData, error } = useSWR(
+  const { data, error } = useSWR(
     `../api/users/${id}` + "?page=" + page, fetcher
   );
 
@@ -63,7 +74,7 @@ const App = ({ data }, ...props) => {
     return arr;
   };
 
-  if (!userData) {
+  if (!data) {
     return (
       <div className="dark:bg-slate-900">
         <Header></Header>
@@ -91,7 +102,7 @@ const App = ({ data }, ...props) => {
     );
   }
 
-  const totalPage = Math.ceil(userData.count / 20);
+  const totalPage = Math.ceil(data.count / 20);
   
   return (
     <div className="dark:bg-slate-900">
@@ -99,7 +110,7 @@ const App = ({ data }, ...props) => {
       <div className="relative w-screen h-64 sm:h-96 p-4 sm:p-8 pb-12">
         <div className="relative w-full h-full">
           <Image
-            src={userData.user?.header_url}
+            src={data.user?.header_url}
             layout="fill"
             objectFit="cover"
             className="w-full h-full mx-4 rounded-3xl"
@@ -109,32 +120,32 @@ const App = ({ data }, ...props) => {
           <div className="flex flex-row justify-between sm:justify-start w-full items-end">
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 border-[3.5px]  border-white rounded-full">
               <Image
-                src={userData.user?.avatar_url}
+                src={data.user?.avatar_url}
                 layout="fill"
                 objectFit="cover"
                 className="rounded-full"
               />
             </div>
             <div className="hidden sm:flex flex-col mb-1 ml-5 font-semibold text-lg dark:text-white">
-              <h1>{userData.user?.name}</h1>
+              <h1>{data.user?.name}</h1>
             </div>
-            {userData.user?.id !== ctx.UserInfo?.id &&
+            {data.user?.id !== ctx.UserInfo?.id &&
               <div className="grid sm:flex sm:flex-row mb-[-1.3rem] ml-5 text-sm text-gray-700">
                 <FollowBtn
                   following_uid={ctx.UserInfo?.id}
-                  followed_uid={userData.user?.id}
+                  followed_uid={data.id}
                 />
               </div>
             }
           </div>
           <div className="flex sm:hidden flex-col mt-3 font-semibold text-lg ">
-            <h1 className="line-clamp-1 dark:text-white">{userData.user?.name}</h1>
+            <h1 className="line-clamp-1 dark:text-white">{data.user?.name}</h1>
           </div>
           <div className="py-2 sm:py-6 max-w-xl sm:max-w-full">
             <div
               className="line-clamp-2 dark:text-slate-300"
             >
-              {userData.user?.introduce?.split(/(https?:\/\/[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+)/).map((v, i) =>
+              {data.user?.introduce?.split(/(https?:\/\/[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+)/).map((v, i) =>
                 i & 1 ? (
                   <a className="text-sky-500 dark:text-sky-600" key={i} href={v} target="_blank" rel="noopener noreferrer">
                     {v}
@@ -149,7 +160,7 @@ const App = ({ data }, ...props) => {
       </div>
       <div className="mx-auto max-w-2xl pt-28 px-4 sm:pt-32 sm:px-6 lg:max-w-7xl lg:px-8 mb-12">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {userData.body?.map((image) => (
+          {data.body?.map((image) => (
             <BlurImage key={image.id} image={image} />
           ))}
         </div>
@@ -158,7 +169,7 @@ const App = ({ data }, ...props) => {
         {getpagenation().map((count, idx) => (
           <Link
             href={`${
-              count !== "..." ? `/users/${userData.user?.uid}/?page=${count}` : `/users/${userData.user?.uid}/?page=${page}`
+              count !== "..." ? `/users/${data.user?.uid}/?page=${count}` : `/users/${data.user?.uid}/?page=${page}`
             }`}
             key={idx}
           >
@@ -177,5 +188,3 @@ const App = ({ data }, ...props) => {
     </div>
   );
 }
-
-export default App

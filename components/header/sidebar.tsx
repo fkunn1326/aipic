@@ -5,9 +5,12 @@ import React, { useState } from "react";
 
 const Sidebar = ({ isOpen, avatar, name, id }) => {
   const router = useRouter();
+<<<<<<< HEAD
   const t = ( key, str, object: any=undefined ) => {
     return str
   }
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
 
   return (
     <div
@@ -20,12 +23,12 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
           <div className="flex flex-col gap-y-4">
             <Link href="/signin">
               <a className="mt-4 text-gray-600 dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.Signin','サインイン')}
+                サインイン
               </a>
             </Link>
             <Link href="/signup">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.Signup','サインアップ')}
+                サインアップ
               </a>
             </Link>
           </div>
@@ -42,32 +45,32 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
             </Link>
             <Link href="/">
               <a className="mt-4 text-gray-600  dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.Home','ホーム')}
+                ホーム
               </a>
             </Link>
             <Link href="/upload">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.PostArtwork','作品の投稿')}
+                作品の投稿
               </a>
             </Link>
             <Link href="/dashboard">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.DashBoard','ダッシュボード')}
+                ダッシュボード
               </a>
             </Link>
             <Link href="/likes">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.LikedArtworks','いいねをした作品')}
+                いいねをした作品
               </a>
             </Link>
             <Link href="/settings">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.Settings','アカウントの設定')}
+                アカウントの設定
               </a>
             </Link>
             <Link href="/history">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                {t('Header.SideBar.History','閲覧履歴')}
+                閲覧履歴
               </a>
             </Link>
             <Link href="/">
@@ -78,7 +81,7 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
                   router.push("/");
                 }}
               >
-                {t('Header.SideBar.Signout','サインアウト')}
+                サインアウト
               </a>
             </Link>
           </div>

@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import Image from "next/image";
+import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
@@ -6,6 +7,7 @@ import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
+<<<<<<< HEAD
 import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ locale }) => {
@@ -18,6 +20,14 @@ export const getServerSideProps = async ({ locale }) => {
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App(...props) {
+=======
+import { supabaseClient } from "../utils/supabaseClient";
+import { useRouter } from "next/router";
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
+
+export default function App() {
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   var ctx = useContext(userInfoContext);
   var access_limit = "";
 
@@ -55,7 +65,7 @@ export default function App(...props) {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold dark:text-white">
-            {t('DailyRankingPage.DailyRanking','デイリーランキング')}
+            デイリーランキング
           </div>
         </div>
       </div>

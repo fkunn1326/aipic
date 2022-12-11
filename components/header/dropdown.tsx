@@ -19,9 +19,12 @@ function classNames(...classes) {
 }
 
 export default function Dropdawn(props) {
+<<<<<<< HEAD
   const t = ( key, str, object: any=undefined ) => {
     return str
   }
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const router = useRouter();
   var avatar = props.avatar;
   return (
@@ -52,7 +55,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <UserCircleIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    {t('Header.DropDown.MyPage','マイページ')}
+                    マイページ
                   </p>
                 </a>
               </Link>
@@ -62,7 +65,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <ListBulletIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    {t('Header.DropDown.DashBoard','ダッシュボード')}
+                    ダッシュボード
                   </p>
                 </a>
               </Link>
@@ -72,7 +75,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <HeartIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    {t('Header.DropDown.LikesList','いいね一覧')}
+                    いいね一覧
                   </p>
                 </a>
               </Link>
@@ -82,7 +85,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <Cog6ToothIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    {t('Header.DropDown.Settings','設定')}
+                    設定
                   </p>
                 </a>
               </Link>
@@ -92,7 +95,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <ClockIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    {t('Header.DropDown.History','閲覧履歴')}
+                    閲覧履歴
                   </p>
                 </a>
               </Link>
@@ -118,7 +121,7 @@ export default function Dropdawn(props) {
                         router.push("/");
                       }}
                     >
-                      {t('Header.DropDown.Signout','サインアウト')}
+                      サインアウト
                     </button>
                   </div>
                 )}

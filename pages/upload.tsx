@@ -42,10 +42,13 @@ import {
   SortableContext,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
+<<<<<<< HEAD
 import { t } from "../utils/Translation"
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
 
-export const getServerSideProps = async ({ req, res, locale}) => {
-  const supabase = createServerSupabaseClient({ req, res })
+export const getServerSideProps = async (req, res) => {
+  const supabase = createServerSupabaseClient(req)
   const {
     data: { session },
   } = await supabase.auth.getSession()
@@ -59,8 +62,12 @@ export const getServerSideProps = async ({ req, res, locale}) => {
     }
 
   return {
+<<<<<<< HEAD
     props: {
     },
+=======
+    props: {},
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   }
 }
 
@@ -78,7 +85,11 @@ const models = [
   { id: 11, name: "Custom Model", unavailable: false },
 ];
 
+<<<<<<< HEAD
 const Upload = (...props) => {
+=======
+const Upload = (props) => {
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const ctx = useContext(userInfoContext);
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedindex, setselectedindex] = useState(0);
@@ -276,7 +287,7 @@ const Upload = (...props) => {
 
       router.push("/");
     } catch (e) {
-      alert(t('UploadPage.UploadError', "アップロード中にエラーが発生しました。再試行してください。"));
+      alert("アップロード中にエラーが発生しました。再試行してください。");
       setisSending(false);
     }
   };
@@ -370,14 +381,14 @@ const Upload = (...props) => {
                               ></path>
                             </svg>
                             <p className="mb-2 text-sm text-gray-500 dark:text-slate-300">
-                              {t('UploadPage.SelectFile' ,"ファイルを選択")}
+                              ファイルを選択
                             </p>
                             <p className="text-xs text-gray-500 dark:text-slate-300 text-center">
                               PNG,JPG
                               <br />
-                              {t('UploadPage.Note1','1枚50MB以内')}
+                              1枚50MB以内
                               <br />
-                              {t('UploadPage.Note2','アップロードできます。')}
+                              アップロードできます。
                             </p>
                           </div>
                           <input
@@ -505,28 +516,28 @@ const Upload = (...props) => {
                   <Tab.Panels as="div" className="pt-4">
                     <div className="max-w-2xl p-6 space-y-4 md:space-y-6 sm:h-[100vh] pb-64 overflow-scroll rounded bg-gray-50 border dark:border-none dark:bg-slate-800">
                       <p className="dark:text-white font-semibold">
-                        {t('UploadPage.ArtworkInfo','作品の情報')}
+                        作品の情報
                       </p>
                       <InputForm
-                        caption={t("UploadPage.Title", "タイトル")}
+                        caption={"タイトル"}
                         state={title}
                         setState={settitle}
                         required
                       />
                       <TextAreaForm
-                        caption={t('UploadPage.Caption',"説明")}
+                        caption={"説明"}
                         state={caption}
                         setState={setcaption}
                         required
                       />
                       <TagsInput
-                        caption={t('UploadPage.Tag',"タグ")}
+                        caption={"タグ"}
                         state={tags}
                         setState={setTags}
                       />
                       <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                          {t('UploadPage.AgeLimit','年齢制限')}
+                          年齢制限
                         </label>
                         <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
                           <li className="bg-gray-50 w-full border-b rounded-l-lg dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
@@ -544,7 +555,7 @@ const Upload = (...props) => {
                                   checked={agelimit === "all"}
                                   required
                                 ></input>
-                                {t('UploadPage.AllAges','全年齢')}
+                                全年齢
                               </label>
                             </div>
                           </li>
@@ -683,34 +694,34 @@ const Upload = (...props) => {
                         return (
                           <Tab.Panel className="space-y-4" key={i}>
                             <p className="dark:text-white font-semibold">
-                              {t('UploadPage.ImageInfo','画像ごとの情報')}（{i + 1} / {images.length}）
+                              画像ごとの情報（{i + 1} / {images.length}）
                             </p>
                             <TextAreaForm
-                              caption={t('UploadPage.Prompt',"プロンプト")}
+                              caption={"プロンプト"}
                               state={images[i]?.prompt}
                               setState={setlocalprompt}
                               batch={batchprompt}
                             />
                             <TextAreaForm
-                              caption={t('UploadPage.NPrompt',"ネガティブプロンプト")}
+                              caption={"ネガティブプロンプト"}
                               state={images[i]?.nprompt}
                               setState={setlocalnprompt}
                               batch={batchnprompt}
                             />
                             <InputForm
-                              caption={t('UploadPage.Steps',"ステップ数")}
+                              caption={"ステップ数"}
                               state={images[i]?.steps}
                               setState={setlocalsteps}
                               batch={batchsteps}
                             />
                             <InputForm
-                              caption={t('UploadPage.Sampler',"サンプラー")}
+                              caption={"サンプラー"}
                               state={images[i]?.sampler}
                               setState={setlocalsampler}
                               batch={batchsampler}
                             />
                             <SelectMenu
-                              caption={t('UploadPage.SelectedModel',"使用したモデル")}
+                              caption={"使用したモデル"}
                               state={images[i]?.selectedModel}
                               setState={setlocalselectedModel}
                               object={models}
@@ -722,27 +733,27 @@ const Upload = (...props) => {
                       {inputEl?.current?.files?.length === 0 && (
                         <>
                           <TextAreaForm
-                            caption={t('UploadPage.Prompt',"プロンプト")}
+                            caption={"プロンプト"}
                             state={prompt}
                             setState={setprompt}
                           />
                           <TextAreaForm
-                            caption={t('UploadPage.NPrompt',"ネガティブプロンプト")}
+                            caption={"ネガティブプロンプト"}
                             state={nprompt}
                             setState={setnprompt}
                           />
                           <InputForm
-                            caption={t('UploadPage.Steps',"ステップ数")}
+                            caption={"ステップ数"}
                             state={step}
                             setState={setstep}
                           />
                           <InputForm
-                            caption={t('UploadPage.Sampler',"サンプラー")}
+                            caption={"サンプラー"}
                             state={sampler}
                             setState={setsampler}
                           />
                           <SelectMenu
-                            caption={t('UploadPage.SelectedModel',"使用したモデル")}
+                            caption={"使用したモデル"}
                             state={selectedModel}
                             setState={setSelectedModel}
                             object={models}
@@ -753,16 +764,16 @@ const Upload = (...props) => {
                     <p className="my-4 dark:text-slate-300">
                       <Link href="/terms/tos">
                         <a className="text-sky-600 dark:text-sky-500">
-                          {t('UploadPage.Tos','利用規約')}
+                          利用規約
                         </a>
                       </Link>
-                      {t('UploadPage.And','や')}
+                      や
                       <Link href="/terms/guideline">
                         <a className="text-sky-600 dark:text-sky-500">
-                          {t('UploadPage.GuideLine','ガイドライン')}
+                          ガイドライン
                         </a>
                       </Link>
-                      {t('UploadPage.aaaa','に違反する作品は削除の対象となります。')}
+                      に違反する作品は削除の対象となります。
                     </p>
                     <button
                       type="submit"
@@ -795,7 +806,7 @@ const Upload = (...props) => {
                           ></path>
                         </svg>
                       )}
-                      {t('UploadPage.Post','投稿する')}
+                      投稿する
                     </button>
                   </Tab.Panels>
                 </div>

@@ -8,8 +8,12 @@ import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { useRouter } from "next/router";
 import Link from "next/link";
+<<<<<<< HEAD
 import { t } from "../utils/Translation"
 
+=======
+import axios from "axios";
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -36,12 +40,16 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
 
   return {
     props: {
+<<<<<<< HEAD
       likes: await likes.json()
+=======
+      likes: likes.data
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
     },
   }
 }
 
-export default function App({ likes }, ...props) {
+export default function App({ likes }) {
   const router = useRouter();
   const page = router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
@@ -94,7 +102,7 @@ export default function App({ likes }, ...props) {
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="mt-6 text-2xl font-semibold dark:text-white">
-          {t('LikePage.LikedArtworks',"いいねをした作品")}
+          いいねをした作品
         </div>
       </div>
       <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">

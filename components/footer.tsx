@@ -2,10 +2,13 @@ import React from "react";
 import Link from "next/link";
 
 const Footer = () => {
+<<<<<<< HEAD
   const t = (key, str, object=undefined) => {
     return str
   }
 
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   return (
     <footer className="mx-auto px-4 md:px-8 max-w-xl mb:px-0 sm:max-w-7xl dark:bg-slate-900">
       <div className="mt-10 pt-10 pb-28 border-t border-slate-200 dark:border-slate-700 sm:flex justify-between text-slate-500 dark:text-slate-300">
@@ -13,19 +16,19 @@ const Footer = () => {
           <p>AIPIC</p>
           <p className="text-sm sm:ml-6 sm:pl-4 sm:border-l dark:border-slate-700 sm:border-slate-200">
             <Link href="/terms/tos">
-              <a className="text-sky-600 hover:underline">{t('Footer.Tou','利用規約')}</a>
+              <a className="text-sky-600 hover:underline">利用規約</a>
             </Link>
           </p>
           <p className="text-sm sm:ml-6">
             <Link href="/terms/privacy_policy">
               <a className="text-sky-600 hover:underline">
-                {t('Footer.PrivacyPolicy','プライバシーポリシー')}
+                プライバシーポリシー
               </a>
             </Link>
           </p>
           <p className="text-sm sm:ml-6">
             <Link href="/terms/guideline">
-              <a className="text-sky-600 hover:underline">{t('Footer.GuideLine','ガイドライン')}</a>
+              <a className="text-sky-600 hover:underline">ガイドライン</a>
             </Link>
           </p>
           <p className="text-sm sm:ml-6">
@@ -35,7 +38,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t('Footer.Form','お問い合わせフォーム')}
+              お問い合わせフォーム
             </a>
           </p>
         </div>

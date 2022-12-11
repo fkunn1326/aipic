@@ -7,6 +7,5 @@ module.exports = {
     lexers: {
       tsx: ['JsxLexer'],
     },
-    input: "**/**/*.tsx",
-    reloadOnPrerender: true,
+    input: "pages/**/*.tsx",
 }

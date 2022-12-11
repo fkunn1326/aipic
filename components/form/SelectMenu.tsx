@@ -1,7 +1,10 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid";
 import React, { Fragment } from "react";
+<<<<<<< HEAD
 import { t } from "../../utils/Translation"
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
 
 export default function SelectMenu({
   caption,
@@ -11,7 +14,10 @@ export default function SelectMenu({
   batch = false,
   required = false,
 }: any) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   return (
     <div className="w-full">
       <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -25,7 +31,7 @@ export default function SelectMenu({
               batch(state);
             }}
           >
-            {t('SelectMenuComponent.BatchInput','一括入力')}
+            一括入力
           </button>
         )}
       </label>
