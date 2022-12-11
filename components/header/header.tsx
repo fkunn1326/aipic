@@ -7,10 +7,12 @@ import { Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Sideblur from "./sideblur";
 import { SiteName } from "../core/const";
 import { useRouter } from "next/router";
-import { useTranslation } from 'next-i18next'
 
 const Header = () => {
-  const { t } = useTranslation('common')
+  const t = (key, str, object=undefined) => {
+    return str
+  }
+
   const ctx = useContext(userInfoContext);
   const router = useRouter();
 

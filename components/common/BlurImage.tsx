@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { HeartIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
@@ -7,14 +6,13 @@ import { userInfoContext } from "../../context/userInfoContext";
 import { supabaseClient } from "../../utils/supabaseClient";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useTranslation } from 'next-i18next'
+import { t } from "../../utils/Translation"
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function BlurImage({ image, rank=undefined, preview=false, pr=false }) {
-  const { t } = useTranslation('common')
   const ctx = useContext(userInfoContext);
 
   const [isLoading, setLoading] = useState(true);

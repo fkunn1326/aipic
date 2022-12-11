@@ -2,11 +2,12 @@ import { supabaseClient } from "../../utils/supabaseClient";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useTranslation } from 'next-i18next'
 
 const Sidebar = ({ isOpen, avatar, name, id }) => {
   const router = useRouter();
-  const { t } = useTranslation('common')
+  const t = ( key, str, object: any=undefined ) => {
+    return str
+  }
 
   return (
     <div

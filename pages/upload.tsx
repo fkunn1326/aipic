@@ -42,8 +42,7 @@ import {
   SortableContext,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ req, res, locale}) => {
   const supabase = createServerSupabaseClient({ req, res })
@@ -61,9 +60,6 @@ export const getServerSideProps = async ({ req, res, locale}) => {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
     },
   }
 }
@@ -83,7 +79,6 @@ const models = [
 ];
 
 const Upload = (...props) => {
-  const { t } = useTranslation('common')
   const ctx = useContext(userInfoContext);
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedindex, setselectedindex] = useState(0);

@@ -1,20 +1,16 @@
 import { GetServerSideProps } from "next";
 import React from "react";
 import Head from "next/head";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
+
 
 export const getServerSideProps = async ({ res, locale }) => {
   res.statusCode = 503;
   return { props: {
-    ...(await serverSideTranslations(locale, [
-      'common'
-    ]))
   }};
 };
 
 const Maintenance = (...props) => {
-  const { t } = useTranslation('common')
 
   return (
     <>

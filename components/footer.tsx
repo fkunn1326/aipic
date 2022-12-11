@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { useTranslation } from 'next-i18next'
 
 const Footer = () => {
-  const { t } = useTranslation('common')
+  const t = (key, str, object=undefined) => {
+    return str
+  }
 
   return (
     <footer className="mx-auto px-4 md:px-8 max-w-xl mb:px-0 sm:max-w-7xl dark:bg-slate-900">

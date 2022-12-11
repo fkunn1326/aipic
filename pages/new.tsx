@@ -7,17 +7,13 @@ import SkeletonImage from "../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const getServerSideProps  = async ({ req, res, locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
     },
   }
 };
@@ -26,8 +22,6 @@ export default function App(...props) {
   const router = useRouter();
   const page =
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
-
-  const { t } = useTranslation('common')
 
   const { data, error } = useSWR(
     "../api/artworks/list" + "?page=" + page,

@@ -5,15 +5,12 @@ import { useEffect } from "react";
 import { useHash } from "../components/hooks/useHash";
 import { setCookie } from "nookies";
 import { SiteName } from "../components/core/const";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
+
 
 export const getServerSideProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
     },
   }
 }
@@ -22,7 +19,6 @@ const AuthPage = (...props) => {
   const [hash, setHash] = useHash();
   const [isok, setisok] = useState(false);
   const router = useRouter();
-  const { t } = useTranslation('common')
 
   useEffect(() => {
     if (router.isReady) {

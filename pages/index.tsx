@@ -13,11 +13,8 @@ import TagImages from "../components/common/tagimages";
 // import Challenge from "../components/common/challange";
 // import ChallengeImages from "../components/common/challengeimages";
 import Head from "next/head";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import axios from "axios";
-import Script from "next/script";
 import PromptRanking from "../components/common/PromptRanking";
+import { t } from "../utils/Translation"
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -67,22 +64,22 @@ const Meta = () => {
 };
 
 export const getServerSideProps  = async ({ req, res, locale }) => {
-  const follows = await axios.get(`${process.env.BASE_URL}/api/followimages/list`, {
-    withCredentials: true,
+  const follows = await fetch(`${process.env.BASE_URL}/api/followimages/list`, {
+    credentials: 'include',
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const artworks = await axios.get(`${process.env.BASE_URL}/api/artworks/list10`, {
-    withCredentials: true,
+  const artworks = await fetch(`${process.env.BASE_URL}/api/artworks/list10`, {
+    credentials: 'include',
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const tags = await axios.get(`${process.env.BASE_URL}/api/tags/list`, {
-    withCredentials: true,
+  const tags = await fetch(`${process.env.BASE_URL}/api/tags/list`, {
+    credentials: 'include',
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -90,19 +87,15 @@ export const getServerSideProps  = async ({ req, res, locale }) => {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
-      artworks: artworks.data,
-      followdata: follows.data,
-      tags: tags.data
+      artworks: await artworks.json(),
+      followdata: await follows.json(),
+      tags: await tags.json()
     },
     //オブジェクト返ってきてる
   }
 };
 
 export default function App({ artworks, followdata, tags }, ...props) {
-  const { t } = useTranslation('common')
   const ctx = useContext(userInfoContext);
   const [disabled, setDisabled] = useState(true)
 

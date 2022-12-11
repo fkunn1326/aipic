@@ -3,11 +3,10 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { useRouter } from "next/router";
-import { useTranslation } from 'next-i18next'
+import { t } from "../utils/Translation"
 
 export default function PopOver({ id, type }) {
   const router = useRouter();
-  const { t } = useTranslation('common')
   
   return (
     <div>

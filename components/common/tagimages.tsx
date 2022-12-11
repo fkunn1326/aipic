@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import { userInfoContext } from "../../context/userInfoContext";
 import useSWR from "swr";
 import BlurImage from "./BlurImage";
 import SkeletonImage from "./SkeltonImage";
-import axios from "axios";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 

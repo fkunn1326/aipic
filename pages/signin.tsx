@@ -3,15 +3,11 @@ import React, { useState } from "react";
 import { supabaseClient } from "../utils/supabaseClient";
 import { SiteName } from "../components/core/const";
 import { useRouter } from "next/router";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
     },
   }
 }
@@ -24,8 +20,7 @@ const Signin = (...props) => {
   const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
   const router = useRouter();
-  const { t } = useTranslation('common')
-
+  
   const origin =
     typeof window !== "undefined" && window.location.origin
       ? window.location.origin

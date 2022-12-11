@@ -1,27 +1,28 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseClient } from "../../../utils/supabaseClient";
 
-/**
- * @swagger
- * /api/artworks/[id]:
- *   get:
- *     description: Artworksのリストを取得します
- *     parameters:
- *       - name: name
- *         description: アナタの名前
- *         in: query
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: 正常にレスポンスが返されます
- */
+export const config = {
+  runtime: 'experimental-edge',
+};
 
-const getArtwork = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;
+const getArtwork = async (req: NextRequest, res: NextResponse) => {
+  const { href } = new URL(req.url)
+  const id = href.split("/").pop()
+
   const { data, error } = await supabaseClient.rpc("get_images").eq("id", id);
-  if (error) return res.status(401).json({ error: error.message });
-  return res.status(200).json(data);
+  if (error) return new Response(JSON.stringify({ error: error.message }), {
+    status: 401,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };
 
 export default getArtwork;

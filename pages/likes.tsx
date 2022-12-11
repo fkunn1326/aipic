@@ -8,9 +8,8 @@ import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import axios from "axios";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
+
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -28,8 +27,8 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
       },
     }
 
-  const likes = await axios.get(`${process.env.BASE_URL}/api/userlikes?page=${page ? page : 1}`, {
-    withCredentials: true,
+  const likes = await fetch(`${process.env.BASE_URL}/api/userlikes?page=${page ? page : 1}`, {
+    credentials: "include",
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -37,17 +36,13 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
-      likes: likes.data
+      likes: await likes.json()
     },
   }
 }
 
 export default function App({ likes }, ...props) {
   const router = useRouter();
-  const { t } = useTranslation('common')
   const page = router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
   const { data, error } = useSWR(

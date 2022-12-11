@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
-import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -13,9 +12,8 @@ import {
 } from "@heroicons/react/24/solid";
 import SkeletonImage from "../components/common/SkeltonImage"
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import axios from "axios";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
+
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -39,8 +37,8 @@ export const getServerSideProps = async ({ req, res, locale,  query: { page } } 
   
   const { data } = await supabase.from('profiles').select('*').eq("id", session.user.id).single();
 
-  const artworks = await axios.get(`${process.env.BASE_URL}/api/users/${data.uid}?page=${page ? page : 1}`, {
-    withCredentials: true,
+  const artworks = await fetch(`${process.env.BASE_URL}/api/users/${data.uid}?page=${page ? page : 1}`, {
+    credentials: "include",
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -48,17 +46,13 @@ export const getServerSideProps = async ({ req, res, locale,  query: { page } } 
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
       user: data,
-      artworks: artworks.data
+      artworks: await artworks.json()
     },
   }
 }
 
 export default function App({ user , artworks }, ...props) {
-  const { t } = useTranslation('common')
   const router = useRouter();
   const ctx = useContext(userInfoContext);
   const page =

@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
 
   if (isInMaintenanceMode) {
     if (req.nextUrl.pathname !== "/maintenance") {
-      return NextResponse.redirect(new URL("/maintenance", req.url));
+      return NextResponse.redirect(new URL("/maintenance", process.env.BASE_URL));
     }
   }
 }

@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import useSWR from "swr";
 import Link from "next/link";
-import axios from "axios";
 
 function useHorizontalScroll() {
   const elRef = useRef<null | HTMLDivElement>(null);
