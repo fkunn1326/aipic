@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
+export const config = {
+  runtime: 'experimental-edge',
+};
+
 const getArtworks = async (req: NextApiRequest, res: NextApiResponse) => {
   const supabaseClient = createServerSupabaseClient({ req, res });
 
@@ -24,8 +28,19 @@ const getArtworks = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { data, error } = await query.limit(10);
 
-  if (error) return res.status(401).json({ error: error.message });
-  return res.status(200).json(data);
+  if (error) return new Response(JSON.stringify({ error: error.message }), {
+    status: 401,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };
 
 export default getArtworks;

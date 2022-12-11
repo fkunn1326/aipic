@@ -1,7 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid";
 import React, { Fragment } from "react";
-import { useTranslation } from 'next-i18next'
+import { t } from "../../utils/Translation"
 
 export default function SelectMenu({
   caption,
@@ -11,7 +11,6 @@ export default function SelectMenu({
   batch = false,
   required = false,
 }: any) {
-  const { t } = useTranslation('common')
 
   return (
     <div className="w-full">

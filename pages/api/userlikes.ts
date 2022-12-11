@@ -1,10 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { NextRequest, NextResponse } from "next/server";
+import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
-const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { page } = req.query;
+const getUser = async (req: NextRequest, res: NextResponse) => {
+  const supabaseClient = createMiddlewareSupabaseClient({ req, res });
 
-  const supabaseClient = createServerSupabaseClient({ req, res });
+  const { searchParams } = new URL(req.url)
+  const page = searchParams.get("page") ? searchParams.get("page") : undefined;
 
   const {
     data: { session }
@@ -20,10 +21,15 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
     .order("created_at");
 
   if (!session) {
-    return res.status(401).json({
+    return new Response(JSON.stringify({
       error: 'not_authenticated',
       description:
         'The user does not have an active session or is not authenticated'
+    }), {
+      status: 401,
+      headers: {
+        'content-type': 'application/json',
+      },
     });
   }else{
     const { data } = await supabaseClient.from('profiles').select('*').eq("id", session.user.id).single();
@@ -46,8 +52,19 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
     count: count,
   };
 
-  if (error) return res.status(401).json({ error: error.message });
-  return res.status(200).json(response);
+  if (error) return new Response(JSON.stringify({ error: error.message }), {
+    status: 401,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  
+  return new Response(JSON.stringify(response), {
+    status: 200,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };
 
 export default getUser;

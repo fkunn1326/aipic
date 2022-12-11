@@ -2,15 +2,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { supabaseClient } from "../utils/supabaseClient";
 import { SiteName } from "../components/core/const";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
     },
   }
 }
@@ -21,8 +17,6 @@ const validate = () => {
 };
 
 const Signup = (...props) => {
-  const { t } = useTranslation('common')
-
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
   const emailregex =

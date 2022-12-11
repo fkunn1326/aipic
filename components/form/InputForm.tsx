@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from 'next-i18next'
+import { t } from "../../utils/Translation"
 
 export default function InputForm({
   caption,
@@ -8,7 +8,6 @@ export default function InputForm({
   batch = false,
   required = false,
 }: any) {
-  const { t } = useTranslation('common')
 
   return (
     <div>

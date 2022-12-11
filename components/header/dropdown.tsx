@@ -13,14 +13,15 @@ import { supabaseClient } from "../../utils/supabaseClient";
 import Router, { useRouter } from "next/router";
 import React from "react";
 import Link from "next/link";
-import { useTranslation } from 'next-i18next'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Dropdawn(props) {
-  const { t } = useTranslation('common')
+  const t = ( key, str, object: any=undefined ) => {
+    return str
+  }
   const router = useRouter();
   var avatar = props.avatar;
   return (

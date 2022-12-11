@@ -1,14 +1,16 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { NextRequest, NextResponse } from "next/server";
+import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
-const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
-  const supabaseClient = createServerSupabaseClient({ req, res });
+const getUser = async (req: NextRequest, res: NextResponse) => {
+  const supabaseClient = createMiddlewareSupabaseClient({ req, res });
 
   const {
     data: { session }
   } = await supabaseClient.auth.getSession();
 
-  var { uid, page } = req.query;
+  const { pathname, searchParams } = new URL(req.url)
+  const uid = pathname.split("/").pop()
+  const page = searchParams.get("page") ? searchParams.get("page") : undefined;
 
   var userquery = supabaseClient
     .from("profiles")
@@ -44,7 +46,12 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
       .eq("uid", uid);
     var id = data[0].id;
   } catch (err) {
-    return res.status(404).json({ error: "This user is not defined" })
+    return new Response(JSON.stringify({ error: "This user is not defined" }), {
+      status: 404,
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
   }
 
   var { data: userdata, error: usererror } = await userquery
@@ -60,8 +67,19 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
     count: count,
   };
 
-  if (error) return res.status(401).json({ error: error.message });
-  return res.status(200).json(response);
+  if (error) return new Response(JSON.stringify({ error: error.message }), {
+    status: 401,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  
+  return new Response(JSON.stringify(response), {
+    status: 200,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };
 
 export default getUser;

@@ -1,27 +1,41 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseClient } from "../../../utils/supabaseClient";
 
-const getImage = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;
+const getImage = async (req: NextRequest, res: NextResponse) => {
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get("id") ? searchParams.get("id") : undefined;
+  
   const { data, error } = await supabaseClient
     .from("images")
     .select(`*, author: user_id(name, avatar_url, uid))`)
-    .eq("id", id);
-  if (error) return res.status(401).json({ error: error.message });
-  /* @ts-ignore */
-  return res.status(200).json({
+    .eq("id", id)
+    .single()
+
+  if (error) return new Response(JSON.stringify({ error: error.message }), {
+    status: 401,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+
+  return new Response(JSON.stringify({
     version: "1.0",
     type: "rich",
     height: 315,
     width: 600,
     work_type: "illust",
     html: `<iframe width=\"600\" height=\"315\" src=\"https://www.aipic.app/artworks/${id}\" frameborder=\"0\"></iframe>`,
-    title: data[0].title,
-    thumbnail_url: data[0].href,
-    author_name: data[0].author.name,
-    author_url: `https://www.aipic.app/users/${data[0].author.uid}`,
+    title: data?.title,
+    thumbnail_url: data?.href,
+    author_name: data?.author.name,
+    author_url: `https://www.aipic.app/users/${data?.author.uid}`,
     provider_name: "AIPIC",
     provider_url: "https://www.aipic.app/",
+  }), {
+    status: 200,
+    headers: {
+      'content-type': 'application/json',
+    },
   });
 };
 

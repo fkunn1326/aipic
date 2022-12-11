@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from 'next-i18next'
+import { t } from "../../utils/Translation"
 
 export default function TextAreaForm({
   caption,
@@ -8,7 +8,6 @@ export default function TextAreaForm({
   batch = false,
   required = false,
 }: any) {
-  const { t } = useTranslation('common')
 
   const handleChange = (e) => {
     setState(e.target.value);

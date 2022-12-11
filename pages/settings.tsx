@@ -12,12 +12,7 @@ import SettingModal from "../components/modal/settingmodal"
 import toast, { Toaster } from 'react-hot-toast';
 import ReactCrop, { makeAspectCrop, centerCrop, PixelCrop } from 'react-image-crop'
 import { canvasPreview } from '../utils/canvasPreview'
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ req, res, locale }) => {
   const supabase = createServerSupabaseClient({ req, res })
@@ -35,9 +30,6 @@ export const getServerSideProps = async ({ req, res, locale }) => {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
       initialSession: session,
       user: session.user,
     },
@@ -47,8 +39,6 @@ export const getServerSideProps = async ({ req, res, locale }) => {
 const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g;
 
 const Settings = ({ initialSession, user }, ...props) => {
-  const { t } = useTranslation('common')
-
   const ctx = useContext(userInfoContext);
   
   const [states, setstates] = useState({

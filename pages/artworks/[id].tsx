@@ -28,7 +28,6 @@ import {
 import { userInfoContext } from "../../context/userInfoContext";
 import Link from "next/link";
 import Head from "next/head";
-import axios from "axios";
 import PopOver from "../../components/popover";
 import OtherImages from "../../components/common/OtherImages";
 import FollowBtn from "../../components/common/follow";
@@ -38,9 +37,7 @@ import BlurImage from "../../components/common/BlurImage";
 import data from '@emoji-mart/data/sets/14/twitter.json'
 import { v4 as uuidv4 } from "uuid";
 import { Transition } from '@headlessui/react'
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
+import { t } from "../../utils/Translation"
 
 const EmojiPicker = (props: any) => {
   const ref = useRef<any>();
@@ -59,25 +56,29 @@ const EmojiPicker = (props: any) => {
 };
 
 export const getServerSideProps = async ({ req, res, locale, query: { id } }) => {  
-  const artwork = await axios.get(`${process.env.BASE_URL}/api/artworks/${id}`, {
-    withCredentials: true,
+  const artwork = await fetch(`${process.env.BASE_URL}/api/artworks/${id}`, {
+    credentials: "include",
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const otherworks = await axios.get(`${process.env.BASE_URL}/api/users/list5?id=${artwork?.data[0]?.author?.id}`, {
-    withCredentials: true,
+  const artwork_data = await artwork.json()
+
+  const userid = artwork_data[0]?.author?.id
+
+  const otherworks = await fetch(`${process.env.BASE_URL}/api/users/list5?id=${userid}`, {
+    credentials: "include",
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  var profile : any = null
+  var profile: any = null
 
   try{
-    profile = await axios.get(`${process.env.BASE_URL}/api/auth/account`, {
-      withCredentials: true,
+    profile = await fetch(`${process.env.BASE_URL}/api/auth/account`, {
+      credentials: "include",
       headers: {
           Cookie: req?.headers?.cookie
       }
@@ -85,11 +86,8 @@ export const getServerSideProps = async ({ req, res, locale, query: { id } }) =>
   }catch(e){
     return {
       props: {
-        ...(await serverSideTranslations(locale, [
-          'common'
-        ])),
-        data: artwork.data,
-        otherdata: otherworks.data,
+        data: artwork_data,
+        otherdata: await otherworks.json() || [],
         host: req.headers.host || null,
       },
     };
@@ -97,12 +95,9 @@ export const getServerSideProps = async ({ req, res, locale, query: { id } }) =>
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
-      data: artwork.data,
-      profile: profile?.data,
-      otherdata: otherworks.data,
+      data: artwork_data,
+      profile: await profile?.json(),
+      otherdata: await otherworks.json() || [],
       host: req.headers.host || null,
     },
   };
@@ -171,13 +166,14 @@ const LikeBtn = ({ data, profile }) => {
           user_id: profile.id,
         });
         setisliked(false);
-        await axios.post(
+        await fetch(
           "/api/likes",
-          JSON.stringify({
-            artwork_id: `${data.id}`,
-            type: "delete",
-          }),
           {
+            method: "post",
+            body: JSON.stringify({
+              artwork_id: `${data.id}`,
+              type: "delete",
+            }),
             headers: {
               "Content-Type": "application/json",
             },
@@ -189,16 +185,17 @@ const LikeBtn = ({ data, profile }) => {
           user_id: profile.id,
         });
         setisliked(true);
-        await axios.post(
+        await fetch(
           "/api/likes",
-          JSON.stringify({
-            artwork_id: `${data.id}`,
-            type: "add",
-          }),
           {
+            method: "post",
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+              artwork_id: `${data.id}`,
+              type: "add",
+            }),
           }
         );
       }
@@ -217,7 +214,6 @@ const LikeBtn = ({ data, profile }) => {
 };
 
 const Images = ({ data, host, profile, otherdata, children }, ...props) => {
-  const { t } = useTranslation('common')
   const [isImageOpen, setisImageOpen] = useState(false);
   const [isPromptOpen, setisPromptOpen] = useState(false);
   const [isShareOpen, setisShareOpen] = useState(false);
@@ -272,15 +268,16 @@ const Images = ({ data, host, profile, otherdata, children }, ...props) => {
     }
     (async () => {
       try {
-        await axios.post(
+        await fetch(
           "/api/views",
-          JSON.stringify({
-            artwork_id: `${data[0].id}`,
-          }),
           {
+            method: "post",
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+              artwork_id: `${data[0].id}`,
+            }),
           }
         );
       } catch (e) {}
@@ -305,15 +302,16 @@ const Images = ({ data, host, profile, otherdata, children }, ...props) => {
     const result = document.execCommand("copy");
     document.body.removeChild(pre);
     (async () => {
-      await axios.post(
+      await fetch(
         "/api/copies",
-        JSON.stringify({
-          artwork_id: `${id}`,
-        }),
         {
+          method: "post",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            artwork_id: `${id}`,
+          }),
         }
       );
     })();

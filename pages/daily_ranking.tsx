@@ -6,15 +6,11 @@ import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../utils/Translation"
 
 export const getServerSideProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
     },
   }
 }
@@ -22,7 +18,6 @@ export const getServerSideProps = async ({ locale }) => {
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function App(...props) {
-  const { t } = useTranslation('common')
   var ctx = useContext(userInfoContext);
   var access_limit = "";
 

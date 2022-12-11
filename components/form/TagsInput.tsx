@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import ReactTags from "react-tag-autocomplete";
-import { useTranslation } from 'next-i18next'
+import { t } from "../../utils/Translation"
 
 export default function TagsInput({
   caption,
@@ -17,7 +17,6 @@ export default function TagsInput({
 
   const reactTags = useRef();
   const [suggestions, setSuggestions] = useState<tags[]>([]);
-  const { t } = useTranslation('common')
 
   const onDelete = useCallback(
     (tagIndex) => {

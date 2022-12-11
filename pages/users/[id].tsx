@@ -10,15 +10,13 @@ import FollowBtn from "../../components/common/follow";
 import BlurImage from "../../components/common/BlurImage";
 import SkeletonImage from "../../components/common/SkeltonImage";
 import Head from "next/head";
-import axios from "axios";
-import { useTranslation, Trans } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { t } from "../../utils/Translation"
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const getServerSideProps = async ({ req, res, locale, query: { id } }) => {  
-  const user = await axios.get(`${process.env.BASE_URL}/api/users/${id}`, {
-    withCredentials: true,
+  const user = await fetch(`${process.env.BASE_URL}/api/users/${id}`, {
+    credentials: "include",
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -27,51 +25,14 @@ export const getServerSideProps = async ({ req, res, locale, query: { id } }) =>
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common'
-      ])),
-      data: user.data,
+      data: await user.json(),
     },
   };
 };
 
-// const Meta = ({ data }) => {
-//   return (
-//     <Head>
-//       <meta charSet="utf-8" />
-//       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-//       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-//       <title>
-//         {data[0].name} - AIPIC
-//       </title>
-//       <meta name="description" content={data[0].introduce} />
-//       <meta name="twitter:card" content="summary_large_image" />
-//       <meta name="twitter:site" content="@fkunn1326" />
-//       <meta name="twitter:title" content={`${data[0].name} - AIPIC`} />
-//       <meta name="twitter:description" content={data[0].introduce} />
-//       <meta name="note:card" content="summary_large_image"/>
-//       <meta property="og:site_name" content="AIPIC" />
-//       <meta property="og:type" content="website" />
-//       <meta property="og:title" content={`${data[0].name} - AIPIC`} />
-//       <meta property="og:description" content={data[0].introduce} />
-//       <meta
-//         property="og:url"
-//         content={`https://aipic.vercel.app/artworks/${data[0].id}`}
-//       />
-//       <link rel="canonical" href="https://www.aipic.app" />
-//       <meta name="twitter:image" content={data[0].href} />
-//       <meta property="og:image" content={data[0].href} />
-//       <meta name="robots" content="index,follow" />
-//     </Head>
-//   );
-// };
-
 const App = ({ data }, ...props) => {
   const router = useRouter();
   const ctx = useContext(userInfoContext);
-  const { t } = useTranslation('common')
-
-  const dummystr = t("UserPage.Dummy", "Dummy")
 
   const { id } = router.query;
   const page =
