@@ -9,6 +9,8 @@ import SkeletonImage from "../components/common/SkeltonImage";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -35,13 +37,17 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
 
   return {
     props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
       likes: likes.data
     },
   }
 }
 
-export default function App({ likes }) {
+export default function App({ likes }, ...props) {
   const router = useRouter();
+  const { t } = useTranslation('common')
   const page = router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
   const { data, error } = useSWR(
@@ -93,7 +99,7 @@ export default function App({ likes }) {
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="mt-6 text-2xl font-semibold dark:text-white">
-          いいねをした作品
+          {t('LikePage.LikedArtworks',"いいねをした作品")}
         </div>
       </div>
       <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">

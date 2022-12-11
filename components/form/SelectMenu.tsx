@@ -1,6 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid";
 import React, { Fragment } from "react";
+import { useTranslation } from 'next-i18next'
 
 export default function SelectMenu({
   caption,
@@ -10,6 +11,8 @@ export default function SelectMenu({
   batch = false,
   required = false,
 }: any) {
+  const { t } = useTranslation('common')
+
   return (
     <div className="w-full">
       <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -23,7 +26,7 @@ export default function SelectMenu({
               batch(state);
             }}
           >
-            一括入力
+            {t('SelectMenuComponent.BatchInput','一括入力')}
           </button>
         )}
       </label>

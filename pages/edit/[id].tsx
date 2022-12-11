@@ -42,9 +42,11 @@ import {
 import Preview from "../../components/form/Preview";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { supabaseClient } from "../../utils/supabaseClient";
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-export const getServerSideProps = async (req, res) => {
-  const supabase = createServerSupabaseClient(req)
+export const getServerSideProps = async ({ req, res, locale }) => {
+  const supabase = createServerSupabaseClient({ req, res })
   const {
     data: { session },
   } = await supabase.auth.getSession()
@@ -58,7 +60,11 @@ export const getServerSideProps = async (req, res) => {
     }
 
   return {
-    props: {},
+    props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
+    }
   }
 }
 
@@ -85,6 +91,7 @@ const models = [
 ];
 
 const Edit = (props) => {
+  const { t } = useTranslation('common')
   const ctx = useContext(userInfoContext);
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedindex, setselectedindex] = useState(0);
@@ -403,14 +410,14 @@ const Edit = (props) => {
 
       router.push(`/artworks/${data[0].id}`);
     } catch (e) {
-      alert("アップロード中にエラーが発生しました。再試行してください。");
+      alert(t('EditPage.UploadError',"アップロード中にエラーが発生しました。再試行してください。"));
       setisSending(false);
     }
   };
 
   const handledelete = async (e) => {
     const check = confirm(
-      `一度消した画像は復元することはできません。\n本当に削除しますか？`
+      t('EditPage.DeleteCheck',`一度消した画像は復元することはできません。\n本当に削除しますか？`)
     );
     if (check) {
       setisSending(true);
@@ -437,36 +444,6 @@ const Edit = (props) => {
         .match({ id: data[0].id });
 
       router.push("/");
-    }
-  };
-
-  const handleDelete = (i) => {
-    setTags(tags.filter((tag, index) => index !== i));
-  };
-
-  const handleAddition = (tag) => {
-    if (tag["name"] !== undefined)
-      if (!tag["name"].startsWith("#")) tag["name"] = "#" + tag["name"];
-    setTags([...tags, tag]);
-  };
-
-  const handleDrag = (tag, currPos, newPos) => {
-    const newTags = tags.slice();
-
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-
-    setTags(newTags);
-  };
-
-  const handleTagClick = (index) => {
-    handleDelete(index);
-  };
-
-  const handleInputChange = async (tag) => {
-    if (tag !== "") {
-      const result = await fetch(`/api/tags/suggest/?word=${tag}`);
-      setSuggestions(await result.json());
     }
   };
 
@@ -559,14 +536,14 @@ const Edit = (props) => {
                               ></path>
                             </svg>
                             <p className="mb-2 text-sm text-gray-500 dark:text-slate-300">
-                              ファイルを選択
+                              {t('EditPage.SelectFile','ファイルを選択')}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-slate-300 text-center">
                               PNG,JPG
                               <br />
-                              1枚50MB以内
+                              {t('EditPage.Note1','1枚50MB以内')}
                               <br />
-                              アップロードできます。
+                              {t('EditPage.Note2','アップロードできます。')}
                             </p>
                           </div>
                           <input
@@ -694,28 +671,28 @@ const Edit = (props) => {
                   <Tab.Panels as="div" className="pt-4">
                     <div className="max-w-2xl p-6 space-y-4 md:space-y-6 sm:h-[80vh] pb-64 overflow-scroll rounded bg-gray-50 border dark:border-none dark:bg-slate-800">
                       <p className="dark:text-white font-semibold">
-                        作品の情報
+                        {t('EditPage.ArtworkInfo','作品の情報')}
                       </p>
                       <InputForm
-                        caption={"タイトル"}
+                        caption={t('EditPage.Title',"タイトル")}
                         state={title}
                         setState={settitle}
                         required
                       />
                       <TextAreaForm
-                        caption={"説明"}
+                        caption={t('EditPage.Caption',"説明")}
                         state={caption}
                         setState={setcaption}
                         required
                       />
                       <TagsInput
-                        caption={"タグ"}
+                        caption={t('EditPage.Tag',"タグ")}
                         state={tags}
                         setState={setTags}
                       />
                       <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                          年齢制限
+                          {t('EditPage.AgeLimit','年齢制限')}
                         </label>
                         <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
                           <li className="bg-gray-50 w-full border-b rounded-l-lg dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
@@ -733,7 +710,7 @@ const Edit = (props) => {
                                   checked={agelimit === "all"}
                                   required
                                 ></input>
-                                全年齢
+                                {t('EditPage.AllAges','全年齢')}
                               </label>
                             </div>
                           </li>
@@ -872,34 +849,34 @@ const Edit = (props) => {
                         return (
                           <Tab.Panel className="space-y-4" key={i}>
                             <p className="dark:text-white font-semibold">
-                              画像ごとの情報（{i + 1} / {images.length}）
+                              {t('EditPage.ImageInfo','画像ごとの情報')}（{i + 1} / {images.length}）
                             </p>
                             <TextAreaForm
-                              caption={"プロンプト"}
+                              caption={t('EditPage.Prompt',"プロンプト")}
                               state={images[i]?.prompt}
                               setState={setlocalprompt}
                               batch={batchprompt}
                             />
                             <TextAreaForm
-                              caption={"ネガティブプロンプト"}
+                              caption={t('EditPage.NPrompt',"ネガティブプロンプト")}
                               state={images[i]?.nprompt}
                               setState={setlocalnprompt}
                               batch={batchnprompt}
                             />
                             <InputForm
-                              caption={"ステップ数"}
+                              caption={t('EditPage.Steps',"ステップ数")}
                               state={images[i]?.steps}
                               setState={setlocalsteps}
                               batch={batchsteps}
                             />
                             <InputForm
-                              caption={"サンプラー"}
+                              caption={t('EditPage.Sampler',"サンプラー")}
                               state={images[i]?.sampler}
                               setState={setlocalsampler}
                               batch={batchsampler}
                             />
                             <SelectMenu
-                              caption={"使用したモデル"}
+                              caption={t('EditPage.SelectedModel',"使用したモデル")}
                               state={images[i]?.selectedModel}
                               setState={setlocalselectedModel}
                               object={models}
@@ -911,27 +888,27 @@ const Edit = (props) => {
                       {inputEl?.current?.files?.length === 0 && (
                         <>
                           <TextAreaForm
-                            caption={"プロンプト"}
+                            caption={t('EditPage.Prompt',"プロンプト")}
                             state={prompt}
                             setState={setprompt}
                           />
                           <TextAreaForm
-                            caption={"ネガティブプロンプト"}
+                            caption={t('EditPage.NPrompt',"ネガティブプロンプト")}
                             state={nprompt}
                             setState={setnprompt}
                           />
                           <InputForm
-                            caption={"ステップ数"}
+                            caption={t('EditPage.Steps',"ステップ数")}
                             state={step}
                             setState={setstep}
                           />
                           <InputForm
-                            caption={"サンプラー"}
+                            caption={t('EditPage.Sampler',"サンプラー")}
                             state={sampler}
                             setState={setsampler}
                           />
                           <SelectMenu
-                            caption={"使用したモデル"}
+                            caption={t('EditPage.SelectedModel',"使用したモデル")}
                             state={selectedModel}
                             setState={setSelectedModel}
                             object={models}
@@ -942,16 +919,16 @@ const Edit = (props) => {
                     <p className="my-4 dark:text-slate-300">
                       <Link href="/terms/tos">
                         <a className="text-sky-600 dark:text-sky-500">
-                          利用規約
+                          {t('EditPage.Tos','利用規約')}
                         </a>
                       </Link>
-                      や
+                      {t('EditPage.And','や')}
                       <Link href="/terms/guideline">
                         <a className="text-sky-600 dark:text-sky-500">
-                          ガイドライン
+                          {t('EditPage.GuideLine','ガイドライン')}
                         </a>
                       </Link>
-                      に違反する作品は削除の対象となります。
+                      {t('EditPage.aaa','に違反する作品は削除の対象となります。')}
                     </p>
                     <button
                       type="submit"
@@ -984,7 +961,7 @@ const Edit = (props) => {
                           ></path>
                         </svg>
                       )}
-                      保存する
+                      {t('EditPage.Save','保存する')}
                     </button>
                     <button
                       type="button"
@@ -1020,7 +997,7 @@ const Edit = (props) => {
                           ></path>
                         </svg>
                       )}
-                      削除する
+                      {t('EditPage.Delete','削除する')}
                     </button>
                   </Tab.Panels>
                 </div>
