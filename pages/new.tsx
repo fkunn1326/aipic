@@ -1,23 +1,33 @@
-import Image from "next/image";
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
-import { userInfoContext } from "../context/userInfoContext";
 import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function App() {
-  var ctx = useContext(userInfoContext);
+export const getServerSideProps  = async ({ req, res, locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
+    },
+  }
+};
+
+export default function App(...props) {
   const router = useRouter();
   const page =
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
+
+  const { t } = useTranslation('common')
 
   const { data, error } = useSWR(
     "../api/artworks/list" + "?page=" + page,
@@ -67,7 +77,9 @@ export default function App() {
       <Header></Header>
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
-          <div className="text-xl font-semibold dark:text-white">新着</div>
+          <div className="text-xl font-semibold dark:text-white">
+            {t('NewPage.NewImage',"新着")}
+          </div>
         </div>
       </div>
       <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">

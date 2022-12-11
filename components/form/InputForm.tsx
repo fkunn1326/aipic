@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'next-i18next'
 
 export default function InputForm({
   caption,
@@ -7,6 +8,8 @@ export default function InputForm({
   batch = false,
   required = false,
 }: any) {
+  const { t } = useTranslation('common')
+
   return (
     <div>
       <div className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -20,7 +23,7 @@ export default function InputForm({
               batch(state);
             }}
           >
-            一括入力
+            {t('InputFormComponent.BatchInput','一括入力')}
           </button>
         )}
       </div>

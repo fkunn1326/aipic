@@ -38,6 +38,8 @@ import BlurImage from "../../components/common/BlurImage";
 import data from '@emoji-mart/data/sets/14/twitter.json'
 import { v4 as uuidv4 } from "uuid";
 import { Transition } from '@headlessui/react'
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 
 const EmojiPicker = (props: any) => {
@@ -56,15 +58,13 @@ const EmojiPicker = (props: any) => {
   return <div ref={ref} className={`transition-all duration-300 ease-in-out absolute bottom-12 ${props.place ? props.place : "right"}-0 z-50`} ></div>;
 };
 
-export const getServerSideProps = async ({ req, res, query: { id } }) => {  
+export const getServerSideProps = async ({ req, res, locale, query: { id } }) => {  
   const artwork = await axios.get(`${process.env.BASE_URL}/api/artworks/${id}`, {
     withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
-
-
 
   const otherworks = await axios.get(`${process.env.BASE_URL}/api/users/list5?id=${artwork?.data[0]?.author?.id}`, {
     withCredentials: true,
@@ -85,6 +85,9 @@ export const getServerSideProps = async ({ req, res, query: { id } }) => {
   }catch(e){
     return {
       props: {
+        ...(await serverSideTranslations(locale, [
+          'common'
+        ])),
         data: artwork.data,
         otherdata: otherworks.data,
         host: req.headers.host || null,
@@ -94,6 +97,9 @@ export const getServerSideProps = async ({ req, res, query: { id } }) => {
 
   return {
     props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
       data: artwork.data,
       profile: profile?.data,
       otherdata: otherworks.data,
@@ -210,7 +216,8 @@ const LikeBtn = ({ data, profile }) => {
   );
 };
 
-const Images = ({ data, host, profile, otherdata, children }) => {
+const Images = ({ data, host, profile, otherdata, children }, ...props) => {
+  const { t } = useTranslation('common')
   const [isImageOpen, setisImageOpen] = useState(false);
   const [isPromptOpen, setisPromptOpen] = useState(false);
   const [isShareOpen, setisShareOpen] = useState(false);
@@ -457,11 +464,11 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                             <div className="flex flex-col gap-8 justify-center items-center absolute inset-0 m-autopointer-events-auto">
                               <p className="text-xl text-white font-semibold">
                                 {image.age_limit.toUpperCase()}
-                                作品は、非表示に設定されています。
+                                {t('ArtworkPage.ArtworkisUnshown','作品は、非表示に設定されています。')}
                               </p>
                               <Link href="/settings">
                                 <a className="text-base text-white font-semibold py-4 px-12 border rounded-3xl cursor-pointer">
-                                  設定を変更する
+                                  {t('ArtworkPage.ChengeSettings','設定を変更する')}
                                 </a>
                               </Link>
                             </div>
@@ -470,11 +477,11 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                             <div className="flex flex-col gap-8 justify-center items-center absolute inset-0 m-auto z-50 pointer-events-auto">
                               <p className="text-xl text-white font-semibold">
                                 {image.age_limit.toUpperCase()}
-                                作品を表示するには、ログインする必要があります。
+                                {t('ArtworkPage.RequireLogin','作品を表示するには、ログインする必要があります。')}
                               </p>
                               <Link href="/signin">
                                 <a className="text-base text-white font-semibold py-4 px-12 border rounded-3xl cursor-pointer">
-                                  サインイン
+                                  {t('ArtworkPage.Signin','サインイン')}
                                 </a>
                               </Link>
                             </div>
@@ -489,7 +496,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                         className="h-8 xl:mr-2 text-black dark:text-white"
                         onClick={() => setisPromptOpen(true)}
                       >
-                        プロンプトを表示する
+                        {t('ArtworkPage.ShowPrompt','プロンプトを表示する')}
                       </button>
                       <div className="flex w-max flex-row gap-4">
                         <Modal
@@ -498,7 +505,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                         >
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl">
                             <p className="text-gray-600 dark:text-slate-300 text-sm">
-                              使用モデル
+                              {t('ArtworkPage.UsedModel','使用モデル')}
                             </p>
                             <p className="mt-2 font-semibold text-2xl text-black dark:text-white">
                               {image.image_contents[splideindex]?.model}
@@ -507,7 +514,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl mt-4">
                             <div className="flex justify-between">
                               <p className="text-gray-600 dark:text-slate-300 text-sm">
-                                プロンプト
+                                {t('ArtworkPage.Prompt','プロンプト')}
                               </p>
                               <button className="border dark:border-slate-400 rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                 <ClipboardDocumentIcon
@@ -541,7 +548,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                           <div className="bg-slate-50 dark:bg-slate-600 p-8 rounded-3xl mt-4">
                             <div className="flex justify-between">
                               <p className="text-gray-600 dark:text-slate-300 text-sm">
-                                ネガティブプロンプト
+                                {t('ArtworkPage.NPrompt','ネガティブプロンプト')}
                               </p>
                               <button className="border dark:border-slate-400 rounded-lg hover:bg-gray-100 active:bg-gray-200 active:border-green-600">
                                 <ClipboardDocumentIcon
@@ -577,7 +584,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                         <LikeBtn data={image} profile={profile}></LikeBtn>
                         <button
                           className="w-8 h-8 relative z-10"
-                          title="絵文字"
+                          title={t('ArtworkPage.Emoji','絵文字')}
                         >
                           <FaceSmileIcon
                             className={
@@ -610,7 +617,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                         <button
                           className="w-8 h-8"
                           onClick={() => setisShareOpen(true)}
-                          title="共有する"
+                          title={t('ArtworkPage.Share','共有する')}
                         >
                           <ArrowUpOnSquareIcon className="w-8 h-8 text-black dark:text-white"/>
                         </button>
@@ -620,7 +627,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                         >
                           <div className="p-5 rounded-3xl">
                             <p className="text-gray-600 dark:text-slate-300 text-sm">
-                              この作品を共有
+                              {t('ArtworkPage.ShareArtwork','この作品を共有')}
                             </p>
                           </div>
                           <div className="grid grid-cols-4 gap-4 px-6">
@@ -682,7 +689,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                               >
                                 <EllipsisHorizontalIcon className="w-7 h-7" />
                               </button>
-                              その他
+                              {t('ArtworkPage.Other','その他')}
                             </div>
                           </div>
                           <div className="relative hidden-scrollbar">
@@ -791,13 +798,13 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                         <div className="flex flex-row items-center ">
                           <HeartSolidIcon
                             className="w-4 h-4 mr-1"
-                            title="いいね"
+                            title={t('ArtworkPage.Likes','いいね')}
                           />
                           {image.likes === null ? 0 : image.likes?.length}
                         </div>
                         <div
                           className="flex flex-row items-center"
-                          title="閲覧数"
+                          title={t('ArtworkPage.VisitedCount','閲覧数')}
                         >
                           <EyeIcon className="w-4 h-4 mr-1" />
                           {image.views}
@@ -805,7 +812,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                         <div className="flex flex-row items-center">
                           <ClipboardIcon
                             className="w-4 h-4 mr-1"
-                            title="コピー数"
+                            title={t('ArtworkPage.CopyCount','コピー数')}
                           />
                           {image.copies}
                         </div>
@@ -863,7 +870,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                                   type="submit"
                                   className={`w-full text-white bg-sky-500 rounded-full font-semibold text-sm my-5 px-5 py-2 text-center`}
                                 >
-                                  編集する
+                                  {t('ArtworkPage.Edit','編集する')}
                                 </a>
                               </Link>
                             ) : (
@@ -873,9 +880,9 @@ const Images = ({ data, host, profile, otherdata, children }) => {
                               />
                             )}
                             <div className="mt-6 flex justify-between text-sm text-gray-600">
-                              <p>その他の作品</p>
+                              <p>{t('ArtworkPage.OtherArtworks','その他の作品')}</p>
                               <Link href={`/users/${image.author?.uid}`}>
-                                <a className="text-sky-500 dark:text-sky-600">もっと見る</a>
+                                <a className="text-sky-500 dark:text-sky-600">{t('ArtworkPage.ShowMore','もっと見る')}</a>
                               </Link>
                             </div>
                             <div className="mt-3 grid grid-cols-3 gap-3">
@@ -900,7 +907,7 @@ const Images = ({ data, host, profile, otherdata, children }) => {
   );
 };
 
-export default function App({ data, host, otherdata, profile=false, children }) {
+export default function App({ data, host, otherdata, profile=false, children }, ...props) {
   return (
     <Images data={data} host={host} profile={profile} otherdata={otherdata}>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">

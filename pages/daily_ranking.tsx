@@ -1,5 +1,4 @@
-import Image from "next/image";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
@@ -7,12 +6,23 @@ import useSWR from "swr";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { supabaseClient } from "../utils/supabaseClient";
-import { useRouter } from "next/router";
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+export const getServerSideProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
+    },
+  }
+}
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function App() {
+export default function App(...props) {
+  const { t } = useTranslation('common')
   var ctx = useContext(userInfoContext);
   var access_limit = "";
 
@@ -50,7 +60,7 @@ export default function App() {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold dark:text-white">
-            デイリーランキング
+            {t('DailyRankingPage.DailyRanking','デイリーランキング')}
           </div>
         </div>
       </div>

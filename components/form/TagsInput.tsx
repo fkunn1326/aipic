@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import ReactTags from "react-tag-autocomplete";
+import { useTranslation } from 'next-i18next'
 
 export default function TagsInput({
   caption,
@@ -12,9 +13,11 @@ export default function TagsInput({
     id: string;
     count: number;
   };
+  
 
   const reactTags = useRef();
   const [suggestions, setSuggestions] = useState<tags[]>([]);
+  const { t } = useTranslation('common')
 
   const onDelete = useCallback(
     (tagIndex) => {
@@ -53,7 +56,7 @@ export default function TagsInput({
   return (
     <div>
       <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        タグ
+        {t('TagInputComponent.Tag','タグ')}
       </div>
       <ReactTags
         allowNew
@@ -66,7 +69,7 @@ export default function TagsInput({
         onInput={onInput}
         minQueryLength={1}
         addOnBlur={true}
-        placeholderText={"タグを追加"}
+        placeholderText={t('TagInputComponent.AddTag','タグを追加')}
         classNames={{
           root: "relative p-2.5 border border-gray-300 cursor-text bg-gray-50 dark:border-slate-600 dark:bg-slate-800 dark:text-white border border-gray-300 rounded-lg",
           rootFocused: "",

@@ -11,15 +11,16 @@ import { HiOutlineUserCircle, HiOutlineCog6Tooth } from "react-icons/hi2"
 import SettingModal from "../components/modal/settingmodal"
 import toast, { Toaster } from 'react-hot-toast';
 import ReactCrop, { makeAspectCrop, centerCrop, PixelCrop } from 'react-image-crop'
-import { useDebounceEffect } from '../utils/useDebounceEffect'
 import { canvasPreview } from '../utils/canvasPreview'
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const getServerSideProps = async (req, res) => {
-  const supabase = createServerSupabaseClient(req)
+export const getServerSideProps = async ({ req, res, locale }) => {
+  const supabase = createServerSupabaseClient({ req, res })
   const {
     data: { session },
   } = await supabase.auth.getSession()
@@ -34,6 +35,9 @@ export const getServerSideProps = async (req, res) => {
 
   return {
     props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
       initialSession: session,
       user: session.user,
     },
@@ -42,7 +46,9 @@ export const getServerSideProps = async (req, res) => {
 
 const idregex = /[!"#$%&'()\*\+\-\.,\/:;<=>?@\s+\[\\\]^_`{|}~]/g;
 
-const Settings = ({ initialSession, user }) => {
+const Settings = ({ initialSession, user }, ...props) => {
+  const { t } = useTranslation('common')
+
   const ctx = useContext(userInfoContext);
   
   const [states, setstates] = useState({
@@ -120,7 +126,9 @@ const Settings = ({ initialSession, user }) => {
 
     return (
       <SettingModal isOpen={isOpen} onClose={() => onClose()}>
-        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
+        <h1 className="text-lg font-semibold">
+          {t('SettingsPage.Modal.Edit',"{{title}}を編集する", { title: selectedtitle })}
+        </h1>
         {multi ? 
           <textarea
             value={value}
@@ -140,11 +148,11 @@ const Settings = ({ initialSession, user }) => {
           <div className="flex flex-row mt-4 gap-x-3">
             <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
               setIsOpen(false)
-            }}>キャンセル</button>
+            }}>{t('SettingsPage.Cancel',"キャンセル")}</button>
             <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
               handleedit(selected, value)
               setIsOpen(false)
-            }}>変更する</button>
+            }}>{t('SettingsPage.Confirm',"変更する")}</button>
           </div>
         </div>
       </SettingModal>
@@ -154,18 +162,20 @@ const Settings = ({ initialSession, user }) => {
   const AvatarModal = ({ isOpen, onClose, src }) => {
     return (
       <SettingModal isOpen={isOpen} onClose={() => onClose()}>
-        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
+        <h1 className="text-lg font-semibold">
+        {t('SettingsPage.Modal.Edit',"{{title}}を編集する", { title: selectedtitle })}
+        </h1>
         <AvatarCrop src={src} />
         <canvas
             ref={canvasRef}
             className="hidden"
         />
-        <p className="text-sm font-medium text-gray-500">※ 反映には少し時間がかかります。</p>
+        <p className="text-sm font-medium text-gray-500">{t('SettingsPage.note',"※ 反映には少し時間がかかります。")}</p>
         <div className="flex justify-end">
           <div className="flex flex-row mt-4 gap-x-3">
             <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
               setisAvatarOpen(false)
-            }}>キャンセル</button>
+            }}>{t('SettingsPage.Cancel',"キャンセル")}</button>
             <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
               //@ts-ignore
               canvasPreview(imgRef.current, canvasRef.current, completedRef.current, 1, 0)
@@ -183,7 +193,7 @@ const Settings = ({ initialSession, user }) => {
                 handleedit(selected, `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/avatar-${user?.id}/public`)
               })
               setisAvatarOpen(false)
-            }}>変更する</button>
+            }}>{t('SettingsPage.Confirm',"変更する")}</button>
           </div>
         </div>
       </SettingModal>
@@ -243,18 +253,18 @@ const Settings = ({ initialSession, user }) => {
   const HeaderModal = ({ isOpen, onClose, src }) => {
     return (
       <SettingModal isOpen={isOpen} onClose={() => onClose()}>
-        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
+        <h1 className="text-lg font-semibold">{t('SettingsPage.Modal.Edit',"{{title}}を編集する", { title: selectedtitle })}</h1>
         <HeaderCrop src={src} />
         <canvas
             ref={canvasRef}
             className="hidden"
         />
-        <p className="text-sm font-medium text-gray-500">※ 反映には少し時間がかかります。</p>
+        <p className="text-sm font-medium text-gray-500">{t('SettingsPage.note',"※ 反映には少し時間がかかります。")}</p>
         <div className="flex justify-end">
           <div className="flex flex-row mt-4 gap-x-3">
             <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
               setisHeaderOpen(false)
-            }}>キャンセル</button>
+            }}>{t('SettingsPage.Cancel',"キャンセル")}</button>
             <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
               //@ts-ignore
               canvasPreview(imgRef.current, canvasRef.current, completedRef.current, 1, 0)
@@ -272,7 +282,7 @@ const Settings = ({ initialSession, user }) => {
                 handleedit(selected, `https://imagedelivery.net/oqP_jIfD1r6XgWjKoMC2Lg/header-${user?.id}/public`)
               })
               setisHeaderOpen(false)
-            }}>変更する</button>
+            }}>{t('SettingsPage.Confirm',"変更する")}</button>
           </div>
         </div>
       </SettingModal>
@@ -343,59 +353,59 @@ const Settings = ({ initialSession, user }) => {
               <Link href="/settings">
                 <a className="bg-gray-100 dark:bg-slate-800 group rounded-md px-3 py-2.5 flex items-center gap-x-2 text-sm font-medium text-sky-700 dark:text-sky-500">
                   <HiOutlineUserCircle className="h-6 w-6 text-gray-400 stroke-2" />
-                  プロフィール
+                  {t('SettingsPage.Profile',"プロフィール")}
                 </a>
               </Link>
               <Link href="/settings/account">
                 <a className="group rounded-md px-3 py-2.5 flex items-center gap-x-2 text-sm dark:text-white">
                   <HiOutlineCog6Tooth className="h-6 w-6 text-gray-400 stroke-2" />
-                  アカウント
+                  {t('SettingsPage.Account',"アカウント")}
                 </a>
               </Link>
             </div>
           </aside>
           <div className="lg:col-span-9 w-full h-fit shadow-md dark:bg-slate-800 rounded-lg border dark:border-slate-600 p-6 sm:p-12">
             <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-              プロフィール
+              {t('SettingsPage.Profile',"プロフィール")}
             </h5>
             <p className="mb-5 text-gray-500 dark:text-slate-300 sm:text-base">
-              他の人に表示される情報を確認したり、変更したりします。
+              {t('SettingsPage.Profile_Note',"他の人に表示される情報を確認したり、変更したりします。")}
             </p>
             <div className="divide-y divide-gray-200 dark:divide-slate-600 flex flex-col">
               <div className="py-5 grid grid-cols-3">
-                <p className="font-medium dark:text-white">ニックネーム</p>
+                <p className="font-medium dark:text-white">{t('SettingsPage.NickName',"ニックネーム")}</p>
                 <p className="dark:text-slate-200">{states["name"]}</p>
                 <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
-                  setSelectedTitle("ニックネーム")
+                  setSelectedTitle(t('SettingsPage.NickName',"ニックネーム"))
                   setSelected("name")
                   setMulti(false)
                   setIsOpen(true)
                 }}>
-                  編集する
+                  {t('SettingsPage.Edit',"編集する")}
                 </button>
               </div>
               <div className="py-5 grid grid-cols-3">
-                <p className="font-medium dark:text-white">自己紹介</p>
+                <p className="font-medium dark:text-white">{t('SettingsPage.Introduce',"自己紹介")}</p>
                 <pre className="font-sans whitespace-pre-wrap dark:text-slate-200">{states["introduce"]}</pre>
                 <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
-                  setSelectedTitle("自己紹介")
+                  setSelectedTitle(t('SettingsPage.Introduce',"自己紹介"))
                   setSelected("introduce")
                   setMulti(true)
                   setIsOpen(true)
                 }}>                  
-                  編集する
+                  {t('SettingsPage.Edit',"編集する")}
                 </button>
               </div>
               <div className="py-5 grid grid-cols-3">
-                <p className="font-medium dark:text-white">アバター</p>
+                <p className="font-medium dark:text-white">{t('SettingsPage.AvatarImage',"アバター画像")}</p>
                 <img className="object-cover rounded-full w-12 h-12" src={states["avatar_url"]}>
                 </img>
                 <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
                   inputRef.current?.click()
-                  setSelectedTitle("アバター画像")
+                  setSelectedTitle(t('SettingsPage.AvatarImage',"アバター画像"))
                   setSelected("avatar_url")
                 }}>
-                  編集する
+                  {t('SettingsPage.Edit',"編集する")}
                 </button>
                 <input type="file" className="hidden" accept="image/*" ref={inputRef} onChange={(e) => {
                   var reader = new FileReader();
@@ -407,15 +417,15 @@ const Settings = ({ initialSession, user }) => {
                 }} />
               </div>
               <div className="py-5 grid grid-cols-3">
-                <p className="font-medium dark:text-white">ヘッダー</p>
+                <p className="font-medium dark:text-white">{t('SettingsPage.HeaderImage',"ヘッダー画像")}</p>
                 <img className="object-cover w-40 h-20" src={states["header_url"]}>
                 </img>
                 <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
                   inputHRef.current?.click()
-                  setSelectedTitle("ヘッダー画像")
+                  setSelectedTitle(t('SettingsPage.HeaderImage',"ヘッダー画像"))
                   setSelected("header_url")
                 }}>
-                  編集する
+                  {t('SettingsPage.Edit',"編集する")}
                 </button>
                 <input type="file" className="hidden" accept="image/*" ref={inputHRef} onChange={(e) => {
                   var reader = new FileReader();

@@ -13,12 +13,14 @@ import { supabaseClient } from "../../utils/supabaseClient";
 import Router, { useRouter } from "next/router";
 import React from "react";
 import Link from "next/link";
+import { useTranslation } from 'next-i18next'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Dropdawn(props) {
+  const { t } = useTranslation('common')
   const router = useRouter();
   var avatar = props.avatar;
   return (
@@ -49,7 +51,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <UserCircleIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    マイページ
+                    {t('Header.DropDown.MyPage','マイページ')}
                   </p>
                 </a>
               </Link>
@@ -59,7 +61,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <ListBulletIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    ダッシュボード
+                    {t('Header.DropDown.DashBoard','ダッシュボード')}
                   </p>
                 </a>
               </Link>
@@ -69,7 +71,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <HeartIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    いいね一覧
+                    {t('Header.DropDown.LikesList','いいね一覧')}
                   </p>
                 </a>
               </Link>
@@ -79,7 +81,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <Cog6ToothIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    設定
+                    {t('Header.DropDown.Settings','設定')}
                   </p>
                 </a>
               </Link>
@@ -89,7 +91,7 @@ export default function Dropdawn(props) {
                 <a className="text-sm cursor-pointer flex flex-row px-4 py-2 items-center dark:text-slate-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:dark:bg-slate-900 hover:dark:text-slate-200">
                   <ClockIcon className="text-gray-400 w-5 h-5 mr-2 stroke-2" />
                   <p className="block text-sm cursor-pointer">
-                    閲覧履歴
+                    {t('Header.DropDown.History','閲覧履歴')}
                   </p>
                 </a>
               </Link>
@@ -115,7 +117,7 @@ export default function Dropdawn(props) {
                         router.push("/");
                       }}
                     >
-                      サインアウト
+                      {t('Header.DropDown.Signout','サインアウト')}
                     </button>
                   </div>
                 )}

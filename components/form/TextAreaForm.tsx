@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'next-i18next'
 
 export default function TextAreaForm({
   caption,
@@ -7,6 +8,8 @@ export default function TextAreaForm({
   batch = false,
   required = false,
 }: any) {
+  const { t } = useTranslation('common')
+
   const handleChange = (e) => {
     setState(e.target.value);
   };
@@ -24,7 +27,7 @@ export default function TextAreaForm({
               batch(state);
             }}
           >
-            一括入力
+            {t('TextAreaFormComponent.BatchInput','一括入力')}
           </button>
         )}
       </div>
