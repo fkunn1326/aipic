@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import useSWR from "swr";
 import BlurImage from "./BlurImage";
 import SkeletonImage from "./SkeltonImage";

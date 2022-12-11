@@ -8,12 +8,9 @@ import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 import { useRouter } from "next/router";
 import Link from "next/link";
-<<<<<<< HEAD
-import { t } from "../utils/Translation"
-
-=======
 import axios from "axios";
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -31,8 +28,8 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
       },
     }
 
-  const likes = await fetch(`${process.env.BASE_URL}/api/userlikes?page=${page ? page : 1}`, {
-    credentials: "include",
+  const likes = await axios.get(`${process.env.BASE_URL}/api/userlikes?page=${page ? page : 1}`, {
+    withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -40,17 +37,17 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
 
   return {
     props: {
-<<<<<<< HEAD
-      likes: await likes.json()
-=======
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
       likes: likes.data
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
     },
   }
 }
 
-export default function App({ likes }) {
+export default function App({ likes }, ...props) {
   const router = useRouter();
+  const { t } = useTranslation('common')
   const page = router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
   const { data, error } = useSWR(
@@ -102,7 +99,7 @@ export default function App({ likes }) {
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="mt-6 text-2xl font-semibold dark:text-white">
-          いいねをした作品
+          {t('LikePage.LikedArtworks',"いいねをした作品")}
         </div>
       </div>
       <div className="mx-auto max-w-2xl mb-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
 import { userInfoContext } from "../context/userInfoContext";
+import useSWR from "swr";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -12,12 +13,9 @@ import {
 } from "@heroicons/react/24/solid";
 import SkeletonImage from "../components/common/SkeltonImage"
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-<<<<<<< HEAD
-import { t } from "../utils/Translation"
-
-=======
 import axios from "axios";
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -25,7 +23,7 @@ function cn(...classes: string[]) {
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export const getServerSideProps = async ({ req, res, query: { page } } ) => {
+export const getServerSideProps = async ({ req, res, locale,  query: { page } } ) => {
   const supabase = createServerSupabaseClient({req ,res})
   const {
     data: { session },
@@ -41,8 +39,8 @@ export const getServerSideProps = async ({ req, res, query: { page } } ) => {
   
   const { data } = await supabase.from('profiles').select('*').eq("id", session.user.id).single();
 
-  const artworks = await fetch(`${process.env.BASE_URL}/api/users/${data.uid}?page=${page ? page : 1}`, {
-    credentials: "include",
+  const artworks = await axios.get(`${process.env.BASE_URL}/api/users/${data.uid}?page=${page ? page : 1}`, {
+    withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -50,17 +48,17 @@ export const getServerSideProps = async ({ req, res, query: { page } } ) => {
 
   return {
     props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
       user: data,
-      artworks: await artworks.json()
+      artworks: artworks.data
     },
   }
 }
 
-<<<<<<< HEAD
 export default function App({ user , artworks }, ...props) {
-=======
-export default function App({ user , artworks}) {
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+  const { t } = useTranslation('common')
   const router = useRouter();
   const ctx = useContext(userInfoContext);
   const page =
@@ -109,7 +107,7 @@ export default function App({ user , artworks}) {
       <Header></Header>
       <div className="mx-auto max-w-7xl p-6 sm:px-12">
         <div className="mt-6 text-2xl font-semibold dark:text-white">
-          投稿した作品
+          {t('DashBoardPage.PostedArtworks','投稿した作品')}
         </div>
       </div>
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 mb-12">

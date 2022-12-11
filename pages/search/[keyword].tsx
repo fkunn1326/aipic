@@ -7,10 +7,8 @@ import SkeletonImage from "../../components/common/SkeltonImage";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import Link from "next/link";
-<<<<<<< HEAD
-import { t } from "../../utils/Translation"
-=======
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -24,16 +22,16 @@ export const getServerSideProps  = async ({ req, res, locale, query: { page, key
 
   return {
     props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
       search: await search.json(),
     },
   }
 };
 
-<<<<<<< HEAD
 export default function App({ search }, ...props) {
-=======
-export default function App({ search }) {
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+  const { t } = useTranslation('common')
   const router = useRouter();
   const page =
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
@@ -98,7 +96,7 @@ export default function App({ search }) {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold dark:text-white">
-            {keyword} の検索結果: {count}件
+            {t('SearchPage.Title',"{{keyword}} の検索結果: {{count}}件", { keyword: keyword, count: count })}
           </div>
         </div>
       </div>

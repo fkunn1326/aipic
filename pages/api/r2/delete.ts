@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { NextApiRequest, NextApiResponse } from "next";
+import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import jwt from "jsonwebtoken";
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 
@@ -11,23 +13,18 @@ const supabaseAdmin = createClient(
 const account_id = process.env.CLOUDFLARE_IMAGES_ACCOUNT_ID as string;
 const api_key = process.env.CLOUDFLARE_IMAGES_API_TOKEN as string;
 
-const Delete = async (req: NextRequest, res: NextResponse) => {
+const Delete = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ message: "Method not allowed" }), {
-      status: 405,
-      headers: {
-        'content-type': 'application/json',
-      },
-    })
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const supabaseClient = createMiddlewareSupabaseClient({ req, res });
+  const supabaseClient = createServerSupabaseClient({ req, res });
   
   const {
     data: { session }
   } = await supabaseClient.auth.getSession();
 
-  const { image_id } = await req.json()
+  const { image_id } = req.body;
 
   try {
     var { data, error }: any = await supabaseAdmin
@@ -46,34 +43,15 @@ const Delete = async (req: NextRequest, res: NextResponse) => {
           }
         );
       } catch (err) {
-        return new Response(JSON.stringify({ error: error }), {
-          status: 403,
-          headers: {
-            'content-type': 'application/json',
-          },
-        });
+        return res.status(403).json({ error: error });
       }
-      return new Response(JSON.stringify({}), {
-        status: 200,
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
+
+      return res.status(200).end();
     }
   } catch (err) {
-    return new Response(JSON.stringify({ error: err }), {
-      status: 403,
-      headers: {
-        'content-type': 'application/json',
-      },
-    });
+    return res.status(403).json({ error: error });
   }
-  return new Response(JSON.stringify({}), {
-    status: 200,
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  return res.status(200);
 };
 
 export default Delete;

@@ -1,21 +1,20 @@
 import { GetServerSideProps } from "next";
 import React from "react";
 import Head from "next/head";
-<<<<<<< HEAD
-import { t } from "../utils/Translation"
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-=======
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { res } = context;
+export const getServerSideProps = async ({ res, locale }) => {
   res.statusCode = 503;
-<<<<<<< HEAD
   return { props: {
+    ...(await serverSideTranslations(locale, [
+      'common'
+    ]))
   }};
 };
 
 const Maintenance = (...props) => {
+  const { t } = useTranslation('common')
 
   return (
     <>
@@ -43,35 +42,5 @@ const Maintenance = (...props) => {
     </>
   )
 };
-=======
-  return { props: {} };
-};
-
-const Maintenance = () => (
-  <>
-    <Head>
-      <title>AIPIC メンテナンス中</title>
-    </Head>
-    <div>
-      <>
-        <main className="dark:text-white flex flex-col gap-y-2 items-center justify-center w-screen h-screen">
-          <p>
-            AIPICはただいまメンテナンス中です。
-            <br />
-          </p>
-          <p>
-            ご利用の皆様にはご迷惑をおかけし、大変申し訳ありません。
-            <br />
-          </p>
-          <p>
-            メンテナンス終了までしばらくお待ち下さい。
-            <br />
-          </p>
-        </main>
-      </>
-    </div>
-  </>
-);
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
 
 export default Maintenance;

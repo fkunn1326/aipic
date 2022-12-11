@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
@@ -6,15 +6,11 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY as string
 );
 
-const Views = async (req: NextRequest, res: NextResponse) => {
+const Views = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ message: "Method not allowed" }), {
-      status: 405,
-      headers: {
-        'content-type': 'application/json',
-      },
-    })  }
-  const { artwork_id, type } = await req.json();
+    return res.status(405).json({ message: "Method not allowed" });
+  }
+  const { artwork_id, type } = req.body;
   try {
     var { data, error }: any = await supabaseAdmin
       .from("artworks")
@@ -38,20 +34,11 @@ const Views = async (req: NextRequest, res: NextResponse) => {
         .eq("id", artwork_id);
     }
 
-    return new Response(JSON.stringify({}), {
-      status: 200,
-      headers: {
-        'content-type': 'application/json',
-      },
-    });  
+    return res.status(200).end();
   } catch (err) {
-    return new Response(JSON.stringify({ error: error }), {
-      status: 403,
-      headers: {
-        'content-type': 'application/json',
-      },
-    });
+    return res.status(403).json({ error: error });
   }
+  return res.status(200).end();
 };
 
 export default Views;

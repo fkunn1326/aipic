@@ -1,8 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
-import { t } from "../../utils/Translation"
-=======
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+import { useTranslation } from 'next-i18next'
 
 export default function TextAreaForm({
   caption,
@@ -11,10 +8,8 @@ export default function TextAreaForm({
   batch = false,
   required = false,
 }: any) {
-<<<<<<< HEAD
+  const { t } = useTranslation('common')
 
-=======
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const handleChange = (e) => {
     setState(e.target.value);
   };
@@ -32,7 +27,7 @@ export default function TextAreaForm({
               batch(state);
             }}
           >
-            一括入力
+            {t('TextAreaFormComponent.BatchInput','一括入力')}
           </button>
         )}
       </div>

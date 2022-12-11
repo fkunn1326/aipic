@@ -7,15 +7,10 @@ import { Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Sideblur from "./sideblur";
 import { SiteName } from "../core/const";
 import { useRouter } from "next/router";
+import { useTranslation } from 'next-i18next'
 
 const Header = () => {
-<<<<<<< HEAD
-  const t = (key, str, object=undefined) => {
-    return str
-  }
-
-=======
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+  const { t } = useTranslation('common')
   const ctx = useContext(userInfoContext);
   const router = useRouter();
 
@@ -85,7 +80,7 @@ const Header = () => {
               <input
                 type="search"
                 id="searchbox"
-                placeholder="作品を検索する"
+                placeholder={t('Header.SearchArtworks','作品を検索する')}
                 className="bg-gray-50 dark:bg-slate-700 border dark:border-none border-gray-300 text-gray-900 dark:text-white sm:text-sm rounded-lg focus:outline-none focus:border-sky-500 w-[32rem] focus:ring-sky-500 focus:border-4 px-3 py-2.5"
               ></input>
             </form>
@@ -99,7 +94,7 @@ const Header = () => {
             <input
               type="search"
               id="searchbox"
-              placeholder="作品を検索する"
+              placeholder={t('Header.SearchArtworks','作品を検索する')}
               className="transition-all duration-300 ease-out pl-10 pr-3 w-full py-3 text-sm text-black-700 placeholder-gray-500 rounded-xl border border-gray-300 shadow-sm focus:border-white focus:outline-none dark:bg-black-900 dark:text-white dark:placeholder-gray-400 block focus:ring-2 focus:ring-sky-500 dark:focus:ring-4 dark:bg-slate-700 dark:outline-none dark:border-none"
             ></input>
             <MagnifyingGlassIcon className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none w-8 h-full text-gray-400 stroke-[4] dark:text-slate-300" />
@@ -112,12 +107,12 @@ const Header = () => {
               <div className="hidden md:flex justify-end items-center">
                 <Link href="/signin">
                   <a className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-300">
-                    サインイン
+                    {t('Header.Signin','サインイン')}
                   </a>
                 </Link>
                 <Link href="/signup">
                   <a className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-sky-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-sky-600">
-                    サインアップ
+                    {t('Header.Signup','サインアップ')}
                   </a>
                 </Link>
               </div>
@@ -155,7 +150,7 @@ const Header = () => {
             <div className="hidden md:flex justify-end items-center">
               <Link href="/upload">
                 <a className="mr-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border border-transparent bg-sky-500 px-6 py-2 text-base font-bold text-white shadow-sm hover:bg-sky-600">
-                  作品を投稿
+                  {t('Header.PostArtworks','作品を投稿')}
                 </a>
               </Link>
               <Dropdown
