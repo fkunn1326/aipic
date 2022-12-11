@@ -131,8 +131,8 @@ export default function App({ artworks, followdata, tags }, ...props) {
         <div>
           <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
             <div className="mt-6 text-xl font-semibold dark:text-white h-6">
-              {ctx.UserInfo === false && t('HomePage.recommend', 'おすすめ')}
-              {ctx.UserInfo && t('HomePage.Follows', 'フォローユーザーの作品')}
+              {ctx.UserInfo === false && t('おすすめ')}
+              {ctx.UserInfo && t('フォローユーザーの作品')}
             </div>
           </div>
           <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -147,11 +147,11 @@ export default function App({ artworks, followdata, tags }, ...props) {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold text-black dark:text-white">
-            {t('HomePage.NewImage',"新着")}
+            {t("新着")}
           </div>
           <Link href="/new">
             <a className="text-sky-600 dark:text-sky-400">
-            {t('HomePage.ViewAll','すべて見る')}
+            {t('すべて見る')}
             </a>
           </Link>
         </div>
@@ -166,11 +166,11 @@ export default function App({ artworks, followdata, tags }, ...props) {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold text-black dark:text-white">
-            {t('HomePage.ReleaseAnniversary','リリース記念！')}
+            {t('リリース記念！')}
           </div>
           <Link href="/special/aipic_release">
             <a className="text-sky-600 dark:text-sky-400">
-            {t('HomePage.ViewAll','すべて見る')}
+            {t('すべて見る')}
             </a>
           </Link>
         </div>
@@ -199,11 +199,11 @@ export default function App({ artworks, followdata, tags }, ...props) {
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 w-full flex flex-row justify-between">
             <div className="text-xl font-semibold text-black dark:text-white">
-              {t('HomePage.DailyRanking','デイリーランキング')}
+              {t('デイリーランキング')}
             </div>
             <Link href="/daily_ranking">
               <a className="text-sky-600 dark:text-sky-400">
-                {t('HomePage.ViewAll','すべて見る')}
+                {t('すべて見る')}
               </a>
             </Link>
           </div>
@@ -214,7 +214,7 @@ export default function App({ artworks, followdata, tags }, ...props) {
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 w-full flex flex-row justify-between">
             <div className="text-xl font-semibold text-black dark:text-white">
-              {t('HomePage.PopularPrompt','人気のプロンプト')}
+              {t('人気のプロンプト')}
             </div>
           </div>
         </div>

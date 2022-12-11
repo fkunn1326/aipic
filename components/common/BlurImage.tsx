@@ -6,7 +6,10 @@ import { userInfoContext } from "../../context/userInfoContext";
 import { supabaseClient } from "../../utils/supabaseClient";
 import axios from "axios";
 import { useRouter } from "next/router";
+<<<<<<< HEAD
 import { t } from "../../utils/Translation"
+=======
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -175,7 +178,7 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
               </div>
             )}
             <button
-              aria-label={t('BlurImageComponent.LikeButton','いいねボタン')}
+              aria-label="いいねボタン"
               className="absolute bottom-1 right-1 text-sm font-semibold px-2 rounded-md"
               onClick={(e) => handlelike(e)}
             >
@@ -197,7 +200,7 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
             <a className="mt-1 w-full flex items-center">
               <img
                 src={gethref(image.author.avatar_url, 40)}
-                alt={t('BlurImageComponent.ProfileIcon','{{name}}のプロフィールアイコン', { "name": image?.author?.name })}
+                alt={`${image.author.name}のプロフィールアイコン`}
                 width={20}
                 height={20}
                 sizes="20px"

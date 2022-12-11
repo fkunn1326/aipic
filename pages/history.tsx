@@ -2,29 +2,13 @@ import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
 
-export const getServerSideProps = async (req, res) => {
-  const supabase = createServerSupabaseClient(req)
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  if (!session)
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-
-  return {
-    props: {},
-  }
-}
+export const getServerSideProps = withPageAuth({ redirectTo: "/" });
 
 export default function App() {
   const [data, setdata] = useState<any[]>([]);

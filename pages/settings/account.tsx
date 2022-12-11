@@ -9,11 +9,17 @@ import { useRouter } from "next/router";
 import { HiOutlineUserCircle, HiOutlineCog6Tooth } from "react-icons/hi2"
 import SettingModal from "../../components/modal/settingmodal";
 import toast, { Toaster } from 'react-hot-toast';
+<<<<<<< HEAD
 import { t } from "../../utils/Translation"
 
 
 export const getServerSideProps = async ({ req, res, locale }) => {
   const supabase = createServerSupabaseClient({ req, res })
+=======
+
+export const getServerSideProps = async (req, res) => {
+  const supabase = createServerSupabaseClient(req)
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const {
     data: { session },
   } = await supabase.auth.getSession()
@@ -34,7 +40,11 @@ export const getServerSideProps = async ({ req, res, locale }) => {
   }
 }
 
+<<<<<<< HEAD
 const Settings = ({ initialSession, user }, ...props) => {
+=======
+const Settings = ({initialSession, user}) => {
+>>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const ctx = useContext(userInfoContext);
   
   const [states, setstates] = useState({
@@ -66,7 +76,7 @@ const Settings = ({ initialSession, user }, ...props) => {
       if (error.message.startsWith("duplicate key value violates unique constraint")){
         localObj[key] = ctx.UserInfo?.[selected]
         setstates(localObj)
-        toast.error(t('SettingsPage.Account_Error1',"そのIDは既に使用されています"))
+        toast.error("そのIDは既に使用されています")
       }else{
         toast.error(error.message)
       }
@@ -107,7 +117,7 @@ const Settings = ({ initialSession, user }, ...props) => {
 
     return (
       <SettingModal isOpen={isOpen} onClose={() => onClose()}>
-        <h1 className="text-lg font-semibold">{t('SettingsPage.Modal.Edit',"{{title}}を編集する", { title: selectedtitle })}</h1>
+        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
         {multi ? 
           <textarea
             value={value}
@@ -127,10 +137,10 @@ const Settings = ({ initialSession, user }, ...props) => {
           <div className="flex flex-row mt-4 gap-x-3">
             <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
               setIsOpen(false)
-            }}>{t('SettingsPage.Cancel',"キャンセル")}</button>
+            }}>キャンセル</button>
             <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
               handleedit(selected, value)
-            }}>{t('SettingsPage.Confirm',"変更する")}</button>
+            }}>変更する</button>
           </div>
         </div>
       </SettingModal>
@@ -145,17 +155,17 @@ const Settings = ({ initialSession, user }, ...props) => {
 
     return (
       <SettingModal isOpen={isOpen} onClose={() => onClose()}>
-        <h1 className="text-lg font-semibold">{t('SettingsPage.Modal.Edit',"{{title}}を編集する", { title: selectedtitle })}</h1>
+        <h1 className="text-lg font-semibold">{selectedtitle}を編集する</h1>
         <div className="mt-6 grid grid-cols-3 items-center gap-x-3">
           <p className="font-medium">R18</p>
           <div className="flex w-max gap-x-3">
             <div className="flex items-center gap-x-1">
               <input type="radio" name="r18" id="r18ok" value="表示する" className="appearance-none	rounded-full h-4 w-4 border-4 border-gray-300 bg-white checked:bg-white checked:border-sky-500 focus:outline-none transition duration-200 cursor-pointer shadow" defaultChecked={states[selected]?.r18} ref={r18Ref} />
-              <label htmlFor="r18ok" className="cursor-pointer">{t('SettingPage.Show','表示する')}</label>
+              <label htmlFor="r18ok" className="cursor-pointer">表示する</label>
             </div>
             <div className="flex items-center gap-x-1">
             <input type="radio" name="r18" id="r18no" value="表示しない" className="appearance-none	rounded-full h-4 w-4 border-4 border-gray-300 bg-white checked:bg-white checked:border-sky-500 focus:outline-none transition duration-200 cursor-pointer shadow" defaultChecked={!states[selected]?.r18} />
-              <label htmlFor="r18no" className="cursor-pointer">{t('SettingPage.Unshow','表示しない')}</label>
+              <label htmlFor="r18no" className="cursor-pointer">表示しない</label>
             </div>
           </div>
         </div>
@@ -164,11 +174,11 @@ const Settings = ({ initialSession, user }, ...props) => {
           <div className="flex w-max gap-x-3">
             <div className="flex items-center gap-x-1">
               <input type="radio" name="r18g" id="r18gok" value="表示する" className="appearance-none	rounded-full h-4 w-4 border-4 border-gray-300 bg-white checked:bg-white checked:border-sky-500 focus:outline-none transition duration-200 cursor-pointer shadow" defaultChecked={states[selected]?.r18g} ref={r18gRef} />
-              <label htmlFor="r18gok" className="cursor-pointer">{t('SettingPage.Show','表示する')}</label>
+              <label htmlFor="r18gok" className="cursor-pointer">表示する</label>
             </div>
             <div className="flex items-center gap-x-1">
             <input type="radio" name="r18g" id="r18gno" value="表示しない" className="appearance-none	rounded-full h-4 w-4 border-4 border-gray-300 bg-white checked:bg-white checked:border-sky-500 focus:outline-none transition duration-200 cursor-pointer shadow" defaultChecked={!states[selected]?.r18g}  />
-              <label htmlFor="r18gno" className="cursor-pointer">{t('SettingPage.Unshow','表示しない')}</label>
+              <label htmlFor="r18gno" className="cursor-pointer">表示しない</label>
             </div>
           </div>
         </div>
@@ -176,13 +186,13 @@ const Settings = ({ initialSession, user }, ...props) => {
           <div className="flex flex-row mt-4 gap-x-3">
             <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
               setIsAcOpen(false)
-            }}>{t('SettingsPage.Cancel',"キャンセル")}</button>
+            }}>キャンセル</button>
             <button type="button" className="px-3 py-1.5 bg-sky-500 shadow rounded-lg text-white text-sm font-medium"  onClick={() => {
               handleedit(selected, {
                 "r18": r18Ref.current?.checked,
                 "r18g": r18gRef.current?.checked
               })
-            }}>{t('SettingsPage.Confirm',"変更する")}</button>
+            }}>変更する</button>
           </div>
         </div>
       </SettingModal>
@@ -194,13 +204,13 @@ const Settings = ({ initialSession, user }, ...props) => {
 
     return (
       <SettingModal isOpen={isOpen} onClose={() => onClose()}>
-        <h1 className="text-lg font-semibold">{t('SettingPage.DeleteModal.Title','本当に削除しますか？')}</h1>
-        <p className="mt-2 text-sm ">{t('SettingPage.DeleteModal.Body','一度アカウントを削除すると、アカウントに関連する情報がすべて削除されます。')}</p>
+        <h1 className="text-lg font-semibold">本当に削除しますか？</h1>
+        <p className="mt-2 text-sm ">一度アカウントを削除すると、アカウントに関連する情報がすべて削除されます。</p>
         <div className="flex justify-end">
           <div className="flex flex-row mt-4 gap-x-3">
             <button type="button" className="px-3 py-1.5 border dark:border-none dark:bg-slate-800 shadow rounded-lg text-sm" onClick={() => {
               setIsDlOpen(false)
-            }}>{t('SettingsPage.Cancel',"キャンセル")}</button>
+            }}>キャンセル</button>
             <button type="button" className="px-3 py-1.5 bg-red-500 shadow rounded-lg text-white text-sm font-medium"  onClick={async () => {
               supabaseClient.auth.signOut();
               await fetch(
@@ -211,7 +221,7 @@ const Settings = ({ initialSession, user }, ...props) => {
               );
               setIsDlOpen(false)
               router.push("/");
-            }}>{t('SettingPage.Delete','削除する')}</button>
+            }}>削除する</button>
           </div>
         </div>
       </SettingModal>
@@ -232,51 +242,51 @@ const Settings = ({ initialSession, user }, ...props) => {
               <Link href="/settings">
                 <a className="group rounded-md px-3 py-2.5 flex items-center gap-x-2 text-sm dark:text-white">
                   <HiOutlineUserCircle className="h-6 w-6 text-gray-400 stroke-2" />
-                  {t('SettingPage.Profile','プロフィール')}
+                  プロフィール
                 </a>
               </Link>
               <Link href="/settings">
                 <a className="bg-gray-100 dark:bg-slate-800 group rounded-md px-3 py-2.5 flex items-center gap-x-2 text-sm font-medium text-sky-700 dark:text-sky-500">
                   <HiOutlineCog6Tooth className="h-6 w-6 text-gray-400 stroke-2" />
-                  {t('SettingPage.Account','アカウント')}
+                  アカウント
                 </a>
               </Link>
             </div>
           </aside>
           <div className="lg:col-span-9 w-full h-fit shadow-md dark:bg-slate-800 rounded-lg border dark:border-slate-600 p-6 sm:p-12">
             <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-              {t('SettingPage.Account','アカウント')}
+              アカウント
             </h5>
             <p className="mb-5 text-gray-500 dark:text-slate-300 sm:text-base">
-              {t('SettingPage.Account_Description','アカウントについての情報を確認したり、変更したりします。')}
+              アカウントについての情報を確認したり、変更したりします。
             </p>
             <div className="divide-y divide-gray-200 dark:divide-slate-600 flex flex-col">
               <div className="py-5 grid grid-cols-3">
-                <p className="font-medium dark:text-white">{t('SettingPage.UserId','ユーザーID')}</p>
+                <p className="font-medium dark:text-white">ユーザーID</p>
                 <p className="dark:text-slate-200">{states["uid"]}</p>
                 <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
-                  setSelectedTitle(t('SettingPage.UserId',"ユーザーID"))
+                  setSelectedTitle("ユーザーID")
                   setSelected("uid")
                   setMulti(false)
                   setIsOpen(true)
                 }}>
-                  {t('SettingPage.Edit','編集する')}
+                  編集する
                 </button>
               </div>
               <div className="py-5 grid grid-cols-3">
-                <p className="font-medium dark:text-white">{t('SettingPage.Email','メールアドレス')}</p>
+                <p className="font-medium dark:text-white">メールアドレス</p>
                 <p className="dark:text-slate-200">{states["email"]}</p>
               </div>
               <div className="py-5 grid grid-cols-3">
-                <p className="font-medium dark:text-white">{t('SettingPage.AccessLimit','閲覧制限')}</p>
+                <p className="font-medium dark:text-white">閲覧制限</p>
                 <div className="flex flex-col sm:flex-row gap-x-4 dark:text-slate-200">
                   <div className="flex flex-row gap-x-2">
                     <p className="font-medium">R18:</p>
-                    <p>{states["access_limit"]["r18"] ? t('SettingPage.Show',"表示する") : t('SettingPage.Unshow',"表示しない")}</p>
+                    <p>{states["access_limit"]["r18"] ? "表示する" : "表示しない"}</p>
                   </div>
                   <div className="flex flex-row gap-x-2">
                     <p className="font-medium">R18G:</p>
-                    <p className="whitespace-nowrap">{states["access_limit"]["r18g"] ? t('SettingPage.Show',"表示する") : t('SettingPage.Unshow',"表示しない")}</p>
+                    <p className="whitespace-nowrap">{states["access_limit"]["r18g"] ? "表示する" : "表示しない"}</p>
                   </div>
                 </div>
                 <button className="flex justify-end text-sky-600 text-sm" onClick={() => {
@@ -285,12 +295,12 @@ const Settings = ({ initialSession, user }, ...props) => {
                   setMulti(false)
                   setIsAcOpen(true)
                 }}>
-                  {t('SettingPage.Edit','編集する')}
+                  編集する
                 </button>
               </div>
               <div className="py-5 flex flex-row justify-between">
                 <div className="flex flex-row gap-x-12 text-base text-gray-600 dark:text-white">
-                  <p className="font-medium">{t('SettingPage.DeleteAccount','アカウント削除')}</p>
+                  <p className="font-medium">アカウント削除</p>
                 </div>
                 <button className="flex justify-end text-red-600 text-sm" onClick={() => {
                   setSelectedTitle("削除")
@@ -298,7 +308,7 @@ const Settings = ({ initialSession, user }, ...props) => {
                   setMulti(false)
                   setIsDlOpen(true)
                 }}>                  
-                  {t('SettingPage.Delete','削除する')}
+                  削除する
                 </button>
               </div>
             </div>
