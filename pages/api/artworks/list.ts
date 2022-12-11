@@ -1,15 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { NextApiRequest, NextApiResponse } from "next";
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
-export const config = {
-  runtime: 'experimental-edge',
-};
+const getImageList = async (req: NextApiRequest, res: NextApiResponse) => {
+  const supabaseClient = createServerSupabaseClient({ req, res });
 
-const getImageList = async (req: NextRequest, res: NextResponse) => {
-  const supabaseClient = createMiddlewareSupabaseClient({ req, res });
-
-  const { searchParams } = new URL(req.url)
-  const page = searchParams.get("page") ? searchParams.get("page") : undefined;
+  const { page } = req.query;
 
   const {
     data: { session }
@@ -42,19 +37,8 @@ const getImageList = async (req: NextRequest, res: NextResponse) => {
     count: count,
   };
 
-  if (error) return new Response(JSON.stringify({ error: error.message }), {
-    status: 401,
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
-  
-  return new Response(JSON.stringify(response), {
-    status: 200,
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  if (error) return res.status(401).json({ error: error.message });
+  return res.status(200).json(response);
 };
 
 export default getImageList;

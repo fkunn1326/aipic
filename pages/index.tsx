@@ -13,8 +13,11 @@ import TagImages from "../components/common/tagimages";
 // import Challenge from "../components/common/challange";
 // import ChallengeImages from "../components/common/challengeimages";
 import Head from "next/head";
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import axios from "axios";
+import Script from "next/script";
 import PromptRanking from "../components/common/PromptRanking";
-import { t } from "../utils/Translation"
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -64,22 +67,22 @@ const Meta = () => {
 };
 
 export const getServerSideProps  = async ({ req, res, locale }) => {
-  const follows = await fetch(`${process.env.BASE_URL}/api/followimages/list`, {
-    credentials: 'include',
+  const follows = await axios.get(`${process.env.BASE_URL}/api/followimages/list`, {
+    withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const artworks = await fetch(`${process.env.BASE_URL}/api/artworks/list10`, {
-    credentials: 'include',
+  const artworks = await axios.get(`${process.env.BASE_URL}/api/artworks/list10`, {
+    withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
   })
 
-  const tags = await fetch(`${process.env.BASE_URL}/api/tags/list`, {
-    credentials: 'include',
+  const tags = await axios.get(`${process.env.BASE_URL}/api/tags/list`, {
+    withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -87,15 +90,19 @@ export const getServerSideProps  = async ({ req, res, locale }) => {
 
   return {
     props: {
-      artworks: await artworks.json(),
-      followdata: await follows.json(),
-      tags: await tags.json()
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
+      artworks: artworks.data,
+      followdata: follows.data,
+      tags: tags.data
     },
     //オブジェクト返ってきてる
   }
 };
 
 export default function App({ artworks, followdata, tags }, ...props) {
+  const { t } = useTranslation('common')
   const ctx = useContext(userInfoContext);
   const [disabled, setDisabled] = useState(true)
 
@@ -131,8 +138,8 @@ export default function App({ artworks, followdata, tags }, ...props) {
         <div>
           <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
             <div className="mt-6 text-xl font-semibold dark:text-white h-6">
-              {ctx.UserInfo === false && t('おすすめ')}
-              {ctx.UserInfo && t('フォローユーザーの作品')}
+              {ctx.UserInfo === false && t('HomePage.recommend', 'おすすめ')}
+              {ctx.UserInfo && t('HomePage.Follows', 'フォローユーザーの作品')}
             </div>
           </div>
           <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -147,11 +154,11 @@ export default function App({ artworks, followdata, tags }, ...props) {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold text-black dark:text-white">
-            {t("新着")}
+            {t('HomePage.NewImage',"新着")}
           </div>
           <Link href="/new">
             <a className="text-sky-600 dark:text-sky-400">
-            {t('すべて見る')}
+            {t('HomePage.ViewAll','すべて見る')}
             </a>
           </Link>
         </div>
@@ -166,11 +173,11 @@ export default function App({ artworks, followdata, tags }, ...props) {
       <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
         <div className="mt-6 w-full flex flex-row justify-between">
           <div className="text-xl font-semibold text-black dark:text-white">
-            {t('リリース記念！')}
+            {t('HomePage.ReleaseAnniversary','リリース記念！')}
           </div>
           <Link href="/special/aipic_release">
             <a className="text-sky-600 dark:text-sky-400">
-            {t('すべて見る')}
+            {t('HomePage.ViewAll','すべて見る')}
             </a>
           </Link>
         </div>
@@ -199,11 +206,11 @@ export default function App({ artworks, followdata, tags }, ...props) {
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 w-full flex flex-row justify-between">
             <div className="text-xl font-semibold text-black dark:text-white">
-              {t('デイリーランキング')}
+              {t('HomePage.DailyRanking','デイリーランキング')}
             </div>
             <Link href="/daily_ranking">
               <a className="text-sky-600 dark:text-sky-400">
-                {t('すべて見る')}
+                {t('HomePage.ViewAll','すべて見る')}
               </a>
             </Link>
           </div>
@@ -214,7 +221,7 @@ export default function App({ artworks, followdata, tags }, ...props) {
         <div className="mx-auto max-w-7xl py-8 px-4 sm:px-10">
           <div className="mt-6 w-full flex flex-row justify-between">
             <div className="text-xl font-semibold text-black dark:text-white">
-              {t('人気のプロンプト')}
+              {t('HomePage.PopularPrompt','人気のプロンプト')}
             </div>
           </div>
         </div>

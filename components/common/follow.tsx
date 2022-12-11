@@ -1,14 +1,10 @@
 import { supabaseClient } from "../../utils/supabaseClient";
 import { useRouter } from "next/router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-<<<<<<< HEAD
-import { t } from "../../utils/Translation"
+import { useTranslation } from 'next-i18next'
 
 export default function FollowBtn({ following_uid, followed_uid }, ...props) {
-=======
-
-export default function FollowBtn({ following_uid, followed_uid }) {
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+  const { t } = useTranslation('common')
   const router = useRouter();
   const [isfollowed, setisfollowed] = useState(false);
   const [ischanged, setischanged] = useState(false);
@@ -73,7 +69,7 @@ export default function FollowBtn({ following_uid, followed_uid }) {
                     }
                 `}
         >
-          {isfollowed ? "フォロー解除する" : "フォローする"}
+          {isfollowed ? t('UploadPage.UnFollow',"フォロー解除する") : t('UploadPage.Follow',"フォローする")}
         </button>
       )}
     </div>

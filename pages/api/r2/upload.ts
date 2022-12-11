@@ -1,9 +1,10 @@
 import axios from "axios";
-import { NextRequest, NextResponse } from "next/server";
+import FormData from "form-data";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const ImageUploadProfile = async (
-  req: NextRequest,
-  res: NextResponse
+  req: NextApiRequest,
+  res: NextApiResponse
 ) => {
   const account_id = process.env.CLOUDFLARE_IMAGES_ACCOUNT_ID as string;
   const api_key = process.env.CLOUDFLARE_IMAGES_API_TOKEN as string;
@@ -15,12 +16,7 @@ const ImageUploadProfile = async (
   };
 
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ message: "Method not allowed" }), {
-      status: 405,
-      headers: {
-        'content-type': 'application/json',
-      },
-    })
+    return res.status(400).json(results);
   }
 
   try {
@@ -50,12 +46,7 @@ const ImageUploadProfile = async (
     console.error(e);
   }
 
-  return new Response(JSON.stringify(results), {
-    status: 200,
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  return res.status(200).json(results);
 };
 
 export default ImageUploadProfile;

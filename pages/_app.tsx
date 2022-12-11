@@ -1,14 +1,16 @@
 import "../styles/globals.css";
 import React from "react";
 import UserInfoProvider from "../components/auth/userInfoProvider";
-import Script from "next/script";
-import { GATracking } from "../components/GaTracking";
-import '../styles/crop.scss';
 import useTransition from "../components/hooks/useTransition";
+import Script from "next/script";
+import { appWithTranslation } from "next-i18next";
+import { GATracking } from "../components/GaTracking";
+import axios from "axios";
+import '../styles/crop.scss';
 
 export const getServerSideProps  = async ({ req, res, locale }) => {
-  const account = await fetch(`${process.env.BASE_URL}/api/auth/account`, {
-    credentials: "include",
+  const account = await axios.get(`${process.env.BASE_URL}/api/auth/account`, {
+    withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -16,7 +18,7 @@ export const getServerSideProps  = async ({ req, res, locale }) => {
 
   return {
     props: {
-      account: await account.json(),
+      account: account.data,
     },
   }
 };
@@ -42,4 +44,4 @@ function MyApp({ Component, pageProps, account }: any) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);

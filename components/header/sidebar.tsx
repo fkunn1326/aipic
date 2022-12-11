@@ -2,15 +2,11 @@ import { supabaseClient } from "../../utils/supabaseClient";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useTranslation } from 'next-i18next'
 
 const Sidebar = ({ isOpen, avatar, name, id }) => {
   const router = useRouter();
-<<<<<<< HEAD
-  const t = ( key, str, object: any=undefined ) => {
-    return str
-  }
-=======
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
+  const { t } = useTranslation('common')
 
   return (
     <div
@@ -23,12 +19,12 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
           <div className="flex flex-col gap-y-4">
             <Link href="/signin">
               <a className="mt-4 text-gray-600 dark:text-slate-400 font-semibold p-2">
-                サインイン
+                {t('Header.SideBar.Signin','サインイン')}
               </a>
             </Link>
             <Link href="/signup">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                サインアップ
+                {t('Header.SideBar.Signup','サインアップ')}
               </a>
             </Link>
           </div>
@@ -45,32 +41,32 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
             </Link>
             <Link href="/">
               <a className="mt-4 text-gray-600  dark:text-slate-400 font-semibold p-2">
-                ホーム
+                {t('Header.SideBar.Home','ホーム')}
               </a>
             </Link>
             <Link href="/upload">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                作品の投稿
+                {t('Header.SideBar.PostArtwork','作品の投稿')}
               </a>
             </Link>
             <Link href="/dashboard">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                ダッシュボード
+                {t('Header.SideBar.DashBoard','ダッシュボード')}
               </a>
             </Link>
             <Link href="/likes">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                いいねをした作品
+                {t('Header.SideBar.LikedArtworks','いいねをした作品')}
               </a>
             </Link>
             <Link href="/settings">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                アカウントの設定
+                {t('Header.SideBar.Settings','アカウントの設定')}
               </a>
             </Link>
             <Link href="/history">
               <a className="text-gray-600 dark:text-slate-400 font-semibold p-2">
-                閲覧履歴
+                {t('Header.SideBar.History','閲覧履歴')}
               </a>
             </Link>
             <Link href="/">
@@ -81,7 +77,7 @@ const Sidebar = ({ isOpen, avatar, name, id }) => {
                   router.push("/");
                 }}
               >
-                サインアウト
+                {t('Header.SideBar.Signout','サインアウト')}
               </a>
             </Link>
           </div>

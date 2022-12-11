@@ -3,21 +3,20 @@ import React, { useState } from "react";
 import { supabaseClient } from "../utils/supabaseClient";
 import { SiteName } from "../components/core/const";
 import { useRouter } from "next/router";
-<<<<<<< HEAD
-import { t } from "../utils/Translation"
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export const getServerSideProps = async ({ locale }) => {
   return {
     props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
     },
   }
 }
 
 const Signin = (...props) => {
-=======
-
-const Signin = () => {
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const pswdregex =
     /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,100}$/i;
   const emailregex =
@@ -25,11 +24,8 @@ const Signin = () => {
   const [forms, setForms] = useState({ email: "", password: "" });
   const [ismailsent, setisMailsent] = useState(false);
   const router = useRouter();
-<<<<<<< HEAD
-  
-=======
+  const { t } = useTranslation('common')
 
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const origin =
     typeof window !== "undefined" && window.location.origin
       ? window.location.origin
@@ -78,12 +74,12 @@ const Signin = () => {
         <div className="w-full bg-white dark:bg-slate-800 dark:border-slate-600 rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
-              サインイン
+              {t('SigninPage.Signin',"サインイン")}
             </h1>
             <form className="space-y-2 md:space-y-6" onSubmit={clickForms}>
               <div>
                 <label className="block mb-3 text-sm font-medium text-gray-900 dark:text-slate-300">
-                  メール
+                  {t('SigninPage.Email',"メール")}
                   <input
                     type="email"
                     name="email"
@@ -112,13 +108,13 @@ const Signin = () => {
                     id="email_peer"
                     className="mt-2 hidden text-pink-600 text-sm"
                   >
-                    有効なメールアドレスを入力してください。
+                    {t('SigninPage.Email_Wraning1',"有効なメールアドレスを入力してください")}
                   </p>
                 </label>
               </div>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">
-                  パスワード
+                  {t('SigninPage.Mail.Password',"パスワード")}
                   <input
                     type="password"
                     name="password"
@@ -134,7 +130,7 @@ const Signin = () => {
                     id="email_peer2"
                     className="mt-2 hidden text-pink-600 text-sm"
                   >
-                    アカウントが存在しないか、パスワードが間違っています。
+                    {t('SigninPage.Password.Wraning1',"アカウントが存在しないか、パスワードが間違っています。")}
                   </p>
                 </label>
               </div>
@@ -142,10 +138,10 @@ const Signin = () => {
                 type="submit"
                 className="w-full text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
-                サインイン
+                {t('SigninPage.Signin',"サインイン")}
               </button>
               <p className="text-sm text-gray-500 text-center dark:text-slate-300">
-                または
+                {t('SigninPage.Or',"または")}
               </p>
               <button
                 type="button"
@@ -187,13 +183,13 @@ const Signin = () => {
                     </clipPath>
                   </defs>
                 </svg>
-                Googleで続行
+                {t('SigninPage.WithGoogle',"Googleで続行")}
               </button>
               <p className="text-sm text-gray-500 dark:text-slate-300">
-                アカウントがありませんか？
+                {t('SigninPage.Note1',"アカウントがありませんか？")}
                 <Link href="/signup">
                   <a className="font-medium text-sky-600 hover:underline">
-                    サインアップ
+                    {t('SigninPage.Signup',"サインアップ")}
                   </a>
                 </Link>
               </p>

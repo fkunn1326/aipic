@@ -9,15 +9,16 @@ import { useRouter } from "next/router";
 import FollowBtn from "../../components/common/follow";
 import BlurImage from "../../components/common/BlurImage";
 import SkeletonImage from "../../components/common/SkeltonImage";
-<<<<<<< HEAD
 import Head from "next/head";
-import { t } from "../../utils/Translation"
+import axios from "axios";
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const getServerSideProps = async ({ req, res, locale, query: { id } }) => {  
-  const user = await fetch(`${process.env.BASE_URL}/api/users/${id}`, {
-    credentials: "include",
+  const user = await axios.get(`${process.env.BASE_URL}/api/users/${id}`, {
+    withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -26,30 +27,57 @@ export const getServerSideProps = async ({ req, res, locale, query: { id } }) =>
 
   return {
     props: {
-      data: await user.json(),
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
+      data: user.data,
     },
   };
 };
 
+// const Meta = ({ data }) => {
+//   return (
+//     <Head>
+//       <meta charSet="utf-8" />
+//       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+//       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+//       <title>
+//         {data[0].name} - AIPIC
+//       </title>
+//       <meta name="description" content={data[0].introduce} />
+//       <meta name="twitter:card" content="summary_large_image" />
+//       <meta name="twitter:site" content="@fkunn1326" />
+//       <meta name="twitter:title" content={`${data[0].name} - AIPIC`} />
+//       <meta name="twitter:description" content={data[0].introduce} />
+//       <meta name="note:card" content="summary_large_image"/>
+//       <meta property="og:site_name" content="AIPIC" />
+//       <meta property="og:type" content="website" />
+//       <meta property="og:title" content={`${data[0].name} - AIPIC`} />
+//       <meta property="og:description" content={data[0].introduce} />
+//       <meta
+//         property="og:url"
+//         content={`https://aipic.vercel.app/artworks/${data[0].id}`}
+//       />
+//       <link rel="canonical" href="https://www.aipic.app" />
+//       <meta name="twitter:image" content={data[0].href} />
+//       <meta property="og:image" content={data[0].href} />
+//       <meta name="robots" content="index,follow" />
+//     </Head>
+//   );
+// };
+
 const App = ({ data }, ...props) => {
-=======
-
-function cn(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-const fetcher = (url) => fetch(url).then((r) => r.json());
-
-export default function App() {
->>>>>>> parent of d4a7aab (Add: CloudFlare Pages対応)
   const router = useRouter();
   const ctx = useContext(userInfoContext);
+  const { t } = useTranslation('common')
+
+  const dummystr = t("UserPage.Dummy", "Dummy")
 
   const { id } = router.query;
   const page =
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
-  const { data, error } = useSWR(
+  const { data: userData, error } = useSWR(
     `../api/users/${id}` + "?page=" + page, fetcher
   );
 
@@ -74,7 +102,7 @@ export default function App() {
     return arr;
   };
 
-  if (!data) {
+  if (!userData) {
     return (
       <div className="dark:bg-slate-900">
         <Header></Header>
@@ -102,7 +130,7 @@ export default function App() {
     );
   }
 
-  const totalPage = Math.ceil(data.count / 20);
+  const totalPage = Math.ceil(userData.count / 20);
   
   return (
     <div className="dark:bg-slate-900">
@@ -110,7 +138,7 @@ export default function App() {
       <div className="relative w-screen h-64 sm:h-96 p-4 sm:p-8 pb-12">
         <div className="relative w-full h-full">
           <Image
-            src={data.user?.header_url}
+            src={userData.user?.header_url}
             layout="fill"
             objectFit="cover"
             className="w-full h-full mx-4 rounded-3xl"
@@ -120,32 +148,32 @@ export default function App() {
           <div className="flex flex-row justify-between sm:justify-start w-full items-end">
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 border-[3.5px]  border-white rounded-full">
               <Image
-                src={data.user?.avatar_url}
+                src={userData.user?.avatar_url}
                 layout="fill"
                 objectFit="cover"
                 className="rounded-full"
               />
             </div>
             <div className="hidden sm:flex flex-col mb-1 ml-5 font-semibold text-lg dark:text-white">
-              <h1>{data.user?.name}</h1>
+              <h1>{userData.user?.name}</h1>
             </div>
-            {data.user?.id !== ctx.UserInfo?.id &&
+            {userData.user?.id !== ctx.UserInfo?.id &&
               <div className="grid sm:flex sm:flex-row mb-[-1.3rem] ml-5 text-sm text-gray-700">
                 <FollowBtn
                   following_uid={ctx.UserInfo?.id}
-                  followed_uid={data.id}
+                  followed_uid={userData.user?.id}
                 />
               </div>
             }
           </div>
           <div className="flex sm:hidden flex-col mt-3 font-semibold text-lg ">
-            <h1 className="line-clamp-1 dark:text-white">{data.user?.name}</h1>
+            <h1 className="line-clamp-1 dark:text-white">{userData.user?.name}</h1>
           </div>
           <div className="py-2 sm:py-6 max-w-xl sm:max-w-full">
             <div
               className="line-clamp-2 dark:text-slate-300"
             >
-              {data.user?.introduce?.split(/(https?:\/\/[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+)/).map((v, i) =>
+              {userData.user?.introduce?.split(/(https?:\/\/[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+)/).map((v, i) =>
                 i & 1 ? (
                   <a className="text-sky-500 dark:text-sky-600" key={i} href={v} target="_blank" rel="noopener noreferrer">
                     {v}
@@ -160,7 +188,7 @@ export default function App() {
       </div>
       <div className="mx-auto max-w-2xl pt-28 px-4 sm:pt-32 sm:px-6 lg:max-w-7xl lg:px-8 mb-12">
         <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-          {data.body?.map((image) => (
+          {userData.body?.map((image) => (
             <BlurImage key={image.id} image={image} />
           ))}
         </div>
@@ -169,7 +197,7 @@ export default function App() {
         {getpagenation().map((count, idx) => (
           <Link
             href={`${
-              count !== "..." ? `/users/${data.user?.uid}/?page=${count}` : `/users/${data.user?.uid}/?page=${page}`
+              count !== "..." ? `/users/${userData.user?.uid}/?page=${count}` : `/users/${userData.user?.uid}/?page=${page}`
             }`}
             key={idx}
           >
@@ -188,3 +216,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App

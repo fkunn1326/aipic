@@ -1,3 +1,177 @@
 {
-    "フォローユーザーの作品": "フォローユーザーの作品"
+  "ArtworkPage": {
+    "ArtworkisUnshown": "This artwork is set hidden.",
+    "ChengeSettings": "Change the settings",
+    "CopyCount": "Copy count",
+    "Edit": "Edit",
+    "Emoji": "Emoji",
+    "Likes": "Likes",
+    "NPrompt": "Negative prompt",
+    "Other": "Other",
+    "OtherArtworks": "Other Artworks",
+    "Prompt": "Prompt",
+    "RequireLogin": "You have to login to show this artwork.",
+    "Share": "Share",
+    "ShareArtwork": "Share this artwork",
+    "ShowMore": "Show more",
+    "ShowPrompt": "Show prompts",
+    "Signin": "Sign in",
+    "UsedModel": "Model used",
+    "VisitedCount": "Views"
+  },
+  "AuthPage": {
+    "LoginError": "An error occurred while logging in.",
+    "LoginSuccess": "Successfully logged in.",
+    "Redirecting": "Redirecting..."
+  },
+  "DailyRankingPage": {
+    "DailyRanking": "Daily Ranking"
+  },
+  "DashBoardPage": {
+    "PostedArtworks": "Artworks you posted"
+  },
+  "EditPage": {
+    "aaa": "Artworks that are against will be deleted.",
+    "AgeLimit": "Age restrictions",
+    "AllAges": "Everyone (E)",
+    "And": "and",
+    "ArtworkInfo": "About",
+    "Caption": "Caption",
+    "Delete": "Delete",
+    "DeleteCheck": "You cannot restore this artwork when deleted.\nDo you really want to delete this?",
+    "GuideLine": "Guidelines",
+    "ImageInfo": "Info per images",
+    "Note1": "Under 50 Mb per image",
+    "Note2": "can be uploaded.",
+    "NPrompt": "Negative prompt",
+    "Prompt": "Prompt",
+    "Sampler": "Sampler",
+    "Save": "Save",
+    "SelectedModel": "Model",
+    "SelectFile": "Select file(s)",
+    "Steps": "Steps",
+    "Tag": "Tags",
+    "Title": "Title",
+    "Tos": "Term of Use",
+    "UploadError": "An error occurred during uploading images. Please try again."
+  },
+  "HomePage": {
+    "DailyRanking": "Daily Rankings",
+    "Follows": "Artworks by users you are following",
+    "NewImage": "New",
+    "PopularPrompt": "Popular prompts",
+    "recommend": "Recommended",
+    "ReleaseAnniversary": "Release anniversary artworks!",
+    "ViewAll": "View All"
+  },
+  "LikePage": {
+    "LikedArtworks": "Artworks you liked"
+  },
+  "MaintenancePage": {
+    "Body1": "AIPIC is in maintenance now.",
+    "Body2": "We are sorry for the inconvenience.",
+    "Body3": "Please wait until the maintenance is done.",
+    "Title": "AIPIC is under maintenance"
+  },
+  "NewPage": {
+    "NewImage": "New"
+  },
+  "SearchPage": {
+    "Title_other": "Search results for {{keyword}}: {{count}} artworks"
+  },
+  "SettingPage": {
+    "AccessLimit": "Access restrictions",
+    "Account": "Account",
+    "Account_Description": "Check or change info about your account.",
+    "Delete": "Delete",
+    "DeleteAccount": "Delete Account",
+    "DeleteModal": {
+      "Body": "If you delete your account, all information will be deleted.",
+      "Title": "Are you sure?"
+    },
+    "Edit": "Edit",
+    "Email": "Email",
+    "Profile": "Profile",
+    "Show": "Show",
+    "Unshow": "Hide",
+    "UserId": "User ID"
+  },
+  "SettingsPage": {
+    "Account": "Account",
+    "Account_Error1": "This ID is already in use",
+    "AvatarImage": "Avatar image",
+    "Cancel": "Cancel",
+    "Confirm": "Confirm",
+    "Edit": "Edit",
+    "HeaderImage": "Header image",
+    "Introduce": "Bio",
+    "Modal": {
+      "Edit": "Edit {{title}}"
+    },
+    "NickName": "Nickname",
+    "note": "*It will take some time before being reflected.",
+    "Profile": "Profile",
+    "Profile_Note": "Check and change what others can see about you."
+  },
+  "SigninPage": {
+    "Email": "Mail",
+    "Email_Wraning1": "Enter a valid email address.",
+    "Mail": {
+      "Password": "Password"
+    },
+    "Note1": "Don't have an account?",
+    "Or": "or",
+    "Password": {
+      "Wraning1": "Your account does not exist, or the password is incorrect."
+    },
+    "Signin": "Sign in",
+    "Signup": "Sign up",
+    "WithGoogle": "Continue with Google"
+  },
+  "SignupPage": {
+    "AgreeTos": "Agree to <a href=\"/terms/tos\" class=\"text-sm font-medium text-sky-600 hover:underline\"> the Terms of Use</a>.",
+    "CreateAccount": "Create an account",
+    "Email": "Email",
+    "Email_Wraning1": "Please enter a valid email address",
+    "Email_Wraning2": "The email address is already registered.",
+    "Or": "or",
+    "Password": "Password",
+    "Password_Wraning1": "Password must be a combination of letters, numbers, and symbols of at least 8 characters. ",
+    "PasswordforCheck": "Password (confirmation)",
+    "PasswordforCheck_Wraning1": "The password needs to match the password you entered above.",
+    "Signup": "Sign up"
+  },
+  "SignUpPage": {
+    "EmailSent": {
+      "Note1": "An URL was sent to the email you subscribed.",
+      "Note2": "Click the URK on the email and finish your sign up.",
+      "Title": "Confirmation email has been sent"
+    },
+    "Note1": "Already have an account?",
+    "Signin": "Sign in",
+    "WithGoogle": "Continue with Google"
+  },
+  "UploadPage": {
+    "aaaa": "Artworks that are against will be deleted.",
+    "AgeLimit": "Age restrictions",
+    "AllAges": "All ages",
+    "And": "and",
+    "ArtworkInfo": "Artwork Information",
+    "Caption": "Caption",
+    "GuideLine": "Guideline",
+    "ImageInfo": "Info per images",
+    "Note1": "50 Mb per image",
+    "Note2": "can upload.\n",
+    "NPrompt": "Negative Prompt",
+    "Post": "Post artwork",
+    "Prompt": "Prompt",
+    "Sampler": "Sampler",
+    "SelectedModel": "Selected Model",
+    "SelectFile": "Choose file",
+    "Steps": "Sampling Steps",
+    "Tag": "Tags",
+    "Title": "Title",
+    "Tos": "Terms of service",
+    "UploadError": "An error occurred while uploading. Please try again."
+  }
 }
