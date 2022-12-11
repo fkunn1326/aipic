@@ -27,7 +27,7 @@ module.exports = withPlugins([withTM, withPWA, withBundleAnalyzer], {
     esmExternals: "loose",
     scrollRestoration: true,
     nextScriptWorkers: true,
-    runtime: 'experimental-edge',
+    runtime: process.env.NODE_ENV === "production" ? 'experimental-edge' : "",
   },
   reactStrictMode: false,
   swcMinify: true,
