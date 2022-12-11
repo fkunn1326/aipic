@@ -99,9 +99,7 @@ const Edit = (props) => {
   const [title, settitle] = useState("");
   const [caption, setcaption] = useState("");
   const [agelimit, setagelimit] = useState("");
-  const [imagedata, setimagedata] = useState(null);
   const [tags, setTags] = useState<any[]>([]);
-  const [suggestions, setSuggestions] = useState<tags[]>([]);
   const [file, setfile] = useState<any>();
   const [isdeleting, setisdeleting] = useState<boolean>(false);
   const [ischanging, setischanging] = useState<boolean>(false);
@@ -114,50 +112,12 @@ const Edit = (props) => {
     useSensor(TouchSensor, { activationConstraint: { distance: 5 } })
   );
 
-  const reactTags = useRef();
-
   const inputEl = useRef<null | any>(null!);
-
-  const onDelete = useCallback(
-    (tagIndex) => {
-      setTags(tags.filter((tag, index) => index !== tagIndex));
-    },
-    [tags]
-  );
-
-  const onAddition = useCallback(
-    (newTag) => {
-      var name = newTag.name.startsWith("#") ? newTag.name : `#${newTag.name}`;
-      var localNewTag = {
-        id: newTag.id,
-        name: name,
-      };
-      setTags([...tags, localNewTag]);
-    },
-    [tags]
-  );
-
-  const onValidate = useCallback((newTag) => {
-    var flag: boolean =
-      tags.find((tag) => {
-        return tag.name.slice(1) === newTag.name;
-      }) === undefined;
-    return flag;
-  }, []);
-
-  const onInput = async (query) => {
-    if (query.length <= 2) {
-      const result = await fetch(`/api/tags/suggest/?word=${query}`);
-      setSuggestions(await result.json());
-    }
-  };
 
   const router = useRouter();
   const { id } = router.query;
 
   const { data, error } = useSWR(`../../api/artworks/${id}`, fetcher);
-
-  const loadflag = useRef<boolean>(false);
 
   const [isloaded, setisloaded] = useState(false);
 
