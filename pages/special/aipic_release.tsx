@@ -22,7 +22,7 @@ export default function App() {
   }
 
   const { data, error } = useSWR(
-    "../api/tags/AIPICリリース記念" + access_limit,
+    `${process.env.BASE_URL}/api/tags/AIPICリリース記念` + access_limit,
     fetcher,
     {
       fallbackData: [],

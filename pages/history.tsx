@@ -6,9 +6,11 @@ import { useRouter } from "next/router";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import BlurImage from "../components/common/BlurImage";
 import SkeletonImage from "../components/common/SkeltonImage";
+import { useTranslation, Trans } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-export const getServerSideProps = async (req, res) => {
-  const supabase = createServerSupabaseClient(req)
+export const getServerSideProps = async ({ req, res, locale }) => {
+  const supabase = createServerSupabaseClient({ req, res })
   const {
     data: { session },
   } = await supabase.auth.getSession()
@@ -22,12 +24,17 @@ export const getServerSideProps = async (req, res) => {
     }
 
   return {
-    props: {},
+    props: {
+      ...(await serverSideTranslations(locale, [
+        'common'
+      ])),
+    },
   }
 }
 
-export default function App() {
+export default function App(...props) {
   const [data, setdata] = useState<any[]>([]);
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     if (localStorage.getItem("history") !== null) {

@@ -51,7 +51,7 @@ export default function App({ likes }, ...props) {
   const page = router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
   const { data, error } = useSWR(
-    "../api/userlikes" + "?page=" + page , fetcher,{
+    `${process.env.BASE_URL}/api/userlikes` + "?page=" + page , fetcher,{
       fallbackData: likes
     }
   );
