@@ -19,6 +19,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 const { i18n } = require("./next-i18next.config");
+const { EnvironmentPlugin } = require('webpack');
 
 module.exports = withPlugins([withTM, withPWA, withBundleAnalyzer], {
   i18n,
@@ -37,6 +38,28 @@ module.exports = withPlugins([withTM, withPWA, withBundleAnalyzer], {
       "media.discordapp.net",
       "imagedelivery.net",
     ],
+  },
+  webpack(config) {
+    config.plugins.push(
+      new EnvironmentPlugin(
+        [
+          'BASE_URL',
+          'CLOUDFLARE_IMAGES_ACCOUNT_ID',
+          'CLOUDFLARE_IMAGES_API_TOKEN',
+          'CLOUDFLARE_R2_ACCESS_KEY',
+          'CLOUDFLARE_R2_ACCOUNT_ID',
+          'CLOUDFLARE_R2_BUCKET_NAME',
+          'CLOUDFLARE_R2_SECRET_KEY',
+          'NEXT_PUBLIC_GA_TRACKING_ID',
+          'NEXT_PUBLIC_MAINTENANCE_MODE',
+          'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+          'NEXT_PUBLIC_SUPABASE_URL',
+          'SUPABASE_SERVICE_ROLE_KEY'
+        ]
+      )
+    );
+
+    return config;
   },
   async redirects() {
     return [
