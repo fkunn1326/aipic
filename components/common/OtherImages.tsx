@@ -26,7 +26,7 @@ export default function OtherImages({ count }) {
   };
 
   const { data, error } = useSWRImmutable(
-    "../api/artworks/list" + access_limit,
+    `${process.env.BASE_URL}/api/artworks/list` + access_limit,
     fetcher,
     {
       dedupingInterval: 3600000,

@@ -208,7 +208,7 @@ const Settings = ({ initialSession, user }, ...props) => {
             <button type="button" className="px-3 py-1.5 bg-red-500 shadow rounded-lg text-white text-sm font-medium"  onClick={async () => {
               supabaseClient.auth.signOut();
               await fetch(
-                "/api/account/delete",
+                `${process.env.BASE_URL}/api/account/delete`,
                 {
                   method: "post"
                 }

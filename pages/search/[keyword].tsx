@@ -43,7 +43,7 @@ export default function App({ search }, ...props) {
   }, [router.isReady]);
 
   const { data, error } = useSWR(
-    "../api/search" + "?keyword=" + keyword + "&page=" + page,
+    `${process.env.BASE_URL}/api/search` + "?keyword=" + keyword + "&page=" + page,
     fetcher,
     {
       fallbackData: search,

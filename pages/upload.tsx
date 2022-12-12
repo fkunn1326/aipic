@@ -223,7 +223,7 @@ const Upload = (...props) => {
       });
 
       images.map(async (image) => {
-        const responseUploadURL = await axios.post("/api/r2/upload");
+        const responseUploadURL = await axios.post(`${process.env.BASE_URL}/api/r2/upload`);
 
         const url = JSON.parse(JSON.stringify(responseUploadURL.data));
 

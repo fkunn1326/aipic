@@ -24,6 +24,10 @@
     "LoginSuccess": "Successfully logged in.",
     "Redirecting": "Redirecting..."
   },
+  "BlurImageComponent": {
+    "LikeButton": "Like Button",
+    "ProfileIcon": "Profile Icon for {{name}}"
+  },
   "DailyRankingPage": {
     "DailyRanking": "Daily Ranking"
   },
@@ -55,14 +59,48 @@
     "Tos": "Term of Use",
     "UploadError": "An error occurred during uploading images. Please try again."
   },
+  "Footer": {
+    "Form": "Contact Form",
+    "GuideLine": "Guideline",
+    "PrivacyPolicy": "Privacy Policy",
+    "Tou": "Terms of use"
+  },
+  "Header": {
+    "DropDown": {
+      "DashBoard": "Dashboard",
+      "History": "History",
+      "LikesList": "All artworks you liked",
+      "MyPage": "Account page",
+      "Settings": "Settings",
+      "Signout": "Sign out"
+    },
+    "PostArtworks": "Post",
+    "SearchArtworks": "Search",
+    "SideBar": {
+      "DashBoard": "Dashboard",
+      "History": "History",
+      "Home": "Home",
+      "LikedArtworks": "Artworks you liked",
+      "PostArtwork": "Post",
+      "Settings": "Account settings",
+      "Signin": "Sign in",
+      "Signout": "Sign out",
+      "Signup": "Sign up"
+    },
+    "Signin": "Sign in",
+    "Signup": "Sign up"
+  },
   "HomePage": {
     "DailyRanking": "Daily Rankings",
-    "Follows": "Artworks by users you are following",
+    "Follows": "Artworks by users you follow",
     "NewImage": "New",
     "PopularPrompt": "Popular prompts",
     "recommend": "Recommended",
     "ReleaseAnniversary": "Release anniversary artworks!",
     "ViewAll": "View All"
+  },
+  "InputFormComponent": {
+    "BatchInput": "Batch input"
   },
   "LikePage": {
     "LikedArtworks": "Artworks you liked"
@@ -76,8 +114,15 @@
   "NewPage": {
     "NewImage": "New"
   },
+  "PopOver": {
+    "Edit": "Edit",
+    "Report": "Report problem"
+  },
   "SearchPage": {
     "Title_other": "Search results for {{keyword}}: {{count}} artworks"
+  },
+  "SelectMenuComponent": {
+    "BatchInput": "Batch Input"
   },
   "SettingPage": {
     "AccessLimit": "Access restrictions",
@@ -144,12 +189,19 @@
   "SignUpPage": {
     "EmailSent": {
       "Note1": "An URL was sent to the email you subscribed.",
-      "Note2": "Click the URK on the email and finish your sign up.",
+      "Note2": "Click the URL on the email and finish your sign up.",
       "Title": "Confirmation email has been sent"
     },
     "Note1": "Already have an account?",
     "Signin": "Sign in",
     "WithGoogle": "Continue with Google"
+  },
+  "TagInputComponent": {
+    "AddTag": "Add Tags",
+    "Tag": "Tags"
+  },
+  "TextAreaFormComponent": {
+    "BatchInput": "Batch Input"
   },
   "UploadPage": {
     "aaaa": "Artworks that are against will be deleted.",
@@ -158,6 +210,7 @@
     "And": "and",
     "ArtworkInfo": "Artwork Information",
     "Caption": "Caption",
+    "Follow": "Follow",
     "GuideLine": "Guideline",
     "ImageInfo": "Info per images",
     "Note1": "50 Mb per image",
@@ -172,6 +225,10 @@
     "Tag": "Tags",
     "Title": "Title",
     "Tos": "Terms of service",
+    "UnFollow": "Unfollow",
     "UploadError": "An error occurred while uploading. Please try again."
+  },
+  "UserPage": {
+    "Dummy": "Dummy"
   }
 }

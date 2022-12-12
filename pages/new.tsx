@@ -30,7 +30,7 @@ export default function App(...props) {
   const { t } = useTranslation('common')
 
   const { data, error } = useSWR(
-    "../api/artworks/list" + "?page=" + page,
+    `${process.env.BASE_URL}/api/artworks/list` + "?page=" + page,
     fetcher
   );
 

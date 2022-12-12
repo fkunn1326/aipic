@@ -330,7 +330,7 @@ const Edit = (props) => {
       if(images !== defaultimages) {
         defaultimages.map(async (image) => {
           await fetch(
-            "/api/r2/delete",{
+            `${process.env.BASE_URL}/api/r2/delete`,{
               headers: {
                 "Content-Type": "application/json",
               },
@@ -342,7 +342,7 @@ const Edit = (props) => {
           await supabaseClient.from("images").delete().eq("id", image.id)
         });
         images.map(async (image) => {
-          const responseUploadURL = await fetch("/api/r2/upload", { method: "post" });
+          const responseUploadURL = await fetch(`${process.env.BASE_URL}/api/r2/upload`, { method: "post" });
   
           const url = await responseUploadURL.json();
   
@@ -425,7 +425,7 @@ const Edit = (props) => {
 
       defaultimages.map(async (image) => {
         await fetch(
-          "/api/r2/delete",{
+          `${process.env.BASE_URL}/api/r2/delete`,{
             headers: {
               "Content-Type": "application/json",
             },

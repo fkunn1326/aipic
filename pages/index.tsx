@@ -107,7 +107,7 @@ export default function App({ artworks, followdata, tags }, ...props) {
   const [disabled, setDisabled] = useState(true)
 
   const { data, error } = useSWR(
-    "../api/artworks/list10",
+    `${process.env.BASE_URL}/api/artworks/list10`,
     fetcher,
     {
       fallbackData: artworks,

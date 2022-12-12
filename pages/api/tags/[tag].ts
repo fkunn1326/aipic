@@ -11,7 +11,7 @@ const getTagList = async (req: NextApiRequest, res: NextApiResponse) => {
 
   var query = supabaseClient
     .from("artworks")
-    .select(`*, author: user_id(name, avatar_url), likes: likes(id, user_id)`)
+    .select(`*, author: user_id(uid, id, name, avatar_url), likes: likes(id, user_id)`)
     .contains("tags", [tag])
 
   if (!session) {
