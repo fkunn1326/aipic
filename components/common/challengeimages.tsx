@@ -26,7 +26,7 @@ export default function ChallengeImages({ count }) {
   };
 
   const { data, error } = useSWR(
-    `${process.env.BASE_URL}/api/challenge/list` + access_limit,
+    `/api/challenge/list` + access_limit,
     fetcher
   );
 

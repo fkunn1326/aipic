@@ -11,7 +11,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function Challange(props) {
   const [isLoading, setLoading] = useState(true);
-  const { data, error } = useSWR(`${process.env.BASE_URL}/api/challenge/challenge`, fetcher);
+  const { data, error } = useSWR(`/api/challenge/challenge`, fetcher);
 
   if (!data) {
     return (

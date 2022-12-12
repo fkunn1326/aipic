@@ -32,7 +32,7 @@ export default function App(...props) {
   }
 
   const { data, error } = useSWR(
-    `${process.env.BASE_URL}/api/daily_ranking` + access_limit,
+    `/api/daily_ranking` + access_limit,
     fetcher,
     {
       fallbackData: [],
