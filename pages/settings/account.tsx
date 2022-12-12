@@ -13,7 +13,7 @@ import { useTranslation, Trans } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export const getServerSideProps = async ({ req, res, locale }) => {
-  const supabase = createServerSupabaseClient(req)
+  const supabase = createServerSupabaseClient({ req, res})
   const {
     data: { session },
   } = await supabase.auth.getSession()
