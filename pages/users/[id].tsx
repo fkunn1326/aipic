@@ -78,7 +78,7 @@ const App = ({ data }, ...props) => {
     router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
   const { data: userData, error } = useSWR(
-    `${process.env.BASE_URL}/api/users/${id}` + "?page=" + page, fetcher
+    `/api/users/${id}` + "?page=" + page, fetcher
   );
 
   const getpagenation = () => {

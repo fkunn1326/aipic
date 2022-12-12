@@ -10,7 +10,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 const UserInfoProvider = ({ children, account }) => {
   const ctx = useUserInfoContext();
   const { data, error } = useSWR(
-    `${process.env.BASE_URL}/api/auth/account`,
+    `/api/auth/account`,
     fetcher,
     {
       fallbackData: account,

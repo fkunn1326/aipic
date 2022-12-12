@@ -11,7 +11,7 @@ export default function PromptRanking() {
   var ctx = useContext(userInfoContext);
 
   const { data, error } = useSWR(
-    `${process.env.BASE_URL}/api/prompt_ranking`,
+    `/api/prompt_ranking`,
     fetcher,
     {
       fallbackData: [],

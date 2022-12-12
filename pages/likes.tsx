@@ -29,7 +29,7 @@ export const getServerSideProps = async ({ req, res, locale, query: { page } }) 
     }
 
   const likes = await axios.get(`${process.env.BASE_URL}/api/userlikes?page=${page ? page : 1}`, {
-    withCredentials: true,
+      withCredentials: true,
     headers: {
         Cookie: req?.headers?.cookie
     }
@@ -51,7 +51,7 @@ export default function App({ likes }, ...props) {
   const page = router.query.page !== undefined ? parseInt(router.query.page as string) : 1;
 
   const { data, error } = useSWR(
-    `${process.env.BASE_URL}/api/userlikes` + "?page=" + page , fetcher,{
+    `/api/userlikes` + "?page=" + page , fetcher,{
       fallbackData: likes
     }
   );

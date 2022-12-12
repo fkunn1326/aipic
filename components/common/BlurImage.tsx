@@ -37,7 +37,7 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
         });
         setisliked(false);
         await axios.post(
-          `${process.env.BASE_URL}/api/likes`,
+          `/api/likes`,
           JSON.stringify({
             token: `${supabaseClient?.auth?.getSession()}`,
             artwork_id: `${image.id}`,
@@ -56,7 +56,7 @@ export default function BlurImage({ image, rank=undefined, preview=false, pr=fal
         });
         setisliked(true);
         await axios.post(
-          `${process.env.BASE_URL}/api/likes`,
+          `/api/likes`,
           JSON.stringify({
             token: `${supabaseClient?.auth?.getSession()}`,
             artwork_id: `${image.id}`,

@@ -180,7 +180,7 @@ const Settings = ({ initialSession, user }, ...props) => {
               //@ts-ignore
               canvasPreview(imgRef.current, canvasRef.current, completedRef.current, 1, 0)
               canvasRef.current?.toBlob(async function(blob) {
-                const responseUploadURL = await axios.post(`${process.env.BASE_URL}/api/r2/upload`);
+                const responseUploadURL = await axios.post(`/api/r2/upload`);
                 const url = JSON.parse(JSON.stringify(responseUploadURL.data));
                 var formdata = new FormData();
                 formdata.append("file", blob as Blob);
@@ -269,7 +269,7 @@ const Settings = ({ initialSession, user }, ...props) => {
               //@ts-ignore
               canvasPreview(imgRef.current, canvasRef.current, completedRef.current, 1, 0)
               canvasRef.current?.toBlob(async function(blob) {
-                const responseUploadURL = await axios.post(`${process.env.BASE_URL}/api/r2/upload`);
+                const responseUploadURL = await axios.post(`/api/r2/upload`);
                 const url = JSON.parse(JSON.stringify(responseUploadURL.data));
                 var formdata = new FormData();
                 formdata.append("file", blob as Blob);
