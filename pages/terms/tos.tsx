@@ -1,8 +1,256 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
-import Header from "../../components/header/header";
 import Footer from "../../components/footer";
+import Header from "../../components/header/header";
 
-const tos = () => {
+const Tos = () => {
+  const { locale } = useRouter()
+  if (locale === "en") {
+    return (
+        <div className="dark:bg-slate-900 dark:text-white">
+          <Header />
+          <div className="py-12 px-10 sm:px-32 m-auto xl:max-w-7xl">
+            <div>
+              <h1 className="text-2xl font-bold">Terms and Conditions</h1>
+              <p className="pt-4">
+              These Terms and Conditions defines the Terms and Conditions of use of the services provided on this site (&quot;Services&quot;). Registered users (hereinafter referred to as &quot;Users&quot;) are requested to comply these Terms and Conditions on using this Service.
+              </p>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">1.Application</h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                These Terms and Conditions apply to all relationships between users and the operator of this site (hereinafter referred to as &quot;Operator&quot;) regarding the use of this site.
+                </li>
+                <li>
+                  In addition to the Terms and Conditions, the Operator may stipulate various rules and regulations concerning the use of the Service (hereinafter referred to as &quot;Individual Regulations&quot;). These individual provisions, regardless of their names, shall constitute a part of these Terms of Use.
+                </li>
+                <li>
+                  In the event of any inconsistency between the provisions of these Terms and Conditions and the individual provisions of the preceding Article, the provisions of the individual provisions shall prevail unless otherwise specified in the individual provisions.
+                </li>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">2.Registration</h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                  In the case of the Service, the registration for use of the Service shall be completed when the applicant for registration applies for registration for use of the Service in accordance with the method prescribed by the Operator after agreeing to the Terms and Conditions, and when the Operator notifies the applicant for registration of the approval of the registration.
+                </li>
+                <li>
+                  The Operator may not approve an application for registration of use if it determines that the applicant has any of the following reasons, and shall not be obliged to disclose any reasons for such denial.
+                </li>
+                <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                  <li>If false information is reported when applying for user registration</li>
+                  <li>If the application is from a person who has violated these Terms and Conditions</li>
+                  <li>Other cases in which the Company deems the registration of use to be inappropriate</li>
+                </ol>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">
+                3.User ID and password management
+              </h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                  The User shall properly manage his/her user ID and password for the Service at his/her own responsibility.
+                </li>
+                <li>
+                  A user may not, under any circumstances, transfer or lend his/her user ID and password to a third party, or share them with a third party. When a user logs in with the same combination of user ID and password as the registered information, the Operator shall deem the use of the Service to be that of the user who has registered the user ID.
+                </li>
+                <li>
+                  The Operator shall not be liable for any damage caused by the use of a user ID and password by a third party, unless such use is intentional or grossly negligent on the part of the Operator.
+                </li>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">4.Prohibited Acts</h1>
+              <p className="pt-4">
+                In using the Service, the User shall not engage in any of the following acts.
+              </p>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>Acts that violate laws and regulations or public order and morals</li>
+                <li>Conduct related to criminal activity</li>
+                <li>
+                  Acts that destroy or interfere with the functions of the Operator&apos;s, other users of the Service, or third parties&apos; servers or networks
+                </li>
+                <li>Actions that may interfere with the operation of the Operator&apos;s services</li>
+                <li>Collecting or accumulating personal information about other users.</li>
+                <li>Unauthorized access or attempts to gain unauthorized access</li>
+                <li>Impersonating another user</li>
+                <li>
+                  Acts of providing benefits directly or indirectly to antisocial forces in relation to the Operator&apos;s services.
+                </li>
+                <li>
+                  Acts that infringe on the intellectual property rights, portrait rights, privacy, honor, or other rights or interests of the Operator, other users of the Service, or third parties
+                </li>
+                <li>
+                  Posting or transmitting any content on the Service that includes or is deemed by the Operator to include any of the following expressions
+                </li>
+                <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                  <li>Excessively violent expressions</li>
+                  <li>Explicit sexual expression</li>
+                  <li>
+                    Expressions that lead to discrimination based on race, nationality, creed, sex, social status, family origin, etc.
+                  </li>
+                  <li>Expressions that induce or encourage suicide, self-harm, or drug abuse</li>
+                  <li>Other expressions that include antisocial content and cause discomfort to others</li>
+                </ol>
+                <li>Any act of the following that the Operator deems to be the purpose</li>
+                <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                  <li>
+                    Sales, advertising, publicity, solicitation, or any other commercial activities (except those approved by the Operator).
+                  </li>
+                  <li>Acts intended for sexual or obscene purposes</li>
+                  <li>Actions for the purpose of meeting or dating members of the opposite sex whom you do not know.</li>
+                  <li>Actions aimed at harassing or defaming other users</li>
+                  <li>
+                    Actions intended to cause disadvantage, damage, or discomfort to the Operator, other users of the Service, or third parties.
+                  </li>
+                  <li>
+                    Any other use of the Service for purposes different from the intended purpose of use of the Service.
+                  </li>
+                </ol>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">
+                5.Suspension of the Service
+              </h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                  The Operator may suspend or discontinue the Service, in whole or in part, without prior notice to users, for any of the following reasons.
+                </li>
+                <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                  <li>
+                    When performing maintenance inspections or updating of computer systems related to this service
+                  </li>
+                  <li>
+                    When it becomes difficult to provide this service due to force majeure such as earthquake, lightning, fire, power outage, or natural disasters.
+                  </li>
+                  <li>In the event of computer or communication line outage due to accident</li>
+                  <li>In any other cases where the Operator deems it difficult to provide the Service.</li>
+                </ol>
+                <li>
+                  The Operator shall not be liable for any disadvantage or damage incurred by users or third parties due to the suspension or interruption of the provision of the Service.
+                </li>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">6.Copyrights</h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                  Users may only use the Service to post or upload text, images, videos, and other information for which they own the necessary intellectual property rights, such as copyrights, or have obtained the permission of the necessary right holders.
+                </li>
+                <li>
+                  The copyrights of any text, images, videos, etc. posted or uploaded by users using the Service shall be reserved to the users concerned or other existing right holders. However, the Operator may use the text, images, videos, etc. posted or uploaded by users using the Service to the extent necessary for improving the Service, enhancing its quality, correcting deficiencies, etc., and publicizing the Service. The User shall not exercise his/her moral rights in connection with such use.
+                </li>
+                <li>
+                  Except as provided in the preceding paragraph, all copyrights and other intellectual property rights to the Service and all information related to the Service shall belong to the Operator or to the right holders who have authorized the Operator to use them, and the User shall not copy, transfer, lend, translate, modify, reprint, publicly transmit (including making transmittable) or otherwise use the Service without permission.
+                </li>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">7.Restriction of Use and Cancellation of Registration</h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                  The Operator may, without prior notice, delete posted data, restrict a user&apos;s use of all or part of the Service, or terminate the user&apos;s registration if any of the following applies to the user.
+                </li>
+                <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                  <li>Violation of any of the provisions of these Terms and Conditions</li>
+                  <li>When it is found that there is a false fact in the registration information</li>
+                  <li>When there is no response from the Operator for a certain period of time</li>
+                  <li>When there has been no use of this service for a certain period of time since the last use</li>
+                  <li>
+                    In any other cases in which the Operator deems the use of the Service to be inappropriate.
+                  </li>
+                </ol>
+                <li>
+                  If a user falls under any of the items of the preceding paragraph, the user shall naturally lose the benefit of time with respect to all debts owed to the Operator, and shall immediately repay all debts owed at that time in a lump sum.
+                </li>
+                <li>
+                  The Operator shall not be liable for any damages incurred by users as a result of actions taken by the Operator pursuant to this Article.
+                </li>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">8.Withdrawal</h1>
+              <p className="pt-4">
+                A user may withdraw from the Service through the withdrawal procedure prescribed by the Operator.
+              </p>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">
+                9.Disclaimer of Warranty and Disclaimer of Liability
+              </h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                  The Operator does not warrant, expressly or impliedly, that the Service is free from defects in fact or in law (including safety, reliability, accuracy, completeness, validity, fitness for a particular purpose, security or other defects, errors or bugs, infringement of rights, etc.). 
+                </li>
+                <li>
+                  The Operator shall not be liable for any and all damages incurred by users as a result of the Service, except in cases of intentional or gross negligence on the part of the Operator.
+                </li>
+                <li>
+                  The Operator shall not be liable for any transaction, communication, or dispute between a user and another user or a third party with respect to the Service.
+                </li>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">10.Change of Service Contents, etc.</h1>
+              <p className="pt-4">
+                The Operator may change, add, or discontinue the Service with prior notice to users, and users shall consent to such changes, additions, or discontinuation.
+              </p>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">11.Modification of Terms and Conditions</h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>
+                  The Operator may modify these Terms and Conditions without requiring individual user consent in the following cases
+                </li>
+                <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                  <li>When the modification of these Terms and Conditions is compatible with the general interest of the User</li>
+                  <li>
+                    When the modification of these Terms and Condition is not contrary to the purpose of the Service Usage Agreement and is reasonable in light of the necessity of the modification, the reasonableness of the modified contents, and other circumstances pertaining to the modification.
+                  </li>
+                </ol>
+                <li>
+                  In amending these Terms and Conditions in accordance with the preceding paragraph, the Operator shall notify users in advance of the amendment, the content of the amended Terms and Conditions, and the effective date of the amendment.
+                </li>
+              </ol>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">12.Handling of Personal Information</h1>
+              <p className="pt-4">
+                The Operator shall appropriately handle personal information obtained through the use of the Service in accordance with the Service&apos;s &quot;Privacy Policy&quot;.
+              </p>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">13.Notice and Communication</h1>
+              <p className="pt-4">
+                Notification or communication between a user and the Operator shall be made in the manner prescribed by the Operator. Unless a user notifies the Operator of any change in the contact information in accordance with the method separately prescribed by the Operator, the Operator shall deem the currently registered contact information to be valid and shall send notices or communications to such contact information, which shall be deemed to have reached the user at the time of transmission.
+              </p>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">14.Prohibition of Assignment of Rights and Obligations</h1>
+              <p className="pt-4">
+                A user may not assign its position under the Service Agreement or its rights or obligations under these Terms and Conditions to a third party or offer them as security without the Operator&apos;s prior written consent.
+              </p>
+            </div>
+            <div className="pt-8">
+              <h1 className="text-xl font-bold">15.Governing Law and Jurisdiction</h1>
+              <ol className="flex flex-col gap-2 pt-4 pl-8 list-decimal">
+                <li>If there is any conflict in this <Link href="/en/terms/tos"><a className="text-sky-600">English version of the Terms and Conditions</a></Link> and the <Link href="/jp/terms/tos"><a className="text-sky-600">Japanese version of Terms and Conditions</a></Link>, the Japanese Terms and Conditions will be always prioritized.</li>
+                <li>These Terms and Conditions shall be governed by and construed in accordance with the laws of Japan.</li>
+                <li>
+                  Any disputes arising in connection with the Service shall be subject to the exclusive jurisdiction of the court having jurisdiction over the location of the Operator.
+                </li>
+              </ol>
+            </div>
+          </div>
+          <Footer />
+        </div>
+      );
+  }
   return (
     <div className="dark:bg-slate-900 dark:text-white">
       <Header />
@@ -247,4 +495,4 @@ const tos = () => {
   );
 };
 
-export default tos;
+export default Tos;
