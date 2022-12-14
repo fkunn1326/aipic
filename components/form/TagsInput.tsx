@@ -71,13 +71,13 @@ export default function TagsInput({
         addOnBlur={true}
         placeholderText={t('TagInputComponent.AddTag','タグを追加')}
         classNames={{
-          root: "relative p-2.5 border border-gray-300 cursor-text bg-gray-50 dark:border-slate-600 dark:bg-slate-800 dark:text-white border border-gray-300 rounded-lg",
+          root: "relative p-2.5 border border-gray-300 cursor-text dark:border-slate-600 dark:bg-slate-800 dark:text-white border border-gray-300 rounded-lg",
           rootFocused: "",
           selected: "inline",
           selectedTag:
             "inline-block box-border text-base text-sky-600 mr-2 !cursor-pointer hover:line-through",
           search: "inline-block",
-          searchInput: "max-w-full outline-none bg-gray-50 dark:bg-slate-800",
+          searchInput: "max-w-full outline-none dark:bg-slate-800",
           suggestions:
             "react-tags__suggestions dark:react-tags__suggestions_dark",
           suggestionActive: "is-active",

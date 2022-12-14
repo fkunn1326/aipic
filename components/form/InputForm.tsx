@@ -28,7 +28,7 @@ export default function InputForm({
         )}
       </div>
       <input
-        className="bg-gray-50 border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5"
+        className="border border-gray-300 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white sm:text-sm rounded-lg transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-sky-500 w-full p-2.5"
         required={required}
         onChange={(e) => setState(e.target.value)}
         value={state}

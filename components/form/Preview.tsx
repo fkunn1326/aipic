@@ -20,7 +20,7 @@ export default function Preview({ image, id, deleteimage, selected = false }) {
 
   return (
     <div
-      className={`relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg select-none bg-gray-200 dark:bg-gray-600 ${
+      className={`relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg select-none bg-sky-50 dark:bg-gray-600 ${
         selected ? "outline outline-sky-500 outline-[5px] z-10" : ""
       }`}
       ref={setNodeRef}

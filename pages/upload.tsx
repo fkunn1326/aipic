@@ -353,7 +353,7 @@ const Upload = (...props) => {
                     >
                       {!isSelected ? (
                         <label
-                          className={`flex flex-col justify-center items-center w-full h-64 bg-gray-50 dark:bg-slate-800 dark:border-slate-600 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 ${
+                          className={`flex flex-col justify-center items-center w-full md:h-96 h-48 dark:bg-slate-800 dark:border-slate-600 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-sky-50 dark:hover:bg-slate-700 ${
                             isdropping &&
                             "border-4 border-sky-500 bg-sky-100 dark:bg-slate-700"
                           }`}
@@ -378,7 +378,7 @@ const Upload = (...props) => {
                               {t('UploadPage.SelectFile' ,"ファイルを選択")}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-slate-300 text-center">
-                              PNG,JPG
+                              PNG,JPG,GIF
                               <br />
                               {t('UploadPage.Note1','1枚50MB以内')}
                               <br />
@@ -389,7 +389,7 @@ const Upload = (...props) => {
                             id="uploadaria"
                             type="file"
                             className="hidden"
-                            accept="image/png, image/jpeg, image/webp"
+                            accept="image/png, image/jpeg, image/webp, image/gif"
                             onChange={(e) => handleupload(e)}
                             ref={inputEl}
                             multiple
@@ -397,7 +397,7 @@ const Upload = (...props) => {
                           />
                         </label>
                       ) : (
-                        <div className="flex flex-col justify-center items-center w-full h-96 bg-gray-50 dark:bg-slate-800 dark:border-slate-600  rounded-lg border-2 border-gray-300 border-dashed cursor-pointer relative">
+                        <div className="flex flex-col justify-center items-center w-full md:h-96 h-48 dark:bg-slate-800 dark:border-slate-600  rounded-lg border-2 border-gray-300 border-dashed cursor-pointer relative">
                           <XCircleIcon
                             className="absolute z-10 text-sky-400 w-8 h-8 top-2 right-2 bg-gray-50 dark:bg-slate-800 dark:border-slate-600  rounded-full hover:text-sky-500"
                             onClick={() => {
@@ -496,19 +496,19 @@ const Upload = (...props) => {
                         {isSelected && (
                           <button
                             type="button"
-                            className="bg-gray-100 dark:bg-slate-700 rounded-lg flex items-center justify-center "
+                            className="border-2 dark:bg-slate-700 rounded-lg flex items-center justify-center "
                             onClick={() => {
                               document.getElementById("hiddeninput")?.click();
                             }}
                           >
-                            <PlusIcon className="w-full h-full p-4 text-gray-500 dark:text-slate-900" />
+                            <PlusIcon className="w-full h-full p-5 text-gray-500 dark:text-slate-900" />
                           </button>
                         )}
                       </Tab.List>
                     </DndContext>
                   </div>
                   <Tab.Panels as="div" className="pt-4">
-                    <div className="max-w-2xl p-6 space-y-4 md:space-y-6 sm:h-[100vh] pb-64 overflow-scroll rounded bg-gray-50 border dark:border-none dark:bg-slate-800">
+                    <div className="max-w-2xl md:p-8 p-2 space-y-4 md:space-y-6 sm:h-[100vh] md:pb-64 overflow-scroll rounded md:shadow md:border dark:border-none dark:bg-slate-800">
                       <p className="dark:text-white font-semibold">
                         {t('UploadPage.ArtworkInfo','作品の情報')}
                       </p>
@@ -534,13 +534,13 @@ const Upload = (...props) => {
                           {t('UploadPage.AgeLimit','年齢制限')}
                         </label>
                         <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
-                          <li className="bg-gray-50 w-full border-b rounded-l-lg dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
+                          <li className="w-full border-b rounded-l-lg dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
                             <div className="pl-3">
                               <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900cursor-pointer dark:border-slate-600 dark:bg-slate-800 dark:text-white">
                                 <input
                                   id="horizontal-list-radio-license"
                                   type="radio"
-                                  className="outline-none rounded mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                  className="mr-1.5 appearance-none	rounded-full h-4 w-4 border-4 border-gray-300 bg-white checked:bg-white checked:border-sky-500 focus:outline-none transition duration-200 cursor-pointer shadow"
                                   name="bordered-radio"
                                   onClick={() => {
                                     setagelimit("all");
@@ -553,13 +553,13 @@ const Upload = (...props) => {
                               </label>
                             </div>
                           </li>
-                          <li className="bg-gray-50 w-full border-b dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
+                          <li className="w-full border-b dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
                             <div className="pl-3">
                               <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
                                 <input
                                   id="horizontal-list-radio-id"
                                   type="radio"
-                                  className="outline-none mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                  className="mr-1.5 appearance-none	rounded-full h-4 w-4 border-4 border-gray-300 bg-white checked:bg-white checked:border-sky-500 focus:outline-none transition duration-200 cursor-pointer shadow"
                                   name="bordered-radio"
                                   onClick={() => {
                                     setagelimit("r18");
@@ -572,13 +572,13 @@ const Upload = (...props) => {
                               </label>
                             </div>
                           </li>
-                          <li className="bg-gray-50 w-full border-b rounded-r-lg  dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
+                          <li className="w-full border-b rounded-r-lg  dark:border-slate-600 dark:bg-slate-800 dark:text-white border-gray-200 sm:border-b-0 sm:border-r">
                             <div className="pl-3">
                               <label className="flex items-center py-3 w-full text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
                                 <input
                                   id="horizontal-list-radio-millitary"
                                   type="radio"
-                                  className="outline-none mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                  className="mr-1.5 appearance-none	rounded-full h-4 w-4 border-4 border-gray-300 bg-white checked:bg-white checked:border-sky-500 focus:outline-none transition duration-200 cursor-pointer shadow"
                                   name="bordered-radio"
                                   onClick={() => {
                                     setagelimit("r18g");
@@ -771,7 +771,7 @@ const Upload = (...props) => {
                     </p>
                     <button
                       type="submit"
-                      className={`flex flex-row justify-center w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
+                      className={`flex flex-row justify-center w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow ${
                         !isSending
                           ? "bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300"
                           : "bg-sky-300"

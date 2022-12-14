@@ -32,7 +32,7 @@ export default function SelectMenu({
       </label>
       <Listbox value={state} onChange={setState}>
         <div className="relative mt-1">
-          <Listbox.Button className="outline-none relative w-full cursor-default rounded-lg bg-gray-50 py-2 pl-3 pr-10 text-left border border-gray-300  dark:border-slate-600 dark:bg-slate-800 dark:text-white">
+          <Listbox.Button className="outline-none relative w-full cursor-default rounded-lg py-2 pl-3 pr-10 text-left border border-gray-300  dark:border-slate-600 dark:bg-slate-800 dark:text-white transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-sky-500">
             <span className="block truncate">{state?.name}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon
